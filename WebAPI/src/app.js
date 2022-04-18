@@ -96,7 +96,6 @@ export default class Application {
 		// 			if (!location.hash) location.hash = '#main';
 		// 			this.Navigate(location.hash);
 		// 			console.log("angemeldet!");
-
 		// 		}, (ex) => 
 		// 		{
 		// 			alert(ex);

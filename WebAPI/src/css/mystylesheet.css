@@ -47,7 +47,7 @@
     width: auto;
 }
 
-.body-without-sidebar {
+.page-without-sidebar {
     position: relative;
     width: 720px;
     height: 440px;
@@ -58,7 +58,7 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px
 }
 
-.body-with-sidebar {
+.page-with-sidebar {
     margin-left: 300px;
     position: relative;
     border: 1px solid #dddd;
@@ -232,6 +232,7 @@
     width: 20px;
     position: fixed;
     left: 0px;
+    transform: rotateY(180deg);
 }
 
 .sidenav-button-close-animation {
@@ -251,6 +252,7 @@
     animation-name: sidenav-button-slide;
     animation-duration: 1s;
     animation-direction: reverse;
+    transform: rotate(180deg);
 }
 
 .sidenav-element {
