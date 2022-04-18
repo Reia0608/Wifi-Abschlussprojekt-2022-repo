@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+@keyframes sidenav-slide {
+    from { left: 0px; }
+    to { left: -280px; }
+}
+
+@keyframes sidenav-button-slide{
+    from { left: 280px; }
+    to {left: 0px; }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif
+}
+
+.banner-without-sidebar {
+    padding: 60px;
+    text-align: center;
+    background: #0d6efd;;
+    color: white;
+    font-size: 30px;
+  }
+
+.banner-with-sidebar {
+    margin-left: 300px;
+    padding: 60px;
+    text-align: center;
+    background: #0d6efd;;
+    color: white;
+    font-size: 30px;
+  }
+
+.banner-login-element {
+    margin-right: 5px;
+    margin-left: 75%;
+    padding: 0px;
+    text-align: right;
+    font-size: 12px;
+}
+
+.container {
+    margin: 50px auto;
+    width: auto;
+}
+
+.body-without-sidebar {
+    position: relative;
+    width: 720px;
+    height: 440px;
+    margin: 20px auto;
+    border: 1px solid #dddd;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px
+}
+
+.body-with-sidebar {
+    margin-left: 300px;
+    position: relative;
+    border: 1px solid #dddd;
+    border-radius: 18px;
+    overflow: hidden;
+    background-color: rgb(50, 40, 40);
+}
+
+.input-icon {
+    height: 24px;
+    width: 24px;
+    position: relative;
+    background: 0;
+    border: 0;
+    left: 19.5em;
+    top: 1.75em;
+}
+
+.box-1 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover
+}
+
+.box-2 {
+    padding: 10px
+}
+
+.box-1,
+.box-2 {
+    width: 100%
+}
+
+.h-1 {
+    font-size: 24px;
+    font-weight: 700
+}
+
+.text-muted {
+    font-size: 14px
+}
+
+.container .box {
+    width: 50%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    text-decoration: none;
+    color: #615f5fdd
+}
+
+.box:active,
+.box:visited {
+    border: 2px solid #ee82ee
+}
+
+.box:hover {
+    border: 2px solid #ee82ee
+}
+
+.btn.btn-primary {
+    background-color: transparent;
+    color: #ee82ee;
+    border: 0px;
+    padding: 0;
+    font-size: 14px
+}
+
+.btn.btn-primary .fas.fa-chevron-right {
+    font-size: 12px
+}
+
+.footer .p-color {
+    color: #ee82ee
+}
+
+.footer.text-muted {
+    font-size: 10px
+}
+
+.fas.fa-times {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 20px;
+    width: 20px;
+    background-color: #f3cff379;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.fas.fa-times:hover {
+    color: #ff0000
+}
+
+.btn-color {
+    color: #ee82ee
+}
+
+@media (max-width:767px) {
+    body {
+        padding: 10px
+    }
+
+    .body {
+        width: 100%;
+        height: 100%
+    }
+
+    .box-1 {
+        width: 100%
+    }
+
+    .box-2 {
+        width: 100%;
+        height: 440px
+    }
+}
+
+.sidenav-opened {
+    width: 280px;
+    height: 100%;
+    position: fixed;
+    margin: 0;
+    left: 0px;
+}
+
+.sidenav-closed {
+    width: 280px;
+    height: 100%;
+    position: fixed;
+    margin: 0;
+    left: -280px;
+}
+
+.sidenav-close-animation {
+    width: 280px;
+    height: 100%;
+    position: fixed;
+    margin: 0;
+    left: 0px;
+    animation-name: sidenav-slide;
+    animation-duration: 1s;
+}
+
+.sidenav-open-animation {
+    width: 280px;
+    height: 100%;
+    position: fixed;
+    margin: 0;
+    left: 0px;
+    animation-name: sidenav-slide;
+    animation-duration: 1s;
+    animation-direction: reverse;
+}
+
+.sidenav-button-close {
+    height: 100%;
+    width: 20px;
+    position: fixed;
+    left: 280px;
+}
+
+.sidenav-button-open {
+    height: 100%;
+    width: 20px;
+    position: fixed;
+    left: 0px;
+}
+
+.sidenav-button-close-animation {
+    height: 100%;
+    width: 20px;
+    position: fixed;
+    left: 280px;
+    animation-name: sidenav-button-slide;
+    animation-duration: 1s;
+}
+
+.sidenav-button-open-animation {
+    height: 100%;
+    width: 20px;
+    position: fixed;
+    left: 280px;
+    animation-name: sidenav-button-slide;
+    animation-duration: 1s;
+    animation-direction: reverse;
+}
+
+.sidenav-element {
+    margin-left: 2px;
+    cursor: pointer;
+    width: 12em;
+    text-align: left;
+}
+
+.button-open-close {
+    border: 0;
+}
