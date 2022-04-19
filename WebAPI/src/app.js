@@ -80,7 +80,6 @@ export default class Application {
 			else this.Navigate('#main');
 		}
 		
-
 		//=====================================================
 		// common events
 		// horcht auf den change des hash parts in der url

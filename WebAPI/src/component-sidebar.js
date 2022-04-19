@@ -10,8 +10,7 @@ export default class Sidebar
 		{
 			this.target = args.app.Aside;
 
-			const buttonClose = document.getElementById('buttonClose');
-			const buttonOpen = document.getElementById('buttonOpen');
+			const buttonOpenClose = document.getElementById('buttonOpenClose');
 			this.sideNavButtonLogin = this.target.querySelector('#sideNavButtonLogin');
 			this.sideNavButtonLogoff = this.target.querySelector('#sideNavButtonLogoff');
 			this.sideNavButtonHome = this.target.querySelector('#sideNavButtonHome');
@@ -26,32 +25,28 @@ export default class Sidebar
 			{
 				if(sideBar.classList.contains("sidenav-opened"))
 				{
-					sideBar.classList.remove("sidenav-opened");
-					buttonClose.classList.remove("sidenav-button-close");
-					sideBar.classList.add("sidenav-close-animation");
-					buttonClose.classList.add("sidenav-button-close-animation");
+					// WIP problem: is it possible to animate the button and the sidenav at the same time?
+					sideBar.classList.replace("sidenav-opened", "sidenav-close-animation");
+					buttonOpenClose.classList.remove("sidenav-button-close");
+					buttonOpenClose.classList.add("sidenav-button-close-animation");
 					setTimeout(() => 
 					{ 
-						sideBar.classList.remove("sidenav-close-animation");
-						buttonClose.classList.remove("sidenav-button-close-animation");
-						sideBar.classList.add("sidenav-closed");
-						buttonClose.classList.add("d-none");
-						buttonOpen.classList.remove("d-none");
+						// WIP problem: when computer is slow, shows the sidenav for a frame.
+						sideBar.classList.replace("sidenav-close-animation", "sidenav-closed");
+						buttonOpenClose.classList.remove("sidenav-button-close-animation");
+						buttonOpenClose.classList.add("sidenav-button-open");
 					}, 1000);
 				}
 				else
 				{
-					sideBar.classList.remove("sidenav-closed");
-					buttonOpen.classList.remove("sidenav-button-open");
-					sideBar.classList.add("sidenav-open-animation");
-					buttonOpen.classList.add("sidenav-button-open-animation");
+					sideBar.classList.replace("sidenav-closed", "sidenav-open-animation");
+					buttonOpenClose.classList.remove("sidenav-button-open");
+					buttonOpenClose.classList.add("sidenav-button-open-animation");
 					setTimeout(() => 
 					{ 
-						sideBar.classList.remove("sidenav-open-animation");
-						buttonOpen.classList.remove("sidenav-button-open-animation");
-						sideBar.classList.add("sidenav-opened");
-						buttonClose.classList.remove("d-none");
-						buttonOpen.classList.add("d-none");
+						sideBar.classList.replace("sidenav-open-animation", "sidenav-opened");
+						buttonOpenClose.classList.remove("sidenav-button-open-animation");
+						buttonOpenClose.classList.add("sidenav-button-close");
 					}, 1000);
 				}
 

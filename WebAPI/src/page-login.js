@@ -40,7 +40,18 @@ export default class PageLogin
 						{
 							this.app.Benutzer = response.benutzer;
 							this.app.Header.DisplayLogoff = true;
-							this.app.Banner.bannerBenutzer = this.app.Benutzer.nachname + ' ' + this.app.Benutzer.vorname;
+							switch(response.benutzer.rolle) 
+								{
+									case 0:
+										this.app.Banner.bannerBenutzer = this.app.Benutzer.nachname + ' ' + this.app.Benutzer.vorname + ' (' + this.app.Benutzer.rolle.toString() + ')';
+										break;
+									case 1:
+										this.app.Banner.bannerBenutzer = this.app.Benutzer.nachname + ' ' + this.app.Benutzer.vorname + ' (' + this.app.Benutzer.rolle.toString() + ')';
+										break;
+									default:
+										this.app.Banner.bannerBenutzer = this.app.Benutzer.nachname + ' ' + this.app.Benutzer.vorname;
+										break;
+								}
 							window.open('#main', '_self');
 						}
 						else alert(response.message);
