@@ -1,4 +1,4 @@
-﻿namespace VRentalsClasses
+﻿namespace VRentalsClasses.Interfaces
 {
     public enum GeschlechtsTyp 
     { 
@@ -10,7 +10,8 @@
 
     public interface IPerson
     {
-        public int? UserId { get; set; }
+        //************************************************************************
+        #region properties
         public string? Vorname { get; set; }
 
         public string? Nachname { get; set; }
@@ -20,5 +21,7 @@
         public DateTime? Geburtsdatum { get; set; }
 
         public string? GeburtsOrt { get; set; }
+        #endregion 
+        //************************************************************************
     }
 }

@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using VRentalsClasses.Interfaces;
 
-namespace VRentalsClasses
+namespace VRentalsClasses.Models
 {
     public class Benutzer: IPerson, ILoginData
     {
@@ -234,12 +235,16 @@ namespace VRentalsClasses
         [JsonIgnore()]
 		public DateTime? MerkmalGiltBis { get; set; }
 
+		[JsonPropertyName("fahrerliste")]
+		public List<Fahrer>? FahrerListe { get; set; }
+
+
 		#endregion
 
 		//************************************************************************
 		#region public methods
-	
-        public string GetPasswordHash(string pwd)
+
+		public string GetPasswordHash(string pwd)
 		{
 			SHA256 mySHA256 = SHA256.Create();
 			return Convert.ToBase64String(mySHA256.ComputeHash(Encoding.UTF8.GetBytes(pwd)));

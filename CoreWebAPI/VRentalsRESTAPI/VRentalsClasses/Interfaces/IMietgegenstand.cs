@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VRentalsClasses.Models;
 
-namespace VRentalsClasses
+namespace VRentalsClasses.Interfaces
 {
     public enum GegenstandZustandTyp 
     {
@@ -14,6 +15,8 @@ namespace VRentalsClasses
     }
     public interface IMietgegenstand
     {
+        //************************************************************************
+        #region properties
         public List<Ausgaben>? KostenListe { get; set; }
 
         public List<Schaden>? SchadenListe { get; set; }
@@ -26,5 +29,7 @@ namespace VRentalsClasses
         public string? Kategorie { get; set; }
         public byte[]? BildBytes { get; set; }
 
+        #endregion
+        //************************************************************************
     }
 }

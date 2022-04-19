@@ -4,16 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VRentalsClasses
+namespace VRentalsClasses.Models
 {
     public class Schaden
     {
-        string SchadensArt { get; set; }
+        //************************************************************************
+        #region properties
+        public string? SchadensArt { get; set; }
 
-        string Beschreibung { get; set; }
+        public string? Beschreibung { get; set; }
 
-        int AnfallendeKosten { get; set; }
+        public int? AnfallendeKosten { get; set; }
 
-        byte[] SchadenBild { get; set; }
+        public List<byte[]> SchadenBildListe { get; set; }
+        #endregion
+        //************************************************************************
     }
 }

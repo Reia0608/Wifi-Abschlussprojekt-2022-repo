@@ -1,4 +1,4 @@
-namespace VRentalsClasses
+namespace VRentalsClasses.Interfaces
 {
 	public enum RollenTyp 
 	{
@@ -9,7 +9,9 @@ namespace VRentalsClasses
 
 	public interface ILoginData
     {
-		public string? UserName { get; set; }
+        //************************************************************************
+        #region properties
+        public string? UserName { get; set; }
 
 		public string? Passwort { get; set; }
 
@@ -24,5 +26,7 @@ namespace VRentalsClasses
 		public string? BenutzerMerkmal { get; set; }
 
 		public DateTime? MerkmalGiltBis { get; set; }
+		#endregion
+		//************************************************************************
 	}
 }

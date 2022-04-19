@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VRentalsClasses
+namespace VRentalsClasses.Models
 {
     public class Kontakt
     {
-        private string? Kategorie { get; set; }
+        //************************************************************************
+        #region properties
+        public string? Kategorie { get; set; }
 
-        private string? Wert { get; set; }
-
+        public string? Wert { get; set; }
+        #endregion 
+        //************************************************************************
     }
 
 }

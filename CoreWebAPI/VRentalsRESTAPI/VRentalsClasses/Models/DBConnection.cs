@@ -10,7 +10,7 @@ using System.IO;
 using System.Text.Json;
 using System.Reflection;
 
-namespace VRentalsClasses
+namespace VRentalsClasses.Models
 {
 	public class DBConnection
 	{

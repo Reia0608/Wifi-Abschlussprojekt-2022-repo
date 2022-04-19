@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VRentalsClasses.Interfaces;
 
-namespace VRentalsClasses
+namespace VRentalsClasses.Models
 {
     public class Ausgaben
     {
-        string? KostenArt { get; set; }
+        //************************************************************************
+        #region properties
+        public string? KostenArt { get; set; }
 
-        int? Kosten { get; set; }
+        public int? Kosten { get; set; }
+        #endregion
+        //************************************************************************
 
     }
 }

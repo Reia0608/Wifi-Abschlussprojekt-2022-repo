@@ -1391,6 +1391,16 @@
           "System.Xml.XDocument": "4.3.0",
           "System.Xml.XPath": "4.3.0"
         }
+      },
+      "VRentalsClasses/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "2.2.0",
+          "Microsoft.Extensions.Configuration": "7.0.0-preview.2.22152.2",
+          "Npgsql": "7.0.0-preview.2"
+        },
+        "runtime": {
+          "VRentalsClasses.dll": {}
+        }
       }
     }
   },
@@ -2540,6 +2550,11 @@
       "sha512": "sha512-jw9oHHEIVW53mHY9PgrQa98Xo2IZ0ZjrpdOTmtvk+Rvg4tq7dydmxdNqUvJ5YwjDqhn75mBXWttWjiKhWP53LQ==",
       "path": "system.xml.xpath.xdocument/4.3.0",
       "hashPath": "system.xml.xpath.xdocument.4.3.0.nupkg.sha512"
+    },
+    "VRentalsClasses/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

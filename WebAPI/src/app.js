@@ -38,11 +38,13 @@ export default class Application {
 				this.Logoff();
 			}
 		}
-		if (document.cookie) {
+
+		if (document.cookie) 
+		{
 			const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
 			if (benutzerMerkmal) 
 			{
-				this.ApiBenutzerGet((response) => 
+				this.ApiPageInit((response) => 
 				{
 					bannerArgs.displayFull = true;
 					bannerArgs.displayLogoff = true;
@@ -56,7 +58,7 @@ export default class Application {
 					if (!location.hash) location.hash = '#main';
 					this.Navigate(location.hash);
 					console.log("angemeldet!");
-	
+
 				}, (ex) => 
 				{
 					alert(ex);
@@ -77,46 +79,6 @@ export default class Application {
 			if (location.hash) this.Navigate(location.hash);
 			else this.Navigate('#main');
 		}
-
-		// if (document.cookie) 
-		// {
-		// 	const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-		// 	if (benutzerMerkmal) 
-		// 	{
-		// 		this.ApiPageInit((response) => 
-		// 		{
-		// 			bannerArgs.displayFull = true;
-		// 			bannerArgs.displayLogoff = true;
-		// 			this.Benutzer = response.benutzer;
-		// 			// this.GruppeList = r.gruppelist;
-		// 			bannerArgs.userName = this.Benutzer.vorname + ' ' + this.Benutzer.nachname;
-		// 			// navArgs.recht = this.Benutzer.rechttext;
-		// 			this.Sidebar = new Sidebar(sidebarArgs);
-		// 			this.Banner = new Banner(bannerArgs)
-		// 			if (!location.hash) location.hash = '#main';
-		// 			this.Navigate(location.hash);
-		// 			console.log("angemeldet!");
-
-		// 		}, (ex) => 
-		// 		{
-		// 			alert(ex);
-		// 		}, benutzerMerkmal);
-		// 	}
-		// 	else 
-		// 	{
-		// 		this.Sidebar = new Sidebar(sidebarArgs);
-		// 		this.Banner = new Banner(bannerArgs);
-		// 		if (location.hash) this.Navigate(location.hash);
-		// 		else this.Navigate('#main');
-		// 	}
-		// }
-		// else 
-		// {
-		// 	this.Sidebar = new Sidebar(sidebarArgs);
-		// 	this.Banner = new Banner(bannerArgs);
-		// 	if (location.hash) this.Navigate(location.hash);
-		// 	else this.Navigate('#main');
-		// }
 		
 
 		//=====================================================
@@ -204,20 +166,20 @@ export default class Application {
 	// API calls
 	//==================================================================================
 
-	// ApiPageInit(successCallback, errorCallback, benutzerMerkmal) 
-	// {
-	// 	fetch(this.apiBaseUrl + 'page/init' + (benutzerMerkmal ? '?bm=' + benutzerMerkmal : '') , 
-	// 	{
-	// 		method: 'GET'
-	// 	})
-	// 	.then((response) => 
-	// 	{
-	// 		if (response.status == 200) return response.json();
-	// 		else throw new Error(response.status + ' ' + response.statusText);
-	// 	})
-	// 	.then(successCallback)
-	// 	.catch(errorCallback);
-	// }
+	ApiPageInit(successCallback, errorCallback, benutzerMerkmal) 
+	{
+		fetch(this.apiBaseUrl + 'page/init' + (benutzerMerkmal ? '?bm=' + benutzerMerkmal : '') , 
+		{
+			method: 'GET'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) return response.json();
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
 
 	ApiBenutzerLogin(successCallback, errorCallback, args) 
 	{

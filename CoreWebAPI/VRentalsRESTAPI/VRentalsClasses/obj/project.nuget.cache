@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JBBH7esyNqr7f0PuD23JH8UZD5kDlv5Pxgt9hXZBs2zknPeWpwF5pSDlYB937ZL6xqRmMucYTKY4jwb7c3I70w==",
+  "dgSpecHash": "xZJDOUuo5upipZDJAi1h61Lx4zO8+U4rn1Bbg44uGkxAZq1rScKYu4raJQF0zgrAqrktZV5YgyXJegNpTkPCaw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Abschlussprojekt2022\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsClasses\\VRentalsClasses.csproj",
+  "projectFilePath": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsClasses\\VRentalsClasses.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nadia\\.nuget\\packages\\microsoft.aspnetcore.antiforgery\\2.2.0\\microsoft.aspnetcore.antiforgery.2.2.0.nupkg.sha512",
     "C:\\Users\\Nadia\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
