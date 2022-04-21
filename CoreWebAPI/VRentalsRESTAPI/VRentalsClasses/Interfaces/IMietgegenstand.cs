@@ -12,22 +12,28 @@ namespace VRentalsClasses.Interfaces
         frei = 0,
         vermietet = 1, 
         reparatur = 2,
+        wartung = 3
     }
     public interface IMietgegenstand
     {
         //************************************************************************
         #region properties
+        // Eine Liste der Ausgaben für die Wartung und Reparatur des Gegenstands.
         public List<Ausgaben>? KostenListe { get; set; }
 
+        // Eine Liste der Schaden an dem Gegenstand.
         public List<Schaden>? SchadenListe { get; set; }
 
-        public string? Art { get; set; }
-
+        // Für welchen Preis wird es vermietet?
         public int? MietPreis { get; set; }
-        
+        // Was ist der jetzige Zustand des Gegenstands? Ist es vermietbar? Wird es gerade gewartet? etc... 
         public GegenstandZustandTyp GegenstandZustand { get; set; }
+        // Gehört der Gegenstand einer Kategorie an?
         public string? Kategorie { get; set; }
-        public byte[]? BildBytes { get; set; }
+        // Eine von Fotos des Gegenstands.
+        public List<byte[]>? BildBytesList { get; set; }
+        // Wo ist der Gegenstand vorzufinden?
+        public List<Adresse>? AdressenList { get; set; }
 
         #endregion
         //************************************************************************

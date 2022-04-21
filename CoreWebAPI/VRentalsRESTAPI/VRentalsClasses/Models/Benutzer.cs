@@ -16,7 +16,7 @@ namespace VRentalsClasses.Models
         private const string SCHEMA = "rentals";
         private const string TABLE = "tbl_users";
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
-        private const string COLUMNS = "pk_users, vorname, nachname, geburtsdatum, geburtsort," +
+        private const string COLUMNS = "users_id, vorname, nachname, geburtsdatum, geburtsort," +
 			" username, passwort, registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, geschlecht, rolle";
 		#endregion
 
@@ -69,7 +69,7 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ";
 			if(int.TryParse(id, out tmpId))
             {
-				command.CommandText += "pk_users = :pid";
+				command.CommandText += "users_id = :pid";
 				command.Parameters.AddWithValue("pid", tmpId);
             }
             else
@@ -238,7 +238,6 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("fahrerliste")]
 		public List<Fahrer>? FahrerListe { get; set; }
 
-
 		#endregion
 
 		//************************************************************************
@@ -261,7 +260,7 @@ namespace VRentalsClasses.Models
             {
                 command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
                     $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
-                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb where pk_users = :pid";
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb where users_id = :pid";
 
             }
             else
@@ -301,7 +300,7 @@ namespace VRentalsClasses.Models
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
 			command.Connection.Open();
-			command.CommandText = $"delete from {SCHEMA}.{TABLE} where pk_users = :pid";
+			command.CommandText = $"delete from {SCHEMA}.{TABLE} where users_id = :pid";
 			command.Parameters.AddWithValue("pid", this.UserId);
 			try
 			{

@@ -7,7 +7,7 @@ using VRentalsClasses.Interfaces;
 
 namespace VRentalsClasses.Models
 {
-    public class Fahrer: IFahrer, IPerson
+    public class Fahrer: IFahrer
     {
         //************************************************************************
         #region properties
@@ -38,11 +38,11 @@ namespace VRentalsClasses.Models
 
         public DateTime? MerkmalGiltBis { get; set; }
 
-        public byte[]? Foto { get; set; }
+        public byte[]? FahrerFoto { get; set; }
 
-        public DateTime? AusstellungsDatum { get; set; }
+        public DateTime? FuehrerscheinAusstellungsDatum { get; set; }
 
-        public DateTime? AblaufDatum { get; set; }
+        public DateTime? FuehrerscheinAblaufDatum { get; set; }
 
         public string? FuehrerscheinNummer { get; set; }
 

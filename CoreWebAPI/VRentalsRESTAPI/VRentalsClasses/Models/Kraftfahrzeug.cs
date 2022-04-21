@@ -67,9 +67,6 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("kraftfahrzeugid")]
 		public int? KraftfahrzeugId { get; set; }
 
-		[JsonPropertyName("art")]
-		public string? Art { get; set; }
-
 		[JsonPropertyName("mietpreis")]
 		public int? MietPreis { get; set; }
 
@@ -86,20 +83,23 @@ namespace VRentalsClasses.Models
 		public List<Schaden>? SchadenListe { get; set; }
 
 		[JsonIgnore()]
-		public byte[]? BildBytes { get; set; }
+		public List<byte[]>? BildBytesList { get; set; }
 
-		[JsonPropertyName("bildvorhanden")]
+		[JsonIgnore()]
 		public bool BildVorhanden
 		{
 			get
 			{
-				return BildBytes != null && BildBytes.Length > 0;
+				return BildBytesList != null && BildBytesList[0].Length > 0;
 			}
 			set
 			{
 				bool x = value;
 			}
 		}
+
+		public List<Adresse>? AdressenList { get; set; }
+		public Adresse? AktuellerStandort { get; set; }
 
 		#endregion
 
@@ -151,20 +151,20 @@ namespace VRentalsClasses.Models
 			}
 		}
 
-		public override string ToString()
-		{
-			return this.Art;
-		}
+		//public override string ToString()
+		//{
+		//	return this.Art;
+		//}
 
-		public override int GetHashCode()
-		{
-			int result = 0;
-			//result ^= this.Nummer.GetHashCode();
-			result ^= this.Art.GetHashCode();
-			//result ^= this.Beschreibung.GetHashCode();
+		//public override int GetHashCode()
+		//{
+		//	int result = 0;
+		//	//result ^= this.Nummer.GetHashCode();
+		//	result ^= this.Art.GetHashCode();
+		//	//result ^= this.Beschreibung.GetHashCode();
 
-			return result;
-		}
+		//	return result;
+		//}
 
 		public void Refresh()
 		{

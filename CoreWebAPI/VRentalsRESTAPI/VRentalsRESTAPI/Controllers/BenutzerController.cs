@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using VRentalsClasses;
+using VRentalsClasses.Models;
 
 namespace VRentalsRESTAPI.Controllers
 {

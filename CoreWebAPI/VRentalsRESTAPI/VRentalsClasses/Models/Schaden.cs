@@ -16,7 +16,7 @@ namespace VRentalsClasses.Models
 
         public int? AnfallendeKosten { get; set; }
 
-        public List<byte[]> SchadenBildListe { get; set; }
+        public List<byte[]>? SchadenBildListe { get; set; }
         #endregion
         //************************************************************************
     }

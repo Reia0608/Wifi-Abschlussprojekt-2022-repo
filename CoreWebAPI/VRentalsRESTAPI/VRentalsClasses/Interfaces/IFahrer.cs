@@ -12,11 +12,11 @@ namespace VRentalsClasses.Interfaces
         //************************************************************************
         #region properties
 
-        public byte[]? Foto { get; set; }
+        public byte[]? FahrerFoto { get; set; }
 
-        public DateTime? AusstellungsDatum { get; set; }
+        public DateTime? FuehrerscheinAusstellungsDatum { get; set; }
 
-        public DateTime? AblaufDatum { get; set; }
+        public DateTime? FuehrerscheinAblaufDatum { get; set; }
 
         public string? FuehrerscheinNummer { get; set; }
 
