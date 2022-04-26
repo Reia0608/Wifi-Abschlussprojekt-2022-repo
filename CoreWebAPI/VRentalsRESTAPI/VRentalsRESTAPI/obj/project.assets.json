@@ -7767,24 +7767,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Nadia\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\swe21\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsRESTAPI\\VRentalsRESTAPI.csproj",
+      "projectUniqueName": "C:\\Reia\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsRESTAPI\\VRentalsRESTAPI.csproj",
       "projectName": "VRentalsRESTAPI",
-      "projectPath": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsRESTAPI\\VRentalsRESTAPI.csproj",
-      "packagesPath": "C:\\Users\\Nadia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsRESTAPI\\obj\\",
+      "projectPath": "C:\\Reia\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsRESTAPI\\VRentalsRESTAPI.csproj",
+      "packagesPath": "C:\\Users\\swe21\\.nuget\\packages\\",
+      "outputPath": "C:\\Reia\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsRESTAPI\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Nadia\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\swe21\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -7798,8 +7793,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsClasses\\VRentalsClasses.csproj": {
-              "projectPath": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsClasses\\VRentalsClasses.csproj"
+            "C:\\Reia\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsClasses\\VRentalsClasses.csproj": {
+              "projectPath": "C:\\Reia\\Wifi-Abschlussprojekt-2022-repo\\CoreWebAPI\\VRentalsRESTAPI\\VRentalsClasses\\VRentalsClasses.csproj"
             }
           }
         }

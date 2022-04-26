@@ -1,3 +1,17 @@
+-- #########################################################################
+-- ####################### DATABASE vrentals_db ############################
+-- #########################################################################
+
+CREATE DATABASE vrentals_db
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
+
+-- #########################################################################
+-- ######################### ROLE vrentaluser ##############################
+-- #########################################################################
+
 CREATE ROLE vrentalsuser WITH
 	LOGIN
 	NOSUPERUSER
@@ -20,7 +34,7 @@ ALTER ROLE vrentalsuser
 
 CREATE TABLE rentals.tbl_users
 (
-    pk_users serial NOT NULL,
+    users_id serial NOT NULL,
     vorname character varying,
     nachname character varying,
     geschlecht integer,
@@ -43,9 +57,6 @@ ALTER TABLE IF EXISTS rentals.tbl_users
 	
 ALTER TABLE IF EXISTS rentals.tbl_users
     ADD COLUMN bilder_id NUMERIC;
-	
-ALTER TABLE rentals.tbl_users 
-	ADD CONSTRAINT users_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
 	
 ALTER TABLE IF EXISTS rentals.tbl_users
 OWNER TO postgres;
@@ -85,15 +96,6 @@ ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
 
 ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
     ADD COLUMN adresse_id numeric;
-	
-ALTER TABLE rentals.tbl_kraftfahrzeuge 
-	ADD CONSTRAINT kraftfahrzeuge_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
-	
-ALTER TABLE rentals.tbl_kraftfahrzeuge 
-	ADD CONSTRAINT kraftfahrzeuge_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
-	
-ALTER TABLE rentals.tbl_kraftfahrzeuge 
-	ADD CONSTRAINT aktueller_kfz_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);
 
 CREATE SEQUENCE rentals.tbl_kraftfahrzeuge_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_kraftfahrzeuge_seq TO vrentalsuser;
@@ -141,12 +143,6 @@ ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge_ausgaben
 ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben
 	ADD CONSTRAINT kraftfahrzeuge_ausgaben_pk PRIMARY KEY (kraftfahrzeuge_id, ausgaben_id);
 
-ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
-	ADD CONSTRAINT kraftfahrzeugeausgaben_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
-	
-ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
-	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeuge_id) REFERENCES rentals.tbl_kraftfahrzeuge (kraftfahrzeuge_id);
-
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kraftfahrzeuge_ausgaben TO vrentalsuser;
 
 
@@ -164,10 +160,6 @@ CREATE TABLE rentals.tbl_schaden
 
 ALTER TABLE IF EXISTS rentals.tbl_schaden
     ADD COLUMN bilder_id NUMERIC;
-	
-
-ALTER TABLE rentals.tbl_schaden 
-	ADD CONSTRAINT schaden_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
 
 ALTER TABLE IF EXISTS rentals.tbl_schaden
     OWNER to postgres;
@@ -198,9 +190,6 @@ ALTER TABLE rentals.tbl_ausgabenstelle
 CREATE SEQUENCE rentals.tbl_ausgabenstelle_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_ausgabenstelle_seq TO vrentalsuser;
 
-ALTER TABLE rentals.tbl_ausgabenstelle 
-	ADD CONSTRAINT ausgabenstelle_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
-
 ALTER TABLE IF EXISTS rentals.tbl_ausgabenstelle
     OWNER to postgres;
 	
@@ -228,28 +217,6 @@ ALTER TABLE rentals.tbl_anhaenger
 
 CREATE SEQUENCE rentals.tbl_anhaenger_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_anhaenger_seq TO vrentalsuser;
-
-ALTER TABLE rentals.tbl_anhaenger 
-	ADD CONSTRAINT anhaenger_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
-
--- Note: habe aus Versehen einen foreign key namens anhaenger_adresse_fk in der Tabelle tbl_ausgabenstelle angelegt. Habe es mit forlgender Command wieder gelöscht:
---ALTER TABLE rentals.tbl_ausgabenstelle
---DROP CONSTRAINT anhaenger_adresse_fk;
-
-
--- VORSICHT! Schlechter Name aktueller_standort_fk sollte anhaenger_adresse_fk heissen!
-
-ALTER TABLE rentals.tbl_anhaenger 
-	ADD CONSTRAINT aktueller_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);
-
-ALTER TABLE rentals.tbl_anhaenger 
-	ADD CONSTRAINT anhaenger_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
-
-ALTER TABLE rentals.tbl_anhaenger 
-	ADD CONSTRAINT anhaenger_schaden_fk FOREIGN KEY (schaden_id) REFERENCES rentals.tbl_schaden (schaden_id);
-
-ALTER TABLE rentals.tbl_anhaenger 
-	ADD CONSTRAINT anhaenger_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
 
 ALTER TABLE IF EXISTS rentals.tbl_anhaenger
     OWNER to postgres;
@@ -305,3 +272,53 @@ CREATE SEQUENCE rentals.tbl_bilder_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_bilder_seq TO vrentalsuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_bilder TO vrentalsuser;
+
+-- #########################################################################
+-- ############################# FOREIGN KEYS ##############################
+-- #########################################################################
+
+ALTER TABLE rentals.tbl_users 
+	ADD CONSTRAINT users_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
+
+ALTER TABLE rentals.tbl_schaden 
+	ADD CONSTRAINT schaden_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
+
+-- Note: habe aus Versehen einen foreign key namens anhaenger_adresse_fk in der Tabelle tbl_ausgabenstelle angelegt. Habe es mit forlgender Command wieder gelöscht:
+--ALTER TABLE rentals.tbl_ausgabenstelle
+--DROP CONSTRAINT anhaenger_adresse_fk;
+
+
+-- VORSICHT! Schlechter Name aktueller_standort_fk sollte anhaenger_adresse_fk heissen!
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT aktueller_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_schaden_fk FOREIGN KEY (schaden_id) REFERENCES rentals.tbl_schaden (schaden_id);
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
+
+ALTER TABLE rentals.tbl_ausgabenstelle 
+	ADD CONSTRAINT ausgabenstelle_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
+
+ALTER TABLE rentals.tbl_kraftfahrzeuge 
+	ADD CONSTRAINT kraftfahrzeuge_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
+	
+ALTER TABLE rentals.tbl_kraftfahrzeuge 
+	ADD CONSTRAINT aktueller_kfz_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);
+
+ALTER TABLE rentals.tbl_kraftfahrzeuge 
+	ADD CONSTRAINT kraftfahrzeuge_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
+
+ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
+	ADD CONSTRAINT kraftfahrzeugeausgaben_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
+	
+ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
+	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeuge_id) REFERENCES rentals.tbl_kraftfahrzeuge (kraftfahrzeuge_id);

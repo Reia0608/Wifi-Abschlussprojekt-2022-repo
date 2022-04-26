@@ -66,18 +66,24 @@ export default class Application {
 			}
 			else 
 			{
-				this.Sidebar = new Sidebar(sidebarArgs);
-				this.Banner = new Banner(bannerArgs);
-				if (location.hash) this.Navigate(location.hash);
-				else this.Navigate('#main');
+				this.ApiPageInit((response) => 
+				{
+					this.Sidebar = new Sidebar(sidebarArgs);
+					this.Banner = new Banner(bannerArgs);
+					if (location.hash) this.Navigate(location.hash);
+					else this.Navigate('#main');
+				})
 			}
 		}
 		else 
 		{
-			this.Sidebar = new Sidebar(sidebarArgs);
-			this.Banner = new Banner(bannerArgs);
-			if (location.hash) this.Navigate(location.hash);
-			else this.Navigate('#main');
+			this.ApiPageInit((response) => 
+			{
+				this.Sidebar = new Sidebar(sidebarArgs);
+				this.Banner = new Banner(bannerArgs);
+				if (location.hash) this.Navigate(location.hash);
+				else this.Navigate('#main');
+			})
 		}
 		
 		//=====================================================
