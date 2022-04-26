@@ -42,6 +42,12 @@ ALTER TABLE IF EXISTS rentals.tbl_users
     ADD COLUMN merkmalgiltbis date;
 	
 ALTER TABLE IF EXISTS rentals.tbl_users
+    ADD COLUMN bilder_id NUMERIC;
+	
+ALTER TABLE rentals.tbl_users 
+	ADD CONSTRAINT users_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
+	
+ALTER TABLE IF EXISTS rentals.tbl_users
 OWNER TO postgres;
 
 CREATE SEQUENCE rentals.tbl_users_seq START WITH 1 INCREMENT BY 1;
@@ -66,10 +72,22 @@ CREATE TABLE rentals.tbl_kraftfahrzeuge
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
-OWNER TO postgres;
+	OWNER TO postgres;
 	
 ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
-ADD CONSTRAINT kraftfahrzeuge_pk PRIMARY KEY (kraftfahrzeuge_id);
+	ADD CONSTRAINT kraftfahrzeuge_pk PRIMARY KEY (kraftfahrzeuge_id);
+
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
+    ADD COLUMN bilder_id NUMERIC;
+	
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
+    ADD COLUMN aktueller_standort_id numeric;
+
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
+    ADD COLUMN adresse_id numeric;
+	
+ALTER TABLE rentals.tbl_kraftfahrzeuge 
+	ADD CONSTRAINT kraftfahrzeuge_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
 
 CREATE SEQUENCE rentals.tbl_kraftfahrzeuge_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_kraftfahrzeuge_seq TO vrentalsuser;
@@ -93,7 +111,7 @@ ALTER TABLE IF EXISTS rentals.tbl_ausgaben
     OWNER TO postgres;
 
 ALTER TABLE rentals.tbl_ausgaben
-ADD CONSTRAINT ausgaben_pk PRIMARY KEY (ausgaben_id);
+	ADD CONSTRAINT ausgaben_pk PRIMARY KEY (ausgaben_id);
 
 CREATE SEQUENCE rentals.tbl_ausgaben_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_ausgaben_seq TO vrentalsuser;
@@ -115,10 +133,13 @@ ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge_ausgaben
     OWNER TO postgres;
 	
 ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben
-ADD CONSTRAINT kraftfahrzeuge_ausgaben_pk PRIMARY KEY (kraftfahrzeuge_id, ausgaben_id);
+	ADD CONSTRAINT kraftfahrzeuge_ausgaben_pk PRIMARY KEY (kraftfahrzeuge_id, ausgaben_id);
 
-ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben ADD CONSTRAINT kraftfahrzeugeausgaben_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
-ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeuge_id) REFERENCES rentals.tbl_kraftfahrzeuge (kraftfahrzeuge_id);
+ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
+	ADD CONSTRAINT kraftfahrzeugeausgaben_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
+	
+ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
+	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeuge_id) REFERENCES rentals.tbl_kraftfahrzeuge (kraftfahrzeuge_id);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kraftfahrzeuge_ausgaben TO vrentalsuser;
 
@@ -133,20 +154,127 @@ CREATE TABLE rentals.tbl_schaden
     schadensart character varying,
     beschreibung text,
     anfallendekosten double precision
-	-- bilder liste
 );
+
+ALTER TABLE IF EXISTS rentals.tbl_schaden
+    ADD COLUMN bilder_id NUMERIC;
+	
+
+ALTER TABLE rentals.tbl_schaden 
+	ADD CONSTRAINT schaden_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
 
 ALTER TABLE IF EXISTS rentals.tbl_schaden
     OWNER to postgres;
 	
 ALTER TABLE rentals.tbl_schaden
-ADD CONSTRAINT schaden_pk PRIMARY KEY (schaden_id);
+	ADD CONSTRAINT schaden_pk PRIMARY KEY (schaden_id);
 
 CREATE SEQUENCE rentals.tbl_schaden_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_schaden_seq TO vrentalsuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_schaden TO vrentalsuser;
 
+-- #########################################################################
+-- ######################## TABLE ausgabenstelle ###########################
+-- #########################################################################
+
+CREATE TABLE rentals.tbl_ausgabenstelle
+(
+    ausgabenstelle_id numeric NOT NULL,
+    anhaenger_id numeric,
+    kraftfahrzeuge_id numeric,
+    adresse_id numeric
+);
+
+ALTER TABLE rentals.tbl_ausgabenstelle
+	ADD CONSTRAINT ausgabenstelle_pk PRIMARY KEY (ausgabenstelle_id);
+
+CREATE SEQUENCE rentals.tbl_ausgabenstelle_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_ausgabenstelle_seq TO vrentalsuser;
+
+ALTER TABLE rentals.tbl_ausgabenstelle 
+	ADD CONSTRAINT ausgabenstelle_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
+
+ALTER TABLE IF EXISTS rentals.tbl_ausgabenstelle
+    OWNER to postgres;
+	
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_ausgabenstelle TO vrentalsuser;
+	
+-- #########################################################################
+-- ########################## TABLE anhaenger ##############################
+-- #########################################################################
+
+CREATE TABLE rentals.tbl_anhaenger
+(
+    anhaenger_id numeric NOT NULL,
+    aktueller_standort_id numeric,
+    ausgaben_id numeric,
+    schaden_id numeric,
+    art character varying,
+    zustand integer,
+    kategorie character varying,
+    bilder_id numeric,
+    adresse_id numeric
+);
+
+ALTER TABLE rentals.tbl_anhaenger
+	ADD CONSTRAINT anhaenger_pk PRIMARY KEY (anhaenger_id);
+
+CREATE SEQUENCE rentals.tbl_anhaenger_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_anhaenger_seq TO vrentalsuser;
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
+
+-- Note: habe aus Versehen einen foreign key namens anhaenger_adresse_fk in der Tabelle tbl_ausgabenstelle angelegt. Habe es mit forlgender Command wieder gelöscht:
+--ALTER TABLE rentals.tbl_ausgabenstelle
+--DROP CONSTRAINT anhaenger_adresse_fk;
+
+
+-- VORSICHT! Schlechter Name aktueller_standort_fk sollte anhaenger_adresse_fk heissen!
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT aktueller_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_schaden_fk FOREIGN KEY (schaden_id) REFERENCES rentals.tbl_schaden (schaden_id);
+
+ALTER TABLE rentals.tbl_anhaenger 
+	ADD CONSTRAINT anhaenger_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
+
+ALTER TABLE IF EXISTS rentals.tbl_anhaenger
+    OWNER to postgres;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_anhaenger TO vrentalsuser;
+	
+-- #########################################################################
+-- ############################ TABLE adresse ##############################
+-- #########################################################################
+
+	CREATE TABLE rentals.tbl_adresse
+(
+    adresse_id numeric,
+    bezeichnung character varying,
+    land character varying,
+    stadt_ort character varying,
+    plz character varying,
+    strasse character varying,
+    strassennummer character varying
+);
+
+ALTER TABLE rentals.tbl_adresse
+	ADD CONSTRAINT adresse_pk PRIMARY KEY (adresse_id);
+
+CREATE SEQUENCE rentals.tbl_adresse_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_adresse_seq TO vrentalsuser;
+
+ALTER TABLE IF EXISTS rentals.tbl_adresse
+    OWNER to postgres;
+	
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_adresse TO vrentalsuser;
 	
 -- #########################################################################
 -- ############################# TABLE bilder ##############################
@@ -159,10 +287,13 @@ CREATE TABLE rentals.tbl_bilder
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bilder
+    ADD COLUMN bild_url character varying;
+
+ALTER TABLE IF EXISTS rentals.tbl_bilder
     OWNER to postgres;
 	
 ALTER TABLE rentals.tbl_bilder
-ADD CONSTRAINT bilder_pk PRIMARY KEY (bilder_id);
+	ADD CONSTRAINT bilder_pk PRIMARY KEY (bilder_id);
 
 CREATE SEQUENCE rentals.tbl_bilder_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_bilder_seq TO vrentalsuser;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VRentalsClasses.Interfaces
 {
-    public interface ILandfahrzeug: IFahrzeug, IMietgegenstand
+    public interface ILandfahrzeug: IFahrzeug
     {
     }
 }

@@ -27,10 +27,13 @@ namespace VRentalsRESTAPI.Controllers
         public FileStreamResult GetBild(int id)
         {
             Kraftfahrzeug kraftfahrzeug = Kraftfahrzeug.Get(id);
-            if (kraftfahrzeug?.BildBytes != null)
+            if (kraftfahrzeug?.BildBytesList != null)
             {
-                MemoryStream memoryStream = new MemoryStream(kraftfahrzeug.BildBytes);
-                return new FileStreamResult(memoryStream, "image/jpeg");
+                foreach(byte[] byteBild in kraftfahrzeug.BildBytesList)
+                {
+                    MemoryStream memoryStream = new MemoryStream(byteBild);
+                    return new FileStreamResult(memoryStream, "image/jpeg");
+                } 
             }
             return null;
         }
@@ -84,9 +87,14 @@ namespace VRentalsRESTAPI.Controllers
                 if(kraftfahrzeug == null) result = NotFound();
                 else
                 {
-                    MemoryStream memoryStream = new MemoryStream();
-                    file.CopyTo(memoryStream);
-                    kraftfahrzeug.BildBytes = memoryStream.ToArray();
+                    int iterator = 0;
+                    foreach (byte[] bildBytes in kraftfahrzeug.BildBytesList)
+                    {
+                        MemoryStream memoryStream = new MemoryStream();
+                        file.CopyTo(memoryStream);
+                        kraftfahrzeug.BildBytesList[iterator] = memoryStream.ToArray();
+                        iterator++;
+                    }
                     if (kraftfahrzeug.Save() == 1) result = Ok(kraftfahrzeug);
                     else result=NoContent();
                 }

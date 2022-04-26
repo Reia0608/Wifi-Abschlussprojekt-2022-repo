@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using VRentalsClasses.Models;
+using VRentalsClasses.Interfaces;
 
 namespace VRentalsRESTAPI.Controllers
 {

@@ -8,7 +8,7 @@ using VRentalsClasses.Interfaces;
 
 namespace VRentalsClasses.Models
 {
-    public class Kraftfahrzeug: IMietgegenstand
+    public class Kraftfahrzeug: ILandfahrzeug, IMietgegenstand
     {
         //************************************************************************
         #region constants
@@ -68,7 +68,7 @@ namespace VRentalsClasses.Models
 		public int? KraftfahrzeugId { get; set; }
 
 		[JsonPropertyName("mietpreis")]
-		public int? MietPreis { get; set; }
+		public double? MietPreis { get; set; }
 
 		[JsonPropertyName("gegenstandzustand")]
 		public GegenstandZustandTyp GegenstandZustand { get; set; } = GegenstandZustandTyp.frei;
@@ -99,7 +99,7 @@ namespace VRentalsClasses.Models
 		}
 
 		public List<Adresse>? AdressenList { get; set; }
-		public Adresse? AktuellerStandort { get; set; }
+		public IAdresse? AktuellerStandort { get; set; }
 
 		#endregion
 

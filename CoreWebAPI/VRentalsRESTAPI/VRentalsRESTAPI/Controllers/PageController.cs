@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using VRentalsClasses;
+using VRentalsClasses.Models;
 
 namespace VRentalsRESTAPI.Controllers
 {

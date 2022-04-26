@@ -25,7 +25,7 @@ namespace VRentalsClasses.Interfaces
         public List<Schaden>? SchadenListe { get; set; }
 
         // Für welchen Preis wird es vermietet?
-        public int? MietPreis { get; set; }
+        public double? MietPreis { get; set; }
         // Was ist der jetzige Zustand des Gegenstands? Ist es vermietbar? Wird es gerade gewartet? etc... 
         public GegenstandZustandTyp GegenstandZustand { get; set; }
         // Gehört der Gegenstand einer Kategorie an?

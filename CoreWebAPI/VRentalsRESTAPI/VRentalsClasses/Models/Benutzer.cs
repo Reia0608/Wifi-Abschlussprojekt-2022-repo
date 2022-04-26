@@ -22,9 +22,9 @@ namespace VRentalsClasses.Models
 
 		//************************************************************************
 		#region static methods
-		public static Benutzer? Get(ControllerBase controller)
+		public static Benutzer Get(ControllerBase controller)
 		{
-			Benutzer? benutzer = null;
+			Benutzer benutzer = null;
 			string bm = controller.Request.Cookies["benutzermerkmal"];
 			if (!String.IsNullOrEmpty(bm))
 			{
