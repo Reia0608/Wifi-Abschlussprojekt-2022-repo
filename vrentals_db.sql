@@ -88,6 +88,12 @@ ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
 	
 ALTER TABLE rentals.tbl_kraftfahrzeuge 
 	ADD CONSTRAINT kraftfahrzeuge_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
+	
+ALTER TABLE rentals.tbl_kraftfahrzeuge 
+	ADD CONSTRAINT kraftfahrzeuge_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
+	
+ALTER TABLE rentals.tbl_kraftfahrzeuge 
+	ADD CONSTRAINT aktueller_kfz_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);
 
 CREATE SEQUENCE rentals.tbl_kraftfahrzeuge_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_kraftfahrzeuge_seq TO vrentalsuser;
