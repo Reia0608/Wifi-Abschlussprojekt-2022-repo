@@ -5,9 +5,7 @@ using VRentalsClasses.Models;
 
 namespace VRentalsRESTAPI.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class PageController : Controller
+    public class PageController : Controller
     {
 		[HttpGet("init")]
 		public dynamic InitPage(string bm)
