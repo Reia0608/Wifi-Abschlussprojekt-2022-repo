@@ -33,6 +33,7 @@ export default class Application {
 		{
 			app: this,
 			displayFull: false,
+			userName: '',
 			logoffClick: () => 
 			{
 				this.Logoff();
@@ -50,9 +51,10 @@ export default class Application {
 					bannerArgs.displayLogoff = true;
 					this.Benutzer = response.benutzer;
 					// this.GruppeList = r.gruppelist;
-					this.Benutzer = response;
+					this.Benutzer = response.Benutzer;
 					bannerArgs.userName = this.Benutzer.vorname + ' ' + this.Benutzer.nachname;
 					// navArgs.recht = this.Benutzer.rechttext;
+					// this.GruppeList = r.gruppelist;
 					this.Sidebar = new Sidebar(sidebarArgs);
 					this.Banner = new Banner(bannerArgs)
 					if (!location.hash) location.hash = '#main';

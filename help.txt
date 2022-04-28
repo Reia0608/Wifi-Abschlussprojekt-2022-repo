@@ -9,3 +9,9 @@ https://www.git-tower.com/learn/git/faq/solve-merge-conflicts
 ================================================
 
 https://stackoverflow.com/questions/22682870/how-can-i-undo-pushed-commits-using-git
+
+=======================================
+============= Favicon.ico =============
+=======================================
+
+http://www.webweaver.nu/html-tips/favicon.shtml

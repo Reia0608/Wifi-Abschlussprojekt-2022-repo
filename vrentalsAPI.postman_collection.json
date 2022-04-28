@@ -1,0 +1,172 @@
+{
+	"info": {
+		"_postman_id": "8a1f39d8-b9ce-48b9-840a-59a52e1ff556",
+		"name": "vrentalsAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "pageInit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:59968/api/page/init?bm=a66445014683406686e363088388d983",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "59968",
+					"path": [
+						"api",
+						"page",
+						"init"
+					],
+					"query": [
+						{
+							"key": "pwd",
+							"value": "wifi",
+							"disabled": true
+						},
+						{
+							"key": "bm",
+							"value": "a66445014683406686e363088388d983"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Select All Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:59968/api/benutzer/SelectAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "59968",
+					"path": [
+						"api",
+						"benutzer",
+						"SelectAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Benutzer Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:59968/api/benutzer/login?benutzer=reia&pwd=wifi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "59968",
+					"path": [
+						"api",
+						"benutzer",
+						"login"
+					],
+					"query": [
+						{
+							"key": "loginData",
+							"value": "{\"benutzer\": \"reia\", \"pwd\": \"wifi\"}",
+							"disabled": true
+						},
+						{
+							"key": "benutzer",
+							"value": "reia"
+						},
+						{
+							"key": "pwd",
+							"value": "wifi"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Benutzer Logoff",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:59968/api/benutzer/logoff",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "59968",
+					"path": [
+						"api",
+						"benutzer",
+						"logoff"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Select One User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:59968/api/benutzer/?id=a66445014683406686e363088388d983",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "59968",
+					"path": [
+						"api",
+						"benutzer",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "a66445014683406686e363088388d983"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:59968/api/benutzer?benutzer={ \"vorname\": \"daniel\", \"nachname\": \"dusentrieb\", \"username\": \"dusi\", \"passwort\": \"wifi\"}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "59968",
+					"path": [
+						"api",
+						"benutzer"
+					],
+					"query": [
+						{
+							"key": "benutzer",
+							"value": "{ \"vorname\": \"daniel\", \"nachname\": \"dusentrieb\", \"username\": \"dusi\", \"passwort\": \"wifi\"}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

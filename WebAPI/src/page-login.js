@@ -5,6 +5,7 @@ export default class PageLogin
 	constructor(args) 
 	{
 		this.app = args.app;
+		
 		args.app.LoadHTML('./page-login.html', args.app.Main, () => 
 		{
 			const inputUserName = document.getElementById('inputUserName');

@@ -19,7 +19,7 @@ export default class Banner
 				this.displayLogoff = true;
 				this.bannerLogin.classList.add('d-none');
 				this.bannerLogoff.classList.remove('d-none');
-				this.bannerBenutzer.innerText = argsrgs.userName;
+				this.bannerBenutzer.innerText = args.userName;
 			}
 
 			this.bannerLogin.addEventListener('click', (e)=>
