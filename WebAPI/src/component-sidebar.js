@@ -15,11 +15,21 @@ export default class Sidebar
 			this.sideNavButtonLogoff = this.target.querySelector('#sideNavButtonLogoff');
 			this.sideNavButtonHome = this.target.querySelector('#sideNavButtonHome');
 			this.sideNavButtonSearch = this.target.querySelector('#sideNavButtonSearch');
+			this.sideNavButtonProfile = this.target.querySelector('#sideNavButtonProfile');
 			const sideBar = document.getElementById('sideBar');
 			
 			var isOpen = true;
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
+
+			if(args.loggedin)
+			{
+				this.sideNavButtonProfile.classList.remove('d-none');
+			}
+			else
+			{
+				this.sideNavButtonProfile.classList.add('d-none');
+			}
 
 			buttonOpenClose.addEventListener('click', (e)=>
 			{
@@ -71,6 +81,17 @@ export default class Sidebar
 					this.sideNavButtonSearch.classList.add("active");
 					activeSideNavButton.classList.remove("active");
 					activeSideNavButton = this.sideNavButtonSearch;
+				}
+			});
+
+			this.sideNavButtonProfile.addEventListener('click', (e)=>
+			{
+				location.hash = '#profile';
+				if(activeSideNavButton != this.sideNavButtonProfile)
+				{
+					this.sideNavButtonProfile.classList.add("active");
+					activeSideNavButton.classList.remove("active");
+					activeSideNavButton = this.sideNavButtonProfile;
 				}
 			});
 

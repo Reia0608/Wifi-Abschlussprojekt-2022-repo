@@ -22,10 +22,12 @@ namespace VRentalsClasses.Models
 
 		//************************************************************************
 		#region static methods
+
 		public static Benutzer Get(ControllerBase controller)
 		{
 			Benutzer benutzer = null;
-			string bm = controller.Request.Cookies["benutzermerkmal"];
+			Funktionen funktion = new Funktionen();
+			string bm = funktion.GetCookie(controller);
 			if (!String.IsNullOrEmpty(bm))
 			{
 				DBConnection.GetConnection().Open();
@@ -60,14 +62,14 @@ namespace VRentalsClasses.Models
 			return benutzer;
 		}
 
-		public static Benutzer Get(string id)
+		public static Benutzer Get(string benutzermerkmal)
 		{
 			DBConnection.GetConnection().Open();
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
 			int tmpId = 0;
 			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ";
-			if(int.TryParse(id, out tmpId))
+			if(int.TryParse(benutzermerkmal, out tmpId))
             {
 				command.CommandText += "users_id = :pid";
 				command.Parameters.AddWithValue("pid", tmpId);
@@ -75,7 +77,7 @@ namespace VRentalsClasses.Models
             else
             {
 				command.CommandText += "benutzermerkmal = :bm";
-				command.Parameters.AddWithValue("bm", id);
+				command.Parameters.AddWithValue("bm", benutzermerkmal);
             }
 
 			NpgsqlDataReader reader = command.ExecuteReader();
@@ -102,6 +104,50 @@ namespace VRentalsClasses.Models
 			DBConnection.GetConnection().Close();
 			return benutzer;
 		}
+
+		// WIP
+		//public static Benutzer Get(int id)
+		//{
+		//	DBConnection.GetConnection().Open();
+		//	NpgsqlCommand command = new NpgsqlCommand();
+		//	command.Connection = DBConnection.GetConnection();
+		//	int tmpId = 0;
+		//	command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ";
+		//	if (int.TryParse(id, out tmpId))
+		//	{
+		//		command.CommandText += "users_id = :pid";
+		//		command.Parameters.AddWithValue("pid", tmpId);
+		//	}
+		//	else
+		//	{
+		//		command.CommandText += "benutzermerkmal = :bm";
+		//		command.Parameters.AddWithValue("bm", id);
+		//	}
+
+		//	NpgsqlDataReader reader = command.ExecuteReader();
+		//	reader.Read();
+
+		//	Benutzer benutzer = new Benutzer()
+		//	{
+		//		UserId = reader.GetInt32(0),
+		//		Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
+		//		Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
+		//		Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
+		//		GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
+		//		UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
+		//		PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
+		//		//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
+		//		RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
+		//		LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
+		//		BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
+		//		MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
+		//		Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
+		//		Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
+		//	};
+		//	reader.Close();
+		//	DBConnection.GetConnection().Close();
+		//	return benutzer;
+		//}
 
 		public static Benutzer Get(string userName, string pwd)
 		{
@@ -238,6 +284,8 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("fahrerliste")]
 		public List<Fahrer>? FahrerListe { get; set; }
 
+		public byte[]? ProfilBild { get; set; }
+
 		#endregion
 
 		//************************************************************************
@@ -328,8 +376,6 @@ namespace VRentalsClasses.Models
 			result ^= this.Geburtsdatum.HasValue ? this.Geburtsdatum.Value.GetHashCode() : 0;
 			return result;
 		}
-
-
 		#endregion
 
 	}

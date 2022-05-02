@@ -2,12 +2,12 @@
 
 @keyframes sidenav-slide {
     from { left: 0px; }
-    to { left: -280px; }
+    to { left: -285px; }
 }
 
 @keyframes sidenav-button-slide{
-    from { left: 280px; }
-    to {left: 0px; }
+    from { left: 145px; }
+    to {left: -145px; }
 }
 
 * {
@@ -184,25 +184,28 @@
 }
 
 .sidenav-opened {
-    width: 280px;
+    width: 290px;
     height: 100%;
-    position: fixed;
+    position: absolute;
+    z-index: 1;
     margin: 0;
     left: 0px;
 }
 
 .sidenav-closed {
-    width: 280px;
+    width: 290px;
     height: 100%;
-    position: fixed;
+    position: absolute;
+    z-index: 1;
     margin: 0;
     left: -280px;
 }
 
 .sidenav-close-animation {
-    width: 280px;
+    width: 290px;
     height: 100%;
-    position: fixed;
+    position: absolute;
+    z-index: 1;
     margin: 0;
     left: 0px;
     animation-name: sidenav-slide;
@@ -210,9 +213,10 @@
 }
 
 .sidenav-open-animation {
-    width: 280px;
+    width: 290px;
     height: 100%;
-    position: fixed;
+    position: absolute;
+    z-index: 1;
     margin: 0;
     left: 0px;
     animation-name: sidenav-slide;
@@ -223,23 +227,26 @@
 .sidenav-button-close {
     height: 100%;
     width: 20px;
-    position: fixed;
-    left: 280px;
+    position: absolute;
+    z-index: 1;
+    left: 145px;
 }
 
 .sidenav-button-open {
     height: 100%;
     width: 20px;
-    position: fixed;
-    left: 0px;
+    position: absolute;
+    z-index: 1;
+    left: -145px;
     transform: rotateY(180deg);
 }
 
 .sidenav-button-close-animation {
     height: 100%;
     width: 20px;
-    position: fixed;
-    left: 280px;
+    position: absolute;
+    z-index: 1;
+    left: 0px;
     animation-name: sidenav-button-slide;
     animation-duration: 1s;
 }
@@ -247,8 +254,9 @@
 .sidenav-button-open-animation {
     height: 100%;
     width: 20px;
-    position: fixed;
-    left: 280px;
+    position: absolute;
+    z-index: 1;
+    left: -140px;
     animation-name: sidenav-button-slide;
     animation-duration: 1s;
     animation-direction: reverse;
@@ -264,4 +272,6 @@
 
 .button-open-close {
     border: 0;
+    position: absolute;
+    z-index: 1;
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using VRentalsClasses.Models;
 using VRentalsClasses.Interfaces;
 
@@ -24,19 +25,42 @@ namespace VRentalsRESTAPI.Controllers
 			return null;
 		}
 
+
 		[HttpGet("{id}")]
 		public Benutzer SelectOne(string id) => Benutzer.Get(id);
+
+
+		[HttpGet("{id}/bild")]
+		public FileStreamResult GetBild(string benutzermerkmal)
+		{
+			Benutzer benutzer = Benutzer.Get(benutzermerkmal);
+			if (benutzer?.ProfilBild != null)
+			{
+				MemoryStream memoryStream = new MemoryStream(benutzer.ProfilBild);
+				return new FileStreamResult(memoryStream, "image/jpeg");
+			}
+			return null;
+		}
+
 
 		[HttpDelete("logoff")]
 		public IActionResult LogoffPerson()
 		{
 			Benutzer benutzer = Benutzer.Get(this);
 			Response.Cookies.Delete("benutzermerkmal");
-			benutzer.BenutzerMerkmal = String.Empty;
-			benutzer.MerkmalGiltBis = DateTime.Now.AddMinutes(-1);
-			benutzer.Save();
-			return Ok();
+			try
+            {
+				benutzer.BenutzerMerkmal = String.Empty;
+				benutzer.MerkmalGiltBis = DateTime.Now.AddMinutes(-1);
+				benutzer.Save();
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return NotFound("user not found!");
+			}	
 		}
+
 
 		[HttpPost("login")]
 		public IActionResult LoginPerson([FromBody] Dictionary<string, string> loginData)
@@ -95,6 +119,5 @@ namespace VRentalsRESTAPI.Controllers
 			}
 			return result;
 		}
-
 	}
 }

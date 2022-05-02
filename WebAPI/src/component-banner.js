@@ -14,7 +14,7 @@ export default class Banner
 			this.bannerBenutzer = this.target.querySelector('#bannerBenutzer');
 			this.divSignIn = this.target.querySelector('#divSignIn');
 
-			if (args.userName) 
+			if (args.loggedin) 
 			{
 				this.displayLogoff = true;
 				this.bannerLogin.classList.add('d-none');
@@ -29,7 +29,7 @@ export default class Banner
 
 			this.bannerLogoff.addEventListener('click', () => {
 				if (confirm('Wollen Sie sich wirklich abmelden?')) {
-					this.DisplayLogoff = false;
+					this.displayLogoff = false;
 					args.logoffClick();
 				}
 			});
@@ -72,14 +72,14 @@ export default class Banner
 			});
 		}
 	
-		get DisplayFull() 
+		get DisplayBanner() 
 		{
-			return this.displayFull;
+			return this.displayBanner;
 		}
-		set DisplayFull(val) 
+		set DisplayBanner(val) 
 		{
-			this.displayFull = val;
-			if (this.displayFull) this.divSignIn.classList.remove('d-none');
+			this.displayBanner = val;
+			if (this.displayBanner == true) this.divSignIn.classList.remove('d-none');
 			else this.divSignIn.classList.add('d-none');
 		}
 	

@@ -10,14 +10,5 @@ export default class PageMain
 		{
 
 		});
-		new Sidebar(args);
-		new Banner(args);
-
-
-
-
-
-
 	}
-
 }

@@ -26,6 +26,8 @@ namespace VRentalsClasses.Interfaces
 		public string? BenutzerMerkmal { get; set; }
 
 		public DateTime? MerkmalGiltBis { get; set; }
+
+		public byte[] ProfilBild { get; set; }
 		#endregion
 		//************************************************************************
 	}

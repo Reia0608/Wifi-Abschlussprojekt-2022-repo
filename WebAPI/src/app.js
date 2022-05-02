@@ -5,6 +5,7 @@ import PageLogin from './page-login.js';
 import PageMain from './page-home.js';
 import PageSignup from './page-signup.js';
 import PageSearch from './page-search.js';
+import PageProfile from './page-profile.js';
 
 export default class Application {
 	constructor() {
@@ -18,11 +19,12 @@ export default class Application {
         this.Aside = document.querySelector('aside');
 		this.apiBaseUrl = 'http://localhost:59968/api/';
 		this.Benutzer = null;
-		
+
 		let sidebarArgs = 
 		{
 			app: this,
 			displayFull: false,
+			loggedin: false,
 			logoffClick: () =>
 			{
 				this.logoff();
@@ -32,7 +34,10 @@ export default class Application {
 		let bannerArgs =
 		{
 			app: this,
-			displayFull: false,
+			Benutzer: null,
+			displayBanner: false,
+			displayLogoff: false,
+			loggedin: false,
 			userName: '',
 			logoffClick: () => 
 			{
@@ -47,12 +52,13 @@ export default class Application {
 			{
 				this.ApiPageInit((response) => 
 				{
-					bannerArgs.displayFull = true;
+					bannerArgs.loggedin = true;
+					sidebarArgs.loggedin = true;
+					bannerArgs.displayBanner = true;
 					bannerArgs.displayLogoff = true;
-					this.Benutzer = response.benutzer;
+					bannerArgs.Benutzer = response.benutzer;
 					// this.GruppeList = r.gruppelist;
-					this.Benutzer = response.Benutzer;
-					bannerArgs.userName = this.Benutzer.vorname + ' ' + this.Benutzer.nachname;
+					bannerArgs.userName = response.benutzer.vorname + ' ' + response.benutzer.nachname;
 					// navArgs.recht = this.Benutzer.rechttext;
 					// this.GruppeList = r.gruppelist;
 					this.Sidebar = new Sidebar(sidebarArgs);
@@ -88,6 +94,11 @@ export default class Application {
 		window.addEventListener('hashchange', (e) => 
 		{
 			this.Navigate(location.hash);
+			if(this.displayLogoff)
+			{
+				this.Banner = new Banner(bannerArgs);
+			}
+			
 		});
 
 			// back navigation im browser
@@ -145,6 +156,8 @@ export default class Application {
 				break;
 			case '#search':
 				new PageSearch(args);
+			case '#profile':
+				new PageProfile(args);
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;
