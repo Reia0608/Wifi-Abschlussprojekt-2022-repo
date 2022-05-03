@@ -1,15 +1,18 @@
 
-import Sidebar from './component-sidebar.js';
-import Banner from './component-banner.js';
+//import Sidebar from './component-sidebar.js';
+//import Banner from './component-banner.js';
 import PageLogin from './page-login.js';
 import PageMain from './page-home.js';
 import PageSignup from './page-signup.js';
 import PageSearch from './page-search.js';
 import PageProfile from './page-profile.js';
+import LoginManager from './login-manager.js';
 
-export default class Application {
-	constructor() {
 
+export default class Application 
+{
+	constructor() 
+	{
 		//=====================================================
 		// init html parts from 
 		this.Body = document.querySelector('body');
@@ -20,88 +23,10 @@ export default class Application {
 		this.apiBaseUrl = 'http://localhost:59968/api/';
 		this.Benutzer = null;
 
-		let sidebarArgs = 
-		{
-			app: this,
-			displayFull: false,
-			loggedin: false,
-			logoffClick: () =>
-			{
-				this.logoff();
-			}
-		};
+		new LoginManager(this.app);
 
-		let bannerArgs =
-		{
-			app: this,
-			Benutzer: null,
-			displayBanner: false,
-			displayLogoff: false,
-			loggedin: false,
-			userName: '',
-			logoffClick: () => 
-			{
-				this.Logoff();
-			}
-		}
 
-		if (document.cookie) 
-		{
-			const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-			if (benutzerMerkmal) 
-			{
-				this.ApiPageInit((response) => 
-				{
-					bannerArgs.loggedin = true;
-					sidebarArgs.loggedin = true;
-					bannerArgs.displayBanner = true;
-					bannerArgs.displayLogoff = true;
-					bannerArgs.Benutzer = response.benutzer;
-					// this.GruppeList = r.gruppelist;
-					bannerArgs.userName = response.benutzer.vorname + ' ' + response.benutzer.nachname;
-					// navArgs.recht = this.Benutzer.rechttext;
-					// this.GruppeList = r.gruppelist;
-					this.Sidebar = new Sidebar(sidebarArgs);
-					this.Banner = new Banner(bannerArgs)
-					if (!location.hash) location.hash = '#main';
-					this.Navigate(location.hash);
-					console.log("angemeldet!");
-
-				}, (ex) => 
-				{
-					alert(ex);
-				}, benutzerMerkmal);
-			}
-			else 
-			{
-				this.Sidebar = new Sidebar(sidebarArgs);
-				this.Banner = new Banner(bannerArgs);
-				if (location.hash) this.Navigate(location.hash);
-				else this.Navigate('#main');
-			}
-		}
-		else 
-		{
-			this.Sidebar = new Sidebar(sidebarArgs);
-			this.Banner = new Banner(bannerArgs);
-			if (location.hash) this.Navigate(location.hash);
-			else this.Navigate('#main');
-		}
-		
-		//=====================================================
-		// common events
-		// horcht auf den change des hash parts in der url
-		window.addEventListener('hashchange', (e) => 
-		{
-			this.Navigate(location.hash);
-			if(this.displayLogoff)
-			{
-				this.Banner = new Banner(bannerArgs);
-			}
-			
-		});
-
-			// back navigation im browser
+		// back navigation im browser
 		window.onpopstate = (event) => 
 		{
 			if (event.state) 

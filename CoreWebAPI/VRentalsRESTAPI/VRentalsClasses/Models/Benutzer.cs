@@ -234,7 +234,32 @@ namespace VRentalsClasses.Models
 		#endregion
 
 		//************************************************************************
+		#region constructors#
+		public Benutzer()
+		{
 
+		}
+
+		public Benutzer(NpgsqlDataReader reader)
+		{
+			UserId = reader.GetInt32(0);
+			Vorname = reader.IsDBNull(1) ? null : reader.GetString(1);
+			Nachname = reader.IsDBNull(2) ? null : reader.GetString(2);
+			Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
+			GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4);
+			UserName = reader.IsDBNull(5) ? null : reader.GetString(5);
+			PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6);
+			//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10);
+			RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7);
+			LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8);
+			BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9);
+			MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10);
+			Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11);
+			Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12);
+		}
+
+		#endregion
+		//************************************************************************
 		#region properties
 		[JsonPropertyName("userid")]
 		public int? UserId { get; set; }

@@ -1,4 +1,7 @@
 import "./../node_modules/@iconify/iconify/dist/iconify.min.js";
+import Sidebar from './component-sidebar.js';
+import Banner from './component-banner.js';
+import LoginManager from "./login-manager.js";
 
 export default class PageLogin 
 {
@@ -16,10 +19,10 @@ export default class PageLogin
 
 			//this.app.Sidebar.Display = false;
 
-			if(args.benutzer)
-			{
-				inputUserName.value = args.benutzer;
-			}
+			// if(args.benutzer)
+			// {
+			// 	inputUserName.value = args.benutzer;
+			// }
 
 			//======================================================================
 			// events
@@ -32,31 +35,21 @@ export default class PageLogin
 			// login
 			buttonLogin.addEventListener( 'click', () => 
 			{
-
 				if (inputUserName.value && inputPassword.value) 
 				{
 					this.app.ApiBenutzerLogin((response) => 
 					{
 						if (response.success) 
 						{
-							this.app.Benutzer = response.benutzer;
-							this.app.Header.DisplayLogoff = true;
-							switch(response.benutzer.rolle) 
-								{
-									case 0:
-										this.app.Banner.bannerBenutzer = this.app.Benutzer.nachname + ' ' + this.app.Benutzer.vorname + ' (' + this.app.Benutzer.rolle.toString() + ')';
-										break;
-									case 1:
-										this.app.Banner.bannerBenutzer = this.app.Benutzer.nachname + ' ' + this.app.Benutzer.vorname + ' (' + this.app.Benutzer.rolle.toString() + ')';
-										break;
-									default:
-										this.app.Banner.bannerBenutzer = this.app.Benutzer.nachname + ' ' + this.app.Benutzer.vorname;
-										break;
-								}
-							window.open('#main', '_self');
+							console.log('login fetch successful!');
+							new LoginManager();
 						}
-						else alert(response.message);
-					}, (ex) => {
+						else 
+						{
+							alert(response.message);
+						}
+					}, (ex) => 
+					{
 						alert(ex);
 					}, 
 					{
@@ -64,10 +57,11 @@ export default class PageLogin
 						pwd: inputPassword.value
 					});
 				}
-				else 
+				else
+				{
 					alert('Benutzer/Passwort fehlt!!!');
-				
-			});
+				} 
+			})
 
 			//======================================================================
 			// eye-con

@@ -17,8 +17,7 @@ export default class Sidebar
 			this.sideNavButtonSearch = this.target.querySelector('#sideNavButtonSearch');
 			this.sideNavButtonProfile = this.target.querySelector('#sideNavButtonProfile');
 			const sideBar = document.getElementById('sideBar');
-			
-			var isOpen = true;
+
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
 
