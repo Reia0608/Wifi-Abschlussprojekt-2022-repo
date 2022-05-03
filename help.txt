@@ -28,4 +28,6 @@ https://stackoverflow.com/questions/24625303/why-do-we-have-to-specify-frombody-
 
 git checkout -b <name of the new branch>
 
-
+switch branches with:
+1. git branch (to check which ones are available, or which one you are currently on *)
+2. git checkout <name of branch to switch to>
