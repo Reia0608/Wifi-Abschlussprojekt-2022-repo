@@ -43,9 +43,9 @@ CREATE TABLE rentals.tbl_users
     username character varying,
     passwort character varying,
     rolle integer,
-    fk_users_kontaktliste bit,
     registrierungstag date,
     letzteanmeldung date,
+	kontakt_id numeric;
     PRIMARY KEY (pk_users)
 );
 
@@ -66,6 +66,27 @@ GRANT USAGE ON rentals.tbl_users_seq to vrentalsuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_users TO vrentalsuser;
 
+-- #########################################################################
+-- ########################## TABLE kontakt ################################
+-- #########################################################################
+
+CREATE TABLE rentals.tbl_kontakt
+(
+    kontakt_id numeric NOT NULL,
+    kategorie character varying,
+    wert character varying
+);
+
+ALTER TABLE IF EXISTS rentals.tbl_kontakt
+    OWNER to postgres;
+
+ALTER TABLE rentals.tbl_kontakt
+	ADD CONSTRAINT kontakt_pk PRIMARY KEY (kontakt_id);
+	
+CREATE SEQUENCE rentals.tbl_kontakt_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_kontakt_seq TO vrentalsuser;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kontakt TO vrentalsuser;
 
 -- #########################################################################
 -- ###################### TABLE kraftfahrzeuge #############################
@@ -378,3 +399,6 @@ ALTER TABLE rentals.tbl_mietgegenstand
 
 ALTER TABLE rentals.tbl_bewegung
 	ADD CONSTRAINT bewegung_mietgegenstand_fk FOREIGN KEY (mietgegenstand_id) REFERENCES rentals.tbl_mietgegenstand (mietgegenstand_id);
+	
+ALTER TABLE rentals.tbl_users
+	ADD CONSTRAINT users_kontakt_fk FOREIGN KEY (kontakt_id) REFERENCES rentals.tbl_kontakt (kontakt_id);

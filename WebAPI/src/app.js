@@ -92,8 +92,10 @@ export default class Application
 				break;
 			case '#search':
 				new PageSearch(args);
+				break;
 			case '#profile':
 				new PageProfile(args);
+				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;
@@ -181,5 +183,18 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-
+	ApiPageSearch(successCallback, errorCallback, term) 
+	{
+		fetch(this.apiBaseUrl + 'page/search' + (term ? '?term=' + term : '') , 
+		{
+			method: 'GET'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) return response.json();
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
 }
