@@ -42,7 +42,7 @@ export default class PageLogin
 						if (response.success) 
 						{
 							console.log('login fetch successful!');
-							new LoginManager();
+							new LoginManager(this.app);
 						}
 						else 
 						{

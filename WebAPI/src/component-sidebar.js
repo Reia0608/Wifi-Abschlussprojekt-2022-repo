@@ -20,14 +20,18 @@ export default class Sidebar
 
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
-
+			
 			if(args.loggedin)
 			{
 				this.sideNavButtonProfile.classList.remove('d-none');
+				this.sideNavButtonLogin.classList.add('d-none');
+				this.sideNavButtonLogoff.classList.remove('d-none');
 			}
 			else
 			{
 				this.sideNavButtonProfile.classList.add('d-none');
+				this.sideNavButtonLogin.classList.remove('d-none');
+				this.sideNavButtonLogoff.classList.add('d-none');
 			}
 
 			buttonOpenClose.addEventListener('click', (e)=>
@@ -110,35 +114,32 @@ export default class Sidebar
 			
 			if(this.sideNavButtonLogoff)
 			{
-				this.sideNavButtonLogoff.addEventListener('click', () => {
+				this.sideNavButtonLogoff.addEventListener('click', () => 
+				{
+					// Does not work as intended. Abmelden button only becomes active after canceling the confirm. WIP
+					this.sideNavButtonLogoff.classList.add("active");
+					activeSideNavButton.classList.remove("active");
+					activeSideNavButton = this.sideNavButtonLogoff;
 					if (confirm('Wollen Sie sich wirklich abmelden?')) {
 						this.DisplayLogoff = false;
 						args.logoffClick();
 					}
 				});
 			}
-
-
-
-
-
 		});		
-
-
 	}
-
 
 	//================================================
 	// properties
 	//================================================
-	get DisplayFull() 
+	get DisplaySidebar() 
 	{
-		return this.displayFull;
+		return this.displaySidebar;
 	}
-	set DisplayFull(val) 
+	set DisplaySidebar(val) 
 	{
-		this.displayFull = val;
-		if (this.displayFull) this.nav.classList.remove('d-none');
+		this.displaySidebar = val;
+		if (this.displaySidebar) this.nav.classList.remove('d-none');
 		else this.nav.classList.add('d-none');
 	}
 
@@ -146,24 +147,20 @@ export default class Sidebar
 	{
 		return this.displayLogoff;
 	}
-
+	// unnecessary?
 	set DisplayLogoff(val) 
 	{
 		this.displayLogoff = val;
 
-		if (this.displayLogoff) {
+		if (this.displayLogoff) 
+		{
 			this.sideNavButtonLogin.classList.add('d-none');
 			this.sideNavButtonLogoff.classList.remove('d-none');
 		}
-		else {
+		else 
+		{
 			this.sideNavButtonLogin.classList.remove('d-none');
 			this.sideNavButtonLogoff.classList.add('d-none');
 		}
 	}
-
-
-
-
-
-
 }

@@ -1,43 +1,41 @@
 import './app.js';
 import Sidebar from './component-sidebar.js';
 import Banner from './component-banner.js';
-import PageLogin from './page-login.js';
 
 
 export default class LoginManager
 {
-    constructor(args)
+    constructor(appArgs)
     {
         //=====================================================
 		// local constants
 
-        const loginArgs = args;
 
         //=====================================================
 		// local variables
 
         let sidebarArgs = 
 		{
-			app: this,
+			app: appArgs,
 			loggedin: false,
-			displayFull: false,
+			displaySidebar: false,
 			logoffClick: () =>
 			{
-				this.logoff();
+				this.Logoff(appArgs);
 			}
 		};
 
 		let bannerArgs =
 		{
-			app: this,
+			app: appArgs,
 			Benutzer: null,
-			leggedin: this,
+			loggedin: false,
 			displayBanner: false,
 			displayLogoff: false,
 			userName: '',
 			logoffClick: () => 
 			{
-				this.Logoff();
+			 	this.Logoff(appArgs);
 			}
 		}
 
@@ -49,7 +47,7 @@ export default class LoginManager
             const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
 			if (benutzerMerkmal) 
             {
-                this.app.ApiPageInit((response) => 
+                appArgs.ApiPageInit((response) => 
                 {
                     bannerArgs.loggedin = true;
                     sidebarArgs.loggedin = true;
@@ -71,10 +69,10 @@ export default class LoginManager
                     }
                     // navArgs.recht = this.Benutzer.rechttext;
                     // this.GruppeList = r.gruppelist;
-                    loginArgs.Sidebar = new Sidebar(sidebarArgs);
-                    loginArgs.Banner = new Banner(bannerArgs)
+                    appArgs.Sidebar = new Sidebar(sidebarArgs);
+                    appArgs.Banner = new Banner(bannerArgs)
                     if (!location.hash) location.hash = '#main';
-                    loginArgs.Navigate(location.hash);
+                    appArgs.Navigate(location.hash);
                     console.log("angemeldet!");
 
                 }, (ex) => 
@@ -86,79 +84,53 @@ export default class LoginManager
             {
                 this.Sidebar = new Sidebar(sidebarArgs);
                 this.Banner = new Banner(bannerArgs);
-                if (location.hash) loginArgs.Navigate(location.hash);
-                else loginArgs.Navigate('#main');
+                if (location.hash) appArgs.Navigate(location.hash);
+                else appArgs.Navigate('#main');
             }
 		}
 		else 
 		{
+			bannerArgs.loggedin = false;
+			sidebarArgs.loggedin = false;
+			bannerArgs.displayBanner = false;
+			bannerArgs.displayLogoff = false;
 			this.Sidebar = new Sidebar(sidebarArgs);
 			this.Banner = new Banner(bannerArgs);
-			if (location.hash) loginArgs.Navigate(location.hash);
-			else loginArgs.Navigate('#main');
+			if (location.hash) appArgs.Navigate(location.hash);
+			else appArgs.Navigate('#main');
 		}
-
-        
-		//=====================================================
-		// common events
-		// horcht auf den change des hash parts in der url
-		window.addEventListener('hashchange', (e) => 
-		{
-			this.Navigate(location.hash);
-			if(this.displayLogoff)
-			{
-				this.Banner = new Banner(bannerArgs);
-			}
-		});
     }
 
     //=============================================================================
 	// public methods
 	//=============================================================================
 
-    // Bad Solution! Copied from app.js!
-    LoadHTML(url, target, loadEvent) 
+	Logoff(appArgs) 
 	{
-    	return fetch(url).then(response => response.text()).then((html) => 
+		appArgs.ApiBenutzerLogoff(() => 
 		{
-			target.innerHTML = html;
-			loadEvent();
-		});
-	}
-
-
-    // Bad Solution! Copied from app.js!
-    Navigate(href) 
-	{
-		let args = { app: this};
-		let hrefPart = href.split('?');
-		if(hrefPart.length > 1)
-		{
-			let pars = new URLSearchParams(hrefPart[1]);
-			for (let key of pars.keys())
+			let sidebarArgs = 
 			{
-				args[key] = pars.get(key);
-			}
-		}
+				app: appArgs,
+				loggedin: false,
+				displaySidebar: true,
+			};
 
-		switch(hrefPart[0]) 
+			let bannerArgs =
+			{
+				app: appArgs,
+				loggedin: false,
+				displayBanner: true,
+				displayLogoff: false,
+			}
+
+			this.Sidebar = new Sidebar(sidebarArgs);
+			this.Banner = new Banner(bannerArgs);
+			window.open('#main', '_self');
+			console.log("abgemeldet!");
+		}, (ex) => 
 		{
-			case '#login':
-				new PageLogin(args);
-				break;
-			case '#signup':
-				new PageSignup(args);
-				break;
-			case '#main':
-				new PageMain(args);
-				break;
-			case '#search':
-				new PageSearch(args);
-			case '#profile':
-				new PageProfile(args);
-			default:
-				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
-				break;
-		}
+			alert(ex);
+		});
 	}
 }

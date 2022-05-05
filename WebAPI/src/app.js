@@ -23,8 +23,19 @@ export default class Application
 		this.apiBaseUrl = 'http://localhost:59968/api/';
 		this.Benutzer = null;
 
-		new LoginManager(this.app);
+		new LoginManager(this);
 
+		//=====================================================
+		// common events
+		// horcht auf den change des hash parts in der url
+		window.addEventListener('hashchange', (e) => 
+		{
+			this.Navigate(location.hash);
+			if(this.displayLogoff)
+			{
+				this.Banner = new Banner(bannerArgs);
+			}
+		});
 
 		// back navigation im browser
 		window.onpopstate = (event) => 
@@ -88,18 +99,6 @@ export default class Application
 				break;
 		}
 	}
-
-
-	Logoff() {
-		this.ApiBenutzerLogoff(() => {
-			window.open('#main', '_self');
-			console.log("abgemeldet!");
-		}, (ex) => {
-			alert(ex);
-		});
-
-	}
-
 
 	//==================================================================================
 	// API calls
