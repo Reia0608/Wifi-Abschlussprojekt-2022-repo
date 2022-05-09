@@ -17,17 +17,31 @@ namespace VRentalsRESTAPI.Controllers
 		[HttpGet()]
 		public IEnumerable<Benutzer> SelectAll()
 		{
-			Benutzer benutzer = Benutzer.Get(this);
-            if (benutzer?.Rolle == RollenTyp.Admin)
-            {
-                return Benutzer.GetList();
-			}
-			return null;
-		}
+            //Benutzer benutzer = Benutzer.Get(this);
+            //         if (benutzer?.Rolle == RollenTyp.Admin)
+            //         {
+            return Benutzer.GetList();
+            //} 
+            //return null;
+        }
 
+		[HttpGet("{bm}/{suchbegriff}")]
+		public List<Benutzer> SearchBenutzer(string bm, string suchbegriff)
+        {
+            //Benutzer benutzer = Benutzer.Get(this);
+            //if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.User)
+            //{
+            List<Benutzer> benutzerListe = Benutzer.SearchList(suchbegriff);
+            return benutzerListe;
+            //}
+            //else
+            //{
+            //    return null;
+            //}
+        }
 
-		[HttpGet("{id}")]
-		public Benutzer SelectOne(string id) => Benutzer.Get(id);
+		[HttpGet("{bm}")]
+		public Benutzer GetBenutzer(string bm) => Benutzer.Get(bm);
 
 
 		[HttpGet("{id}/bild")]

@@ -66,6 +66,20 @@ GRANT USAGE ON rentals.tbl_users_seq to vrentalsuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_users TO vrentalsuser;
 
+ALTER TABLE rentals.tbl_users ADD COLUMN ts_users tsvector
+    GENERATED ALWAYS AS (to_tsvector('german', event_narrative)) STORED;
+	
+	
+	
+	
+CREATE MATERIALIZED VIEW mvw_users
+AS
+SELECT users.users_id, to_tsvector(concat_ws(' ', users.vorname, users.nachname, users.geburtsort, users.username, kontakt.kategorie, kontakt.wert)) AS tsv_users
+FROM rentals.tbl_users AS users
+INNER JOIN rentals.tbl_kontakt AS kontakt ON kontakt.kontakt_id = users.users_id;
+
+
+
 -- #########################################################################
 -- ########################## TABLE kontakt ################################
 -- #########################################################################

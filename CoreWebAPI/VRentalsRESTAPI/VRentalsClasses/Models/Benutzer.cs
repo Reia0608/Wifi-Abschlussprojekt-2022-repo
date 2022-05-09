@@ -18,6 +18,7 @@ namespace VRentalsClasses.Models
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
         private const string COLUMNS = "users_id, vorname, nachname, geburtsdatum, geburtsort," +
 			" username, passwort, registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, geschlecht, rolle";
+		private const string KONTAKT = "tbl_kontakt";
 		#endregion
 
 		//************************************************************************
@@ -25,9 +26,10 @@ namespace VRentalsClasses.Models
 
 		public static Benutzer Get(ControllerBase controller)
 		{
-			Benutzer benutzer = null;
-			Funktionen funktion = new Funktionen();
-			string bm = funktion.GetCookie(controller);
+			Benutzer? benutzer = null;
+			//Funktionen funktion = new Funktionen();
+			//string bm = funktion.GetCookie(controller);
+			string bm = controller.Request.Cookies["benutzermerkmal"];
 			if (!String.IsNullOrEmpty(bm))
 			{
 				DBConnection.GetConnection().Open();
@@ -104,6 +106,55 @@ namespace VRentalsClasses.Models
 			DBConnection.GetConnection().Close();
 			return benutzer;
 		}
+
+		public static List<Benutzer> SearchList(string suchbegriff)
+        {
+			List<Benutzer> result = new List<Benutzer>();
+			string where = "WHERE ";
+			string orderBy = "ORDER BY vorname";
+			// WIP GeschlechtsTyp geschlecht = null;
+			DBConnection.GetConnection().Open();
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			where +=  " vorname LIKE '" + suchbegriff + "'"
+				+ " OR nachname LIKE '" + suchbegriff + "'"
+				//+ " OR geburtsdatum  = CAST('" + suchbegriff + "' AS DATE) "
+				+ " OR geburtsort LIKE '" + suchbegriff + "'"
+				+ " OR username LIKE '" + suchbegriff + "'"
+				//+ " OR registrierungstag = CAST('" + suchbegriff + "' AS DATE)"
+				//+ " OR letzteanmeldung = CAST('" + suchbegriff + "' AS DATE)"
+				// WIP geschlecht
+				// WIP rolle
+				+ " OR (tbl_kontakt.kategorie LIKE '" + suchbegriff + "' AND tbl_kontakt.kontakt_id = tbl_users.users_id) "
+				+ " OR (tbl_kontakt.wert LIKE '" + suchbegriff + "' AND tbl_kontakt.kontakt_id = tbl_users.users_id) ";
+
+			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE}, {SCHEMA}.{KONTAKT} " + where + orderBy;
+			NpgsqlDataReader reader = command.ExecuteReader();
+			while (reader.Read())
+			{
+				result.Add(new Benutzer()
+				{
+					UserId = reader.GetInt32(0),
+					Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
+					Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
+					Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
+					GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
+					UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
+					PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
+					//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
+					RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
+					LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
+					BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
+					MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
+					Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
+					Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
+				});
+			}
+			reader.Close();
+			DBConnection.GetConnection().Close();
+
+			return result;
+        }
 
 		// WIP
 		//public static Benutzer Get(int id)
@@ -204,7 +255,7 @@ namespace VRentalsClasses.Models
 			DBConnection.GetConnection().Open();
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} order by name, name";
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} order by vorname, vorname";
 			NpgsqlDataReader reader = command.ExecuteReader();
 			List<Benutzer> result = new List<Benutzer>();
 			while (reader.Read())

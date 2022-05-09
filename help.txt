@@ -31,3 +31,16 @@ git checkout -b <name of the new branch>
 switch branches with:
 1. git branch (to check which ones are available, or which one you are currently on *)
 2. git checkout <name of branch to switch to>
+
+==========================================================
+============== Full text search in postgreSQL=============
+==========================================================
+
+Normal search:
+https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-where/
+
+Full text search:
+https://www.crunchydata.com/blog/postgres-full-text-search-a-search-engine-in-a-database
+
+Searching for integers:
+https://stackoverflow.com/questions/1684291/sql-like-condition-to-check-for-integer
