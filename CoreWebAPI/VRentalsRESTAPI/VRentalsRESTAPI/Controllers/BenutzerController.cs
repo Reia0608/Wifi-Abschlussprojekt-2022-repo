@@ -25,8 +25,8 @@ namespace VRentalsRESTAPI.Controllers
             //return null;
         }
 
-		[HttpGet("{bm}/{suchbegriff}")]
-		public List<Benutzer> SearchBenutzer(string bm, string suchbegriff)
+		[HttpGet("search/{suchbegriff}")]
+		public List<Benutzer> SearchBenutzer(string suchbegriff)
         {
             //Benutzer benutzer = Benutzer.Get(this);
             //if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.User)

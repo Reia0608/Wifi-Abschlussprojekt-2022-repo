@@ -183,9 +183,9 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiPageSearch(successCallback, errorCallback, term) 
+	ApiSearchByTerm(successCallback, errorCallback, term) 
 	{
-		fetch(this.apiBaseUrl + 'page/search' + (term ? '?term=' + term : '') , 
+		fetch(this.apiBaseUrl + 'benutzer/search' + (term ? '/' + term : '') , 
 		{
 			method: 'GET'
 		})

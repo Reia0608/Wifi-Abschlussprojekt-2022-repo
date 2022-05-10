@@ -38,8 +38,61 @@ namespace VRentalsClasses.Models
 				command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where benutzermerkmal = :bm";
 				command.Parameters.AddWithValue("bm", bm);
 				NpgsqlDataReader reader = command.ExecuteReader();
-				reader.Read();
+                try
+                {
+					reader.Read();
 
+					benutzer = new Benutzer()
+					{
+						UserId = reader.GetInt32(0),
+						Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
+						Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
+						Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
+						GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
+						UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
+						PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
+						//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
+						RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
+						LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
+						BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
+						MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
+						Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
+						Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
+					};
+				}
+				finally
+                {
+					reader.Close();
+					DBConnection.GetConnection().Close();
+				}
+			}
+			return benutzer;
+		}
+
+		public static Benutzer Get(string benutzermerkmal)
+		{
+			Benutzer? benutzer = null;
+			DBConnection.GetConnection().Open();
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			int tmpId = 0;
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ";
+			if(int.TryParse(benutzermerkmal, out tmpId))
+            {
+				command.CommandText += "users_id = :pid";
+				command.Parameters.AddWithValue("pid", tmpId);
+            }
+            else
+            {
+				command.CommandText += "benutzermerkmal = :bm";
+				command.Parameters.AddWithValue("bm", benutzermerkmal);
+            }
+			NpgsqlDataReader reader = command.ExecuteReader();
+			
+			try
+            {
+				reader.Read();
+                
 				benutzer = new Benutzer()
 				{
 					UserId = reader.GetInt32(0),
@@ -56,54 +109,13 @@ namespace VRentalsClasses.Models
 					MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
 					Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
 					Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
-				};
+				};	
+			}
+			finally
+            {
 				reader.Close();
 				DBConnection.GetConnection().Close();
 			}
-
-			return benutzer;
-		}
-
-		public static Benutzer Get(string benutzermerkmal)
-		{
-			DBConnection.GetConnection().Open();
-			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = DBConnection.GetConnection();
-			int tmpId = 0;
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ";
-			if(int.TryParse(benutzermerkmal, out tmpId))
-            {
-				command.CommandText += "users_id = :pid";
-				command.Parameters.AddWithValue("pid", tmpId);
-            }
-            else
-            {
-				command.CommandText += "benutzermerkmal = :bm";
-				command.Parameters.AddWithValue("bm", benutzermerkmal);
-            }
-
-			NpgsqlDataReader reader = command.ExecuteReader();
-			reader.Read();
-
-			Benutzer benutzer = new Benutzer()
-			{
-				UserId = reader.GetInt32(0),
-				Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
-				Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
-				Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
-				GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
-				UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
-				PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
-				//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
-				RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
-				LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
-				BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
-				MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
-				Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
-				Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
-			};
-			reader.Close();
-			DBConnection.GetConnection().Close();
 			return benutzer;
 		}
 
@@ -130,29 +142,34 @@ namespace VRentalsClasses.Models
 
 			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE}, {SCHEMA}.{KONTAKT} " + where + orderBy;
 			NpgsqlDataReader reader = command.ExecuteReader();
-			while (reader.Read())
-			{
-				result.Add(new Benutzer()
+			try
+            {
+				while (reader.Read())
 				{
-					UserId = reader.GetInt32(0),
-					Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
-					Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
-					Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
-					GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
-					UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
-					PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
-					//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
-					RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
-					LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
-					BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
-					MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
-					Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
-					Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
-				});
+					result.Add(new Benutzer()
+					{
+						UserId = reader.GetInt32(0),
+						Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
+						Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
+						Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
+						GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
+						UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
+						PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
+						//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
+						RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
+						LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
+						BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
+						MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
+						Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
+						Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
+					});
+				}
 			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
-
+			finally
+            {
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
 			return result;
         }
 
@@ -258,28 +275,35 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} order by vorname, vorname";
 			NpgsqlDataReader reader = command.ExecuteReader();
 			List<Benutzer> result = new List<Benutzer>();
-			while (reader.Read())
-			{
-				result.Add(new Benutzer()
+
+			try
+            {
+				while (reader.Read())
 				{
-					UserId = reader.GetInt32(0),
-					Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
-					Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
-					Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
-					GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
-					UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
-					PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
-					//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
-					RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
-					LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
-					BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
-					MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
-					Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
-					Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
-				});
+					result.Add(new Benutzer()
+					{
+						UserId = reader.GetInt32(0),
+						Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
+						Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
+						Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
+						GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
+						UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
+						PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
+						//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
+						RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
+						LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
+						BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
+						MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
+						Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
+						Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
+					});
+				}
 			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+			finally
+            {
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
 			return result;
 		}
 		#endregion
