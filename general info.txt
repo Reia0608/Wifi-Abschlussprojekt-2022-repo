@@ -1,0 +1,9 @@
+icons:
+
+made in: 
+https://iconsflow.com/editor
+
+foreground color: #0d6efd
+background color: #dbe4f2
+
+font: MS Shell Dlg 2
