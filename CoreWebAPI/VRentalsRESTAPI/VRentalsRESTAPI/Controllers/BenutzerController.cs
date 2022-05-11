@@ -40,8 +40,25 @@ namespace VRentalsRESTAPI.Controllers
             //}
         }
 
-		[HttpGet("{bm}")]
-		public Benutzer GetBenutzer(string bm) => Benutzer.Get(bm);
+		[HttpGet("{id}")]
+		public IActionResult GetBenutzer(string id)
+		{
+			IActionResult result = null;
+			try
+			{
+				result = Ok(new
+				{
+					success = true,
+					message = "ok",
+					benutzer = Benutzer.Get(id),
+				});
+			return result;
+			}
+			catch (Exception ex)
+			{
+				return NotFound(ex);
+			}
+		}
 
 
 		[HttpGet("{id}/bild")]
