@@ -24,5 +24,7 @@ namespace VRentalsClasses.Models
 
         // In welchen Ausgabestellen befindet sich diese Art/ Kategorie von Anhänger?
         public List<Adresse>? AdressenList { get; set; }
+        public string? Marke { get; set; }
+        public string? Modell { get; set; }
     }
 }

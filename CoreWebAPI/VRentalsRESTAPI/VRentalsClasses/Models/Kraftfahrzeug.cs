@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
         #region constants
         private const string SCHEMA = "rentals";
         private const string TABLE = "tbl_kraftfahrzeuge";
-        private const string COLUMNS = "kraftfahrzeug_id, kategorie_id, name, preis_ek, preis_vk, packung, einheit, beschreibung, nummer, bild, letzter_einkauf";
+        private const string COLUMNS = "kraftfahrzeuge_id, mietpreis, gegenstandzustand, kategorie, marke, modell";
         #endregion
 
         //************************************************************************
@@ -22,46 +22,86 @@ namespace VRentalsClasses.Models
 
         public static Kraftfahrzeug Get(int kraftfahrzeug_id)
         {
-            DBConnection.GetConnection().Open();
-            NpgsqlCommand command = new NpgsqlCommand();
-            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kfid";
-            command.Parameters.AddWithValue("kfid", kraftfahrzeug_id);
+			Kraftfahrzeug kraftfahrzeug = new Kraftfahrzeug();
 
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeuge_id = :kid";
+            command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
             NpgsqlDataReader reader = command.ExecuteReader();
-            Kraftfahrzeug kraftfahrzeug = null;
-            if (reader.Read())
-            {
-                kraftfahrzeug = new Kraftfahrzeug();
-                {
-
-                };
-            }
-            reader.Close();
-            DBConnection.GetConnection().Close();
+			try
+			{
+				if (reader.Read())
+				{
+					kraftfahrzeug = new Kraftfahrzeug();
+					{
+						kraftfahrzeug = kraftfahrzeug.CreateKraftfahrzeug(reader);
+					};
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
             return kraftfahrzeug;
         }
 
         public static List<Kraftfahrzeug> GetList()
         {
-            DBConnection.GetConnection().Open();
-            NpgsqlCommand command = new NpgsqlCommand();
+			List<Kraftfahrzeug> kraftfahrzeugListe = new List<Kraftfahrzeug>();
+			Kraftfahrzeug kraftfahrzeug = new Kraftfahrzeug();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
             command.Connection = DBConnection.GetConnection();
-            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} order by name";
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} order by marke";
             NpgsqlDataReader reader = command.ExecuteReader();
-            List<Kraftfahrzeug> result = new List<Kraftfahrzeug>();
+            
             while (reader.Read())
             {
-                result.Add(new Kraftfahrzeug()
-                {
-                    //WIP
-                });
+				kraftfahrzeugListe.Add(kraftfahrzeug = kraftfahrzeug.CreateKraftfahrzeug(reader));	
             }
             reader.Close();
             DBConnection.GetConnection().Close();
-            return result;
+            return kraftfahrzeugListe;
         }
 		#endregion
+		//************************************************************************
+		#region constructors#
+		public Kraftfahrzeug()
+		{
 
+		}
+
+		public Kraftfahrzeug(NpgsqlDataReader reader)
+		{
+			KraftfahrzeugId = reader.GetInt32(0);
+			MietPreis = reader.IsDBNull(1) ? null : reader.GetInt32(1);
+			GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2);
+			Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3);
+			//SchadenListe = reader.IsDBNull(5) ? null : reader.GetString(5);
+			//BildBytesList = reader.IsDBNull(6) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(6);
+			//BildVorhanden = reader.IsDBNull(4) ? null : reader.GetBool(4);
+			//AdressenList = reader.IsDBNull(8) ? null : reader.GetString(8);
+			//AktuellerStandort = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9);
+			Marke = reader.IsDBNull(4) ? null : reader.GetString(4);
+			Modell = reader.IsDBNull(5) ? null : reader.GetString(5);
+		}
+
+		#endregion
 		//************************************************************************
 		#region properties
 		[JsonPropertyName("kraftfahrzeugid")]
@@ -100,55 +140,137 @@ namespace VRentalsClasses.Models
 
 		public List<Adresse>? AdressenList { get; set; }
 		public IAdresse? AktuellerStandort { get; set; }
+		[JsonPropertyName("marke")]
+		public string? Marke { get; set; }
+		[JsonPropertyName("modell")]
+		public string? Modell { get; set; }
 
 		#endregion
 
 		//************************************************************************
 		#region public methods
 
+		public Kraftfahrzeug CreateKraftfahrzeug(NpgsqlDataReader reader)
+		{
+			Kraftfahrzeug kraftfahrzeug = new Kraftfahrzeug();
+
+			kraftfahrzeug = new Kraftfahrzeug()
+			{
+				KraftfahrzeugId = reader.GetInt32(0),
+				MietPreis = reader.IsDBNull(1) ? null : reader.GetDouble(1),
+				GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2),
+				Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3),
+				//SchadenListe = reader.IsDBNull(5) ? null : reader.GetString(5),
+				//BildBytesList = reader.IsDBNull(6) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(6),
+				//BildVorhanden = reader.IsDBNull(4) ? null : reader.GetBool(4),
+				//AdressenList = reader.IsDBNull(8) ? null : reader.GetString(8),
+				//AktuellerStandort = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9),
+				Marke = reader.IsDBNull(4) ? null : reader.GetString(4),
+				Modell = reader.IsDBNull(5) ? null : reader.GetString(5),
+			};
+			return kraftfahrzeug;
+		}
+
 		public int Save()
 		{
+			int result = -1;
 			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = DBConnection.GetConnection();
-			command.Connection.Open();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
 			if (this.KraftfahrzeugId.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set kategorie_id = :kid, name = :name, preis_ek = :preisek, preis_vk = :preisvk, packung = :pkg, einheit = :eh, beschreibung = :beschreibung, nummer = :nr, bild = :bild, letzter_einkauf = :lek where artikel_id = :aid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, where kraftfahrzeuge_id = :kid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.KraftfahrzeugId = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :kid, :name, :preisek, :preisvk, :pkg, :eh, :beschreibung, :nr, :bild, :lek)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:kid, :mp, :gz, :k, :ma, :mo)";
 			}
 
-			command.Parameters.AddWithValue("aid", this.KraftfahrzeugId);
-			// WIP
+			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId);
+			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
+			command.Parameters.AddWithValue("gz", (int)this.GegenstandZustand);
+			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
+			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
+			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
+
 			try
 			{
-				return command.ExecuteNonQuery();
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
 			}
 			finally
 			{
 				command.Connection.Close();
 			}
+			return result;
+		}
+
+		public int Save(int id)
+		{
+			int result = -1;
+			NpgsqlCommand command = new NpgsqlCommand();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, where kraftfahrzeuge_id = :kid";
+			command.Parameters.AddWithValue("kid", id);
+			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
+			command.Parameters.AddWithValue("gz", (int)this.GegenstandZustand);
+			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
+			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
+			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
+
+			try
+			{
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				command.Connection.Close();
+			}
+			return result;
 		}
 
 		public int Delete()
 		{
+			int result = -1;
 			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = DBConnection.GetConnection();
-			command.Connection.Open();
-			command.CommandText = $"delete from {SCHEMA}.{TABLE} where artikel_id = :aid";
-			command.Parameters.AddWithValue("aid", this.KraftfahrzeugId);
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+			command.CommandText = $"delete from {SCHEMA}.{TABLE} where users_id = :pid";
+			command.Parameters.AddWithValue("pid", this.KraftfahrzeugId);
 			try
 			{
-				return command.ExecuteNonQuery();
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
 			}
 			finally
 			{
 				command.Connection.Close();
 			}
+			return result;
 		}
 
 		//public override string ToString()

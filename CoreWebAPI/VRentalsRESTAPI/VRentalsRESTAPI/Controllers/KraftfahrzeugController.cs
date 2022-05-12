@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using VRentalsClasses.Models;
 
 namespace VRentalsRESTAPI.Controllers
@@ -17,9 +18,12 @@ namespace VRentalsRESTAPI.Controllers
     {
         // GET: api/<FahrzeugController>
         [HttpGet()]
-        public IEnumerable<Kraftfahrzeug> SelectAll() => Kraftfahrzeug.GetList();
+        public IEnumerable<Kraftfahrzeug> SelectAll()
+        {
+            return Kraftfahrzeug.GetList();
+        }
 
-        // GET: api/<KraftfahrzeugControler>/5
+        // GET: api/<KraftfahrzeugController>/5
         [HttpGet("{id}")]
         public Kraftfahrzeug Get(int id) => Kraftfahrzeug.Get(id);
 
@@ -45,8 +49,14 @@ namespace VRentalsRESTAPI.Controllers
             IActionResult result = null;
             try
             {
-                if (kraftfahrzeug.Save() == 1) result = Ok(kraftfahrzeug);
-                else result = NoContent();
+                if (kraftfahrzeug.Save() == 1)
+                {
+                    result = Ok();
+                }
+                else
+                {
+                    result = NoContent();
+                }
             }
             catch (Exception ex)
             {
@@ -63,11 +73,20 @@ namespace VRentalsRESTAPI.Controllers
             try
             {
                 Kraftfahrzeug dbKraftfahrzeug = Kraftfahrzeug.Get(id);
-                if (dbKraftfahrzeug == null) result = NotFound();
+                if (dbKraftfahrzeug == null)
+                {
+                    result = NotFound();
+                } 
                 else
                 {
-                    if (kraftfahrzeug.Save() == 1) result = Ok(kraftfahrzeug);
-                    else result = NoContent();
+                    if (kraftfahrzeug.Save(id) == 1)
+                    {
+                        result = Ok(kraftfahrzeug);
+                    }
+                    else
+                    {
+                        result = NoContent();
+                    } 
                 }
             }
             catch (Exception ex)
@@ -108,9 +127,27 @@ namespace VRentalsRESTAPI.Controllers
 
         //DELETE: api/<KraftfahrzeugController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            // WIP
+            Kraftfahrzeug kraftfahrzeug = Kraftfahrzeug.Get(id);
+            IActionResult result = null;
+            try
+            {
+                if(kraftfahrzeug.Delete() == 1)
+                {
+                    result = Ok();
+                }
+                else
+                {
+                    result = NotFound("car not found!");
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                Debug.WriteLine(ex.Message);
+            }
+            return result;
         }
 
             

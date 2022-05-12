@@ -8,5 +8,7 @@ namespace VRentalsClasses.Interfaces
 {
     public interface ILandfahrzeug: IFahrzeug
     {
+        public string? Marke { get; set; }
+        public string? Modell { get; set; }
     }
 }

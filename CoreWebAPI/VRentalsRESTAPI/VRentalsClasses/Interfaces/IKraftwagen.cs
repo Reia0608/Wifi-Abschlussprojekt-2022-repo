@@ -8,5 +8,6 @@ namespace VRentalsClasses.Interfaces
 {
     public interface IKraftwagen: IKraftfahrzeug
     {
+
     }
 }

@@ -1,44 +1,71 @@
 
-<div class="p-3 d-flex flex-column flex-shrink-0 text-white bg-dark sidenav-opened" id="sideBar">
-    <a href="" class="d-flex align-items-center mb-md-0 me-md-auto text-white text-decoration-none">
-        <span class="fs-4 me-2">Sidebar</span>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <button type="button" class="nav-link text-white active" aria-current="page" id="sideNavButtonHome">
-                <span class="iconify" data-icon="bx-home-alt" width="16" height="16">
-                </span>
-                <label class="sidenav-element">Home</label> 
-            </button>
-        </li>
-        <li>
-            <button type="button" class="nav-link text-white" id="sideNavButtonSearch">
-                <span class="iconify" data-icon="dashicons:search" width="16" height="16">
-                </span>
-                <label class="sidenav-element">Suchen</label>
-            </button>
-        </li>
-        <li>
-            <button type="button" class="nav-link text-white d-none" id="sideNavButtonProfile">
-                <span class="iconify" data-icon="carbon:user-profile" width="16" height="16" ></span>
-                <label class="sidenav-element">Mein Profil</label> 
-            </button>
-        </li>  
-        <li>
-            <button type="button" class="nav-link text-white" id="sideNavButtonLogin">
-                <span class="iconify" data-icon="ant-design:login-outlined" width="16" height="16" ></span>
-                <label class="sidenav-element">Anmelden</label> 
-            </button>
-            <button type="button" class="nav-link text-white d-none" id="sideNavButtonLogoff">
-                <span class="iconify" data-icon="gg:log-off" width="16" height="16"></span>
-                <label class="sidenav-element">Abmelden</label>
-            </button>
-        </li>    
-    </ul>
-</div>
-<div class="d-flex sidenav-button-close">
-    <button type="button" class="sidenav-button-close" id="buttonOpenClose"><span class="iconify" data-icon="bx:left-arrow"></span></button>
-</div> 
+<!-- Challenge is to tweak a bootstrap template sidebar so that it displayes hidden at first.
+Need new divs to make the side bar a sort of floating menu, controlled through a checkbox state. First div creates a side bar with the double arrow icon (Fontawesome) -->
+<div class="text-white bg-dark" style="width: 36px;">
+    <input type="checkbox"  id="toggle-sb">
+    <label class="sidebar-switch" for="toggle-sb">
+        <i class="iconify fa-lg" data-icon="fa-solid:angle-double-left">
+        </i>
+    </label>
 
-        
+    <!-- Then, the rest of the side bar needs to be wrapped in a new div so that it servers as the controlled object -->
+    <div id="side-slide-control" class="text-white bg-dark" style="width: 280px; border-radius: 0 16px 16px 0; position: absolute;"> 
+
+        <!-- From here is the original code from bootstrap template, only added a border-radius because for some reason otherwise doesn't work-->
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; border-radius: 0 16px 16px 0;" id="sideBar">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <span class="fs-4">Sidebar</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <button type="button" class="nav-link text-white active" aria-current="page" id="sideNavButtonHome">
+                        <span class="iconify" data-icon="bx-home-alt" width="16" height="16">
+                        </span>
+                        <label class="sidenav-element">Home</label> 
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-link text-white" id="sideNavButtonSearch">
+                        <span class="iconify" data-icon="dashicons:search" width="16" height="16">
+                        </span>
+                        <label class="sidenav-element">Suchen</label>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="nav-link text-white d-none" id="sideNavButtonProfile">
+                        <span class="iconify" data-icon="carbon:user-profile" width="16" height="16" ></span>
+                        <label class="sidenav-element">Mein Profil</label> 
+                    </button>
+                </li>  
+                <li>
+                    <button type="button" class="nav-link text-white" id="sideNavButtonLogin">
+                        <span class="iconify" data-icon="ant-design:login-outlined" width="16" height="16" ></span>
+                        <label class="sidenav-element">Anmelden</label> 
+                    </button>
+                    <button type="button" class="nav-link text-white d-none" id="sideNavButtonLogoff">
+                        <span class="iconify" data-icon="gg:log-off" width="16" height="16"></span>
+                        <label class="sidenav-element">Abmelden</label>
+                    </button>
+                </li>    
+            </ul>
+        </div>
+        <hr>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+            <strong>mdo</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

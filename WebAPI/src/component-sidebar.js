@@ -10,13 +10,11 @@ export default class Sidebar
 		{
 			this.target = args.app.Aside;
 
-			const buttonOpenClose = document.getElementById('buttonOpenClose');
 			this.sideNavButtonLogin = this.target.querySelector('#sideNavButtonLogin');
 			this.sideNavButtonLogoff = this.target.querySelector('#sideNavButtonLogoff');
 			this.sideNavButtonHome = this.target.querySelector('#sideNavButtonHome');
 			this.sideNavButtonSearch = this.target.querySelector('#sideNavButtonSearch');
 			this.sideNavButtonProfile = this.target.querySelector('#sideNavButtonProfile');
-			const sideBar = document.getElementById('sideBar');
 
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
@@ -33,37 +31,6 @@ export default class Sidebar
 				this.sideNavButtonLogin.classList.remove('d-none');
 				this.sideNavButtonLogoff.classList.add('d-none');
 			}
-
-			buttonOpenClose.addEventListener('click', (e)=>
-			{
-				if(sideBar.classList.contains("sidenav-opened"))
-				{
-					// WIP problem: is it possible to animate the button and the sidenav at the same time?
-					sideBar.classList.replace("sidenav-opened", "sidenav-close-animation");
-					buttonOpenClose.classList.remove("sidenav-button-close");
-					buttonOpenClose.classList.add("sidenav-button-close-animation");
-					setTimeout(() => 
-					{ 
-						// WIP problem: when computer is slow, shows the sidenav for a frame.
-						sideBar.classList.replace("sidenav-close-animation", "sidenav-closed");
-						buttonOpenClose.classList.remove("sidenav-button-close-animation");
-						buttonOpenClose.classList.add("sidenav-button-open");
-					}, 1000);
-				}
-				else
-				{
-					sideBar.classList.replace("sidenav-closed", "sidenav-open-animation");
-					buttonOpenClose.classList.remove("sidenav-button-open");
-					buttonOpenClose.classList.add("sidenav-button-open-animation");
-					setTimeout(() => 
-					{ 
-						sideBar.classList.replace("sidenav-open-animation", "sidenav-opened");
-						buttonOpenClose.classList.remove("sidenav-button-open-animation");
-						buttonOpenClose.classList.add("sidenav-button-close");
-					}, 1000);
-				}
-
-			});
 
 			this.sideNavButtonHome.addEventListener('click', (e)=>
 			{

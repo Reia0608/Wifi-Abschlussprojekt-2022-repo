@@ -1,15 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
-@keyframes sidenav-slide {
-    from { left: 0px; }
-    to { left: -285px; }
-}
-
-@keyframes sidenav-button-slide{
-    from { left: 145px; }
-    to {left: -145px; }
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -17,16 +7,52 @@
     font-family: 'Poppins', sans-serif
 }
 
-.banner-without-sidebar {
-    padding: 60px;
-    text-align: center;
-    background: #0d6efd;;
-    color: white;
-    font-size: 30px;
+/* Hidding toggle and formatting double arrow icon just a little bit. Rotation just to add a little spice with a transition */
+#toggle-sb{
+    width: 24px;
+    opacity: 0;
+}
+
+.sidebar-switch{
+  margin-left: 8px;
+  transform: rotate(180deg);
+  font-size: 1.25em;
+  line-height: .05em;
+  vertical-align: -0.075em;
+}
+
+/* Trick goes from having the sidebar hidden at first, and then removing that transformation thought clicking the input (inspiration here: https://css-tricks.com/almanac/selectors/c/checked/) 
+Feel free to add more transitions with unchecked state
+*/
+#side-slide-control{
+  transform: translateX(-230px);
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+  opacity: 0;
+  z-index: 2;
+}
+
+#toggle-sb:checked + label{
+  transform:none;
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+}
+
+#toggle-sb:not(:checked) + label{
+    transform: rotate(180deg);
+    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+  }
+
+#toggle-sb:checked ~ #side-slide-control{
+  transform: none;
+  opacity: 1;
+}
+
+#toggle-sb:not(:checked) ~ #side-slide-control{
+    transform: translateX(-230px);
+    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+    opacity: 1;
   }
 
 .banner-with-sidebar {
-    margin-left: 300px;
     padding: 60px;
     text-align: center;
     background: rgb(13, 109, 253);;
@@ -45,17 +71,6 @@
 .container {
     margin: 50px auto;
     width: auto;
-}
-
-.page-without-sidebar {
-    position: relative;
-    width: 720px;
-    height: 440px;
-    margin: 20px auto;
-    border: 1px solid #dddd;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px
 }
 
 .page-with-sidebar {
