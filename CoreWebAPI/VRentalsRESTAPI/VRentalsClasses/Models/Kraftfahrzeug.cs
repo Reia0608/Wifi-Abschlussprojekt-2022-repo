@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using VRentalsClasses.Interfaces;
+using Google.Cloud.Firestore;
 
 namespace VRentalsClasses.Models
 {
@@ -14,7 +15,8 @@ namespace VRentalsClasses.Models
         #region constants
         private const string SCHEMA = "rentals";
         private const string TABLE = "tbl_kraftfahrzeuge";
-        private const string COLUMNS = "kraftfahrzeuge_id, mietpreis, gegenstandzustand, kategorie, marke, modell";
+		private const string BILDER = "tbl_bilder";
+        private const string COLUMNS = "kraftfahrzeuge_id, mietpreis, gegenstandzustand, kategorie, marke, modell, bilder_id";
         #endregion
 
         //************************************************************************
@@ -99,6 +101,7 @@ namespace VRentalsClasses.Models
 			//AktuellerStandort = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9);
 			Marke = reader.IsDBNull(4) ? null : reader.GetString(4);
 			Modell = reader.IsDBNull(5) ? null : reader.GetString(5);
+			Bilder_Id = reader.IsDBNull(6) ? null : (int?)reader.GetInt32(6);
 		}
 
 		#endregion
@@ -121,6 +124,8 @@ namespace VRentalsClasses.Models
 
 		[JsonPropertyName("schadenliste")]
 		public List<Schaden>? SchadenListe { get; set; }
+		[JsonPropertyName("bilder_id")]
+		public int? Bilder_Id { get; set; }
 
 		[JsonIgnore()]
 		public List<byte[]>? BildBytesList { get; set; }
@@ -160,13 +165,9 @@ namespace VRentalsClasses.Models
 				MietPreis = reader.IsDBNull(1) ? null : reader.GetDouble(1),
 				GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2),
 				Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3),
-				//SchadenListe = reader.IsDBNull(5) ? null : reader.GetString(5),
-				//BildBytesList = reader.IsDBNull(6) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(6),
-				//BildVorhanden = reader.IsDBNull(4) ? null : reader.GetBool(4),
-				//AdressenList = reader.IsDBNull(8) ? null : reader.GetString(8),
-				//AktuellerStandort = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9),
 				Marke = reader.IsDBNull(4) ? null : reader.GetString(4),
 				Modell = reader.IsDBNull(5) ? null : reader.GetString(5),
+				Bilder_Id = reader.IsDBNull(6) ? null : reader.GetInt32(6),
 			};
 			return kraftfahrzeug;
 		}
@@ -183,7 +184,7 @@ namespace VRentalsClasses.Models
 
 			if (this.KraftfahrzeugId.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, where kraftfahrzeuge_id = :kid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, bilder_id = :bil where kraftfahrzeuge_id = :kid";
 			}
 			else
 			{
@@ -198,6 +199,7 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
 			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
 			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
+			command.Parameters.AddWithValue("bil", this.Bilder_Id.HasValue ? (int)this.Bilder_Id : null);
 
 			try
 			{
@@ -224,13 +226,15 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, where kraftfahrzeuge_id = :kid";
+			command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, bilder_id = :bil where kraftfahrzeuge_id = :kid";
+			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("kid", id);
 			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
 			command.Parameters.AddWithValue("gz", (int)this.GegenstandZustand);
 			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
 			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
 			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
+			command.Parameters.AddWithValue("bil", this.Bilder_Id.HasValue ? (int)this.Bilder_Id : null);
 
 			try
 			{
@@ -256,8 +260,8 @@ namespace VRentalsClasses.Models
 				command.Connection = DBConnection.GetConnection();
 				command.Connection.Open();
 			}
-			command.CommandText = $"delete from {SCHEMA}.{TABLE} where users_id = :pid";
-			command.Parameters.AddWithValue("pid", this.KraftfahrzeugId);
+			command.CommandText = $"delete from {SCHEMA}.{TABLE} where kraftfahrzeuge_id = :kid";
+			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId);
 			try
 			{
 				result = command.ExecuteNonQuery();

@@ -135,7 +135,7 @@ namespace VRentalsRESTAPI.Controllers
             {
                 if(kraftfahrzeug.Delete() == 1)
                 {
-                    result = Ok();
+                    result = Ok("Car entry deleted!");
                 }
                 else
                 {

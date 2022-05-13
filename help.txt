@@ -44,3 +44,8 @@ https://www.crunchydata.com/blog/postgres-full-text-search-a-search-engine-in-a-
 
 Searching for integers:
 https://stackoverflow.com/questions/1684291/sql-like-condition-to-check-for-integer
+
+==========================================================
+====================== Firebase login=====================
+==========================================================
+cmd to log into firebase account if error occours: firebase login --interactive

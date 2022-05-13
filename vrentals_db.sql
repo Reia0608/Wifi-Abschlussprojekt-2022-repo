@@ -46,8 +46,6 @@ CREATE TABLE rentals.tbl_users
     registrierungstag date,
     letzteanmeldung date,
 	kontakt_id numeric,
-	marke character varying,
-	modell character varying,
     PRIMARY KEY (users_id)
 );
 
@@ -112,6 +110,8 @@ CREATE TABLE rentals.tbl_kraftfahrzeuge
     mietpreis double precision,
     gegenstandzustand integer,
     kategorie character varying(50)
+	marke character varying,
+	modell character varying,
 	-- bilder liste
 	-- standortliste
 	--aktuellerstandort
@@ -241,10 +241,13 @@ CREATE TABLE rentals.tbl_anhaenger
     ausgaben_id numeric,
     schaden_id numeric,
     art character varying,
-    zustand integer,
+    gegenstandzustand integer,
     kategorie character varying,
     bilder_id numeric,
     adresse_id numeric
+	marke character varying,
+	modell character varying,
+	mietpreis DOUBLE,
 );
 
 ALTER TABLE rentals.tbl_anhaenger

@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using VRentalsClasses.Interfaces;
+using Google.Cloud.Firestore;
 
 namespace VRentalsClasses.Models
 {
