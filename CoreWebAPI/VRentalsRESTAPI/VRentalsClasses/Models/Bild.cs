@@ -226,16 +226,6 @@ namespace VRentalsClasses.Models
 		//	return this.Art;
 		//}
 
-		//public override int GetHashCode()
-		//{
-		//	int result = 0;
-		//	//result ^= this.Nummer.GetHashCode();
-		//	result ^= this.Art.GetHashCode();
-		//	//result ^= this.Beschreibung.GetHashCode();
-
-		//	return result;
-		//}
-
 		public void Refresh()
 		{
 			//this.BewegungList = Bewegung.GetList(this);

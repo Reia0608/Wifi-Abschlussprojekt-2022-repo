@@ -5,11 +5,13 @@
 
 ===== Priority 2=====
 
+1. // WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
+-> Anhaenger.cs + Kraftfahrzeug.cs
+
 
 ===== Priority 3=====
 
-1. // WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
--> Anhaenger.cs + Kraftfahrzeug.cs
+1. //WIP: remove the CreateX() functions and use the constructor instead!
 
 2. // WIP: order by?
 -> Bild.cs
