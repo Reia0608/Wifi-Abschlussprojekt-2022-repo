@@ -15,6 +15,7 @@ export default class Sidebar
 			this.sideNavButtonHome = this.target.querySelector('#sideNavButtonHome');
 			this.sideNavButtonSearch = this.target.querySelector('#sideNavButtonSearch');
 			this.sideNavButtonProfile = this.target.querySelector('#sideNavButtonProfile');
+			this.sideNavButtonKfzList = this.target.querySelector('#sideNavButtonKfzList');
 
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
@@ -62,6 +63,18 @@ export default class Sidebar
 					this.sideNavButtonProfile.classList.add("active");
 					activeSideNavButton.classList.remove("active");
 					activeSideNavButton = this.sideNavButtonProfile;
+				}
+			});
+
+			
+			this.sideNavButtonKfzList.addEventListener('click', (e)=>
+			{
+				location.hash = '#carlist';
+				if(activeSideNavButton != this.sideNavButtonKfzList)
+				{
+					this.sideNavButtonKfzList.classList.add("active");
+					activeSideNavButton.classList.remove("active");
+					activeSideNavButton = this.sideNavButtonKfzList;
 				}
 			});
 

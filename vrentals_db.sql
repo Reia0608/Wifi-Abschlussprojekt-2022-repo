@@ -21,12 +21,15 @@ CREATE ROLE vrentalsuser WITH
 	NOREPLICATION
 	CONNECTION LIMIT -1;
 
+-- #########################################################################
+-- ########################## SCHEMA rentals ###############################
+-- #########################################################################
+
 CREATE SCHEMA rentals
     AUTHORIZATION postgres;
 GRANT USAGE ON SCHEMA rentals TO vrentalsuser;
 ALTER ROLE vrentalsuser
 	PASSWORD 'wifi';
-
 
 -- #########################################################################
 -- ############################ TABLE users ################################
@@ -66,17 +69,11 @@ GRANT USAGE ON rentals.tbl_users_seq to vrentalsuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_users TO vrentalsuser;
 
-	
-	
-	
-	
 -- CREATE MATERIALIZED VIEW mvw_users
 -- AS
 -- SELECT users.users_id, to_tsvector(concat_ws(' ', users.vorname, users.nachname, users.geburtsort, users.username, kontakt.kategorie, kontakt.wert)) AS tsv_users
 -- FROM rentals.tbl_users AS users
 -- INNER JOIN rentals.tbl_kontakt AS kontakt ON kontakt.kontakt_id = users.users_id;
-
-
 
 -- #########################################################################
 -- ########################## TABLE kontakt ################################
@@ -112,6 +109,8 @@ CREATE TABLE rentals.tbl_kraftfahrzeuge
     kategorie character varying(50)
 	marke character varying,
 	modell character varying,
+	ausgabenstelle_id numeric;
+	kennzeichen character varying;
 	-- bilder liste
 	-- standortliste
 	--aktuellerstandort
@@ -395,6 +394,9 @@ ALTER TABLE rentals.tbl_ausgabenstelle
 
 ALTER TABLE rentals.tbl_kraftfahrzeuge 
 	ADD CONSTRAINT kraftfahrzeuge_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
+	
+ALTER TABLE rentals.tbl_kraftfahrzeuge 
+	ADD CONSTRAINT kraftfahrzeuge_ausgabenstelle_fk FOREIGN KEY (ausgabenstelle_id) REFERENCES rentals.tbl_ausgabenstelle (ausgabenstelle_id);
 	
 ALTER TABLE rentals.tbl_kraftfahrzeuge 
 	ADD CONSTRAINT aktueller_kfz_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);

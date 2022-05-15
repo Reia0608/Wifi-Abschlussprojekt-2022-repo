@@ -31,11 +31,11 @@ namespace VRentalsRESTAPI.Controllers
         public FileStreamResult GetBild(int id)
         {
             Anhaenger anhaenger = Anhaenger.Get(id);
-            if (anhaenger?.BildBytesList != null)
+            if (anhaenger?.BildListe != null)
             {
-                foreach (byte[] byteBild in anhaenger.BildBytesList)
+                foreach (Bild bild in anhaenger.BildListe)
                 {
-                    MemoryStream memoryStream = new MemoryStream(byteBild);
+                    MemoryStream memoryStream = new MemoryStream(bild.BildBytes);
                     return new FileStreamResult(memoryStream, "image/jpeg");
                 }
             }
@@ -107,11 +107,11 @@ namespace VRentalsRESTAPI.Controllers
                 else
                 {
                     int iterator = 0;
-                    foreach (byte[] bildBytes in anhaenger.BildBytesList)
+                    foreach (Bild bild in anhaenger.BildListe)
                     {
                         MemoryStream memoryStream = new MemoryStream();
                         file.CopyTo(memoryStream);
-                        anhaenger.BildBytesList[iterator] = memoryStream.ToArray();
+                        anhaenger.BildListe[iterator].BildBytes = memoryStream.ToArray();
                         iterator++;
                     }
                     if (anhaenger.Save() == 1) result = Ok(anhaenger);
@@ -149,7 +149,5 @@ namespace VRentalsRESTAPI.Controllers
             }
             return result;
         }
-
-
     }
 }

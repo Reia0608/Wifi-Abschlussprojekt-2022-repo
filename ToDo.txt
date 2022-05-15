@@ -19,3 +19,4 @@
 ===== Priority 4=====
 
 1. Archive all deleted entries in the db.
+2. Add fotos to Ausgabenstelle.

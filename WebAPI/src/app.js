@@ -1,12 +1,13 @@
 
-//import Sidebar from './component-sidebar.js';
-//import Banner from './component-banner.js';
 import PageLogin from './page-login.js';
 import PageMain from './page-home.js';
 import PageSignup from './page-signup.js';
 import PageSearch from './page-search.js';
 import PageProfile from './page-profile.js';
+import PageCarsList from './page-cars-list.js';
+import PageCarsDetails from './page-cars-details.js';
 import LoginManager from './login-manager.js';
+
 
 
 export default class Application 
@@ -96,6 +97,12 @@ export default class Application
 			case '#profile':
 				new PageProfile(args);
 				break;
+			case '#carlist':
+				new PageCarsList(args);
+				break;
+			case '#cardetails':
+				new PageCarsDetails(args);
+				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;
@@ -105,6 +112,9 @@ export default class Application
 	//==================================================================================
 	// API calls
 	//==================================================================================
+
+	//==================================================================================
+	// Seite
 
 	ApiPageInit(successCallback, errorCallback, benutzerMerkmal) 
 	{
@@ -120,6 +130,9 @@ export default class Application
 		.then(successCallback)
 		.catch(errorCallback);
 	}
+
+	//==================================================================================
+	// Benutzer
 
 	ApiBenutzerLogin(successCallback, errorCallback, args) 
 	{
@@ -195,6 +208,93 @@ export default class Application
 			else throw new Error(response.status + ' ' + response.statusText);
 		})
 		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	//==================================================================================
+	// Kraftfahrzeug
+
+	ApiKraftfahrzeugGetList(successCallback, errorCallback) 
+	{
+		fetch(this.apiBaseUrl + 'kraftfahrzeug', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		}).then((response) => 
+		{
+			if (response.status == 200) return response.json();
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiKraftfahrzeugGet(successCallback, errorCallback, kraftfahrzeugId) 
+	{
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeugId, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		}).then((response) => 
+		{
+			if (r.status == 200) return r.json();
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+
+	ApiKraftfahrzeugSet(successCallback, errorCallback, kraftfahrzeug) {
+		fetch(this.apiBaseUrl + 'kraftfahrzeug' + (kraftfahrzeug.kraftfahrzeugid ? '/' + kraftfahrzeug.kraftfahrzeugid : ''), 
+		{
+			method: kraftfahrzeug.kraftfahrzeugid ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(kraftfahrzeug)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				return response.json();
+			}
+			else if (response.status == 204) 
+			{
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiKraftfahrzeugSetBild(successCallback, errorCallback, kraftfahrzeug, bild) 
+	{
+		let data = new FormData();
+		data.append("file", bild);
+
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug.kraftfahrzeugid + '/bild', 
+		{
+			method: 'PUT',
+			cache: 'no-cache',
+			body: data
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				successCallback();
+			}
+			else if (response.status == 204) 
+			{
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
 		.catch(errorCallback);
 	}
 }

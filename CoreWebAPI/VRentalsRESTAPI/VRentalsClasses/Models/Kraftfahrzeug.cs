@@ -16,13 +16,36 @@ namespace VRentalsClasses.Models
         private const string SCHEMA = "rentals";
         private const string TABLE = "tbl_kraftfahrzeuge";
 		private const string BILDER = "tbl_bilder";
-        private const string COLUMNS = "kraftfahrzeuge_id, mietpreis, gegenstandzustand, kategorie, marke, modell, bilder_id";
-        #endregion
+        private const string COLUMNS = "kraftfahrzeuge_id, mietpreis, gegenstandzustand, kategorie, marke, modell, ausgabenstelle_id, aktueller_standort_id, kennzeichen";
+		#endregion
 
-        //************************************************************************
-        #region static methods
+		//************************************************************************
+		#region static methods
+		public static void Truncate(Kraftfahrzeug kraftfahrzeug)
+		{
+			NpgsqlCommand command = new NpgsqlCommand();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+			command.CommandText = $"delete from {SCHEMA}.{TABLE} where kraftfahrzeuge_id = :kid";
+			command.Parameters.AddWithValue("kid", kraftfahrzeug.KraftfahrzeugId);
+			try
+            {
+				command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+			}
+			finally
+            {
+				command.Connection.Close();
+			}	
+		}
 
-        public static Kraftfahrzeug Get(int kraftfahrzeug_id)
+		public static Kraftfahrzeug Get(int kraftfahrzeug_id)
         {
 			Kraftfahrzeug kraftfahrzeug = new Kraftfahrzeug();
 
@@ -91,17 +114,18 @@ namespace VRentalsClasses.Models
 		public Kraftfahrzeug(NpgsqlDataReader reader)
 		{
 			KraftfahrzeugId = reader.GetInt32(0);
-			MietPreis = reader.IsDBNull(1) ? null : reader.GetInt32(1);
+			MietPreis = reader.IsDBNull(1) ? null : reader.GetDouble(1);
 			GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2);
 			Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3);
 			//SchadenListe = reader.IsDBNull(5) ? null : reader.GetString(5);
 			//BildBytesList = reader.IsDBNull(6) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(6);
 			//BildVorhanden = reader.IsDBNull(4) ? null : reader.GetBool(4);
 			//AdressenList = reader.IsDBNull(8) ? null : reader.GetString(8);
-			//AktuellerStandort = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9);
 			Marke = reader.IsDBNull(4) ? null : reader.GetString(4);
 			Modell = reader.IsDBNull(5) ? null : reader.GetString(5);
-			Bilder_Id = reader.IsDBNull(6) ? null : (int?)reader.GetInt32(6);
+			Ausgabenstelle_Id = reader.IsDBNull(6) ? null: reader.GetInt32(6);
+			AktuellerStandort = reader.IsDBNull(7) ? null : reader.GetInt32(7);
+			Kennzeichen = reader.IsDBNull(8) ? null : reader.GetString(8);
 		}
 
 		#endregion
@@ -124,31 +148,27 @@ namespace VRentalsClasses.Models
 
 		[JsonPropertyName("schadenliste")]
 		public List<Schaden>? SchadenListe { get; set; }
-		[JsonPropertyName("bilder_id")]
-		public int? Bilder_Id { get; set; }
 
 		[JsonIgnore()]
-		public List<byte[]>? BildBytesList { get; set; }
+		public List<Bild>? BildListe { get; set; }
 
-		[JsonIgnore()]
-		public bool BildVorhanden
-		{
-			get
-			{
-				return BildBytesList != null && BildBytesList[0].Length > 0;
-			}
-			set
-			{
-				bool x = value;
-			}
-		}
+		[JsonPropertyName("adressenlist")]
+		public List<Adresse>? AdressenListe { get; set; }
 
-		public List<Adresse>? AdressenList { get; set; }
-		public IAdresse? AktuellerStandort { get; set; }
+		[JsonPropertyName("aktuellerstandort")]
+		public int? AktuellerStandort { get; set; }
+
 		[JsonPropertyName("marke")]
 		public string? Marke { get; set; }
+
 		[JsonPropertyName("modell")]
 		public string? Modell { get; set; }
+
+		[JsonPropertyName("ausgabenstelle_id")]
+		public int? Ausgabenstelle_Id{ get; set; }
+
+		[JsonPropertyName("kennzeichen")]
+		public string? Kennzeichen { get; set; }
 
 		#endregion
 
@@ -167,7 +187,9 @@ namespace VRentalsClasses.Models
 				Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3),
 				Marke = reader.IsDBNull(4) ? null : reader.GetString(4),
 				Modell = reader.IsDBNull(5) ? null : reader.GetString(5),
-				Bilder_Id = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+				Ausgabenstelle_Id = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+				AktuellerStandort = reader.IsDBNull(7) ? null : reader.GetInt32(7),
+				Kennzeichen = reader.IsDBNull(8) ? null : reader.GetString(8),
 			};
 			return kraftfahrzeug;
 		}
@@ -184,13 +206,13 @@ namespace VRentalsClasses.Models
 
 			if (this.KraftfahrzeugId.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, bilder_id = :bil where kraftfahrzeuge_id = :kid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeuge_id = :kid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.KraftfahrzeugId = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:kid, :mp, :gz, :k, :ma, :mo)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:kid, :mp, :gz, :k, :ma, :mo, :asid, :aso, :ken)";
 			}
 
 			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId);
@@ -199,8 +221,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
 			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
 			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
-			command.Parameters.AddWithValue("bil", this.Bilder_Id.HasValue ? (int)this.Bilder_Id : null);
-
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (int)this.Ausgabenstelle_Id : (object)DBNull.Value);
+			command.Parameters.AddWithValue("aso", this.AktuellerStandort.HasValue ? (int)this.AktuellerStandort : (object)DBNull.Value);
+			command.Parameters.AddWithValue("ken", String.IsNullOrEmpty(this.Kennzeichen) ? (object)DBNull.Value : (object)this.Kennzeichen);
 			try
 			{
 				result = command.ExecuteNonQuery();
@@ -226,7 +249,7 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, bilder_id = :bil where kraftfahrzeuge_id = :kid";
+			command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeuge_id = :kid";
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("kid", id);
 			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
@@ -234,11 +257,104 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
 			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
 			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
-			command.Parameters.AddWithValue("bil", this.Bilder_Id.HasValue ? (int)this.Bilder_Id : null);
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (int)this.Ausgabenstelle_Id : (object)DBNull.Value);
+			command.Parameters.AddWithValue("aso", this.AktuellerStandort.HasValue ? (int)this.AktuellerStandort : (object)DBNull.Value);
+			command.Parameters.AddWithValue("ken", String.IsNullOrEmpty(this.Kennzeichen) ? (object)DBNull.Value : (object)this.Kennzeichen);
 
 			try
 			{
 				result = command.ExecuteNonQuery();
+				if (result == 1)
+				{
+					if (this.KostenListe != null && this.KostenListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Ausgaben ausgaben in this.KostenListe)
+						{
+							ausgaben.Ausgaben_Id = this.KraftfahrzeugId;
+							iterator += ausgaben.Save();
+						}
+
+						if (iterator == this.KostenListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -2; 
+						}
+					}
+
+					if (this.SchadenListe != null && this.SchadenListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Schaden schaden in this.SchadenListe)
+						{
+							schaden.Schaden_Id = this.KraftfahrzeugId;
+							iterator += schaden.Save();
+						}
+
+						if (iterator == this.SchadenListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -3;
+						}
+					}
+
+					if (this.BildListe != null && this.BildListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Bild bild in this.BildListe)
+						{
+							bild.Bilder_Id = this.KraftfahrzeugId;
+							iterator += bild.Save();
+						}
+
+						if (iterator == this.BildListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -4;
+						}
+					}
+
+					if (this.AdressenListe != null && this.AdressenListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Adresse adresse in this.AdressenListe)
+						{
+							adresse.Adresse_Id = this.KraftfahrzeugId;
+							iterator += adresse.Save();
+						}
+
+						if (iterator == this.AdressenListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -5;
+						}
+					}
+
+					//if (this.KraftfahrzeugList != null && this.KraftfahrzeugList.Count > 0)
+					//{
+					//	int iterator = 0;
+					//	//Kraftfahrzeug.Truncate();
+					//	foreach (Kraftfahrzeug kraftfahrzeug in this.KraftfahrzeugList)
+					//	{
+					//		kraftfahrzeug.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
+					//		iterator += kraftfahrzeug.Save();
+					//	}
+					//}
+
+					command.Connection.Open();
+				}
 			}
 			catch (Exception ex)
 			{

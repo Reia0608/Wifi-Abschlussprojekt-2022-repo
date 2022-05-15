@@ -119,7 +119,7 @@ namespace VRentalsClasses.Models
 			{
 				Ausgabenstelle_Id = reader.GetInt32(0),
 				Adresse_Id = reader.IsDBNull(1) ? null : reader.GetInt32(1),
-		};
+			};
 			return ausgabenstelle;
 		}
 
@@ -135,24 +135,117 @@ namespace VRentalsClasses.Models
 
 			if (this.Ausgabenstelle_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set adresse_id = :aid where ausgabenstelle_id = :asid"; 
+				command.CommandText = $"update {SCHEMA}.{TABLE} set adresse_id = :aid where ausgabenstelle_id = :asid";
+			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Adresse_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :bez, :lan, :so, :plz, :str, :stn)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:asid, :aid)";
 			}
 
-			command.Parameters.AddWithValue("aid", this.Adresse_Id);
-			command.Parameters.AddWithValue("bez", String.IsNullOrEmpty(this.Bezeichnung) ? (object)DBNull.Value : (object)this.Bezeichnung);
-			command.Parameters.AddWithValue("lan", String.IsNullOrEmpty(this.Land) ? (object)DBNull.Value : (object)this.Land);
-			command.Parameters.AddWithValue("so", String.IsNullOrEmpty(this.Stadt_Ort) ? (object)DBNull.Value : (object)this.Stadt_Ort);
-			command.Parameters.AddWithValue("plz", String.IsNullOrEmpty(this.PLZ) ? (object)DBNull.Value : (object)this.PLZ);
-			command.Parameters.AddWithValue("str", String.IsNullOrEmpty(this.Strasse) ? (object)DBNull.Value : (object)this.Strasse);
-			command.Parameters.AddWithValue("stn", String.IsNullOrEmpty(this.StrassenNummer) ? (object)DBNull.Value : (object)this.StrassenNummer);
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id);
+			command.Parameters.AddWithValue("aid", this.Adresse_Id.HasValue ? (object)this.Adresse_Id.Value : (object)DBNull.Value);
 			try
 			{
 				result = command.ExecuteNonQuery();
+				if (result == 1)
+				{
+					if (this.AnhaengerListe != null && this.AnhaengerListe.Count > 0)
+					{
+						int anhaengerListeIterator = 0;
+						foreach (Anhaenger anhaenger in this.AnhaengerListe)
+						{
+							anhaenger.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
+							anhaengerListeIterator += anhaenger.Save();
+						}
+
+						if (anhaengerListeIterator == this.AnhaengerListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = 0;
+						}
+					}
+
+					if (this.KraftfahrzeugListe != null && this.KraftfahrzeugListe.Count > 0)
+					{
+						int kfzListeIterator = 0;
+						//Kraftfahrzeug.Truncate();
+						foreach (Kraftfahrzeug kraftfahrzeug in this.KraftfahrzeugListe)
+						{
+							kraftfahrzeug.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
+							kfzListeIterator += kraftfahrzeug.Save();
+						}
+					}
+					command.Connection.Open();
+				}
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				command.Connection.Close();
+			}
+			return result;
+		}
+
+		public int Save(int id)
+		{
+			int result = -1;
+			NpgsqlCommand command = new NpgsqlCommand();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			command.CommandText = $"update {SCHEMA}.{TABLE} set adresse_id = :aid where ausgabenstelle_id = :asid";
+			//WIP: WARNING! Potential security danger! User could change the id to what he wants
+			command.Parameters.AddWithValue("asid", id);
+			command.Parameters.AddWithValue("aid", this.Adresse_Id.HasValue ? (object)this.Adresse_Id.Value : (object)DBNull.Value);
+			try
+			{
+				result = command.ExecuteNonQuery();
+				if (result == 1)
+				{
+					if (this.AnhaengerListe != null && this.AnhaengerListe.Count > 0)
+					{
+						int anhaengerListeIterator = 0;
+						foreach (Anhaenger anhaenger in this.AnhaengerListe)
+						{
+							anhaenger.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
+							anhaengerListeIterator += anhaenger.Save();
+						}
+
+						if (anhaengerListeIterator == this.AnhaengerListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = 0;
+						}
+					}
+
+					if (this.KraftfahrzeugListe != null && this.KraftfahrzeugListe.Count > 0)
+					{
+						int kfzListeIterator = 0;
+						//Kraftfahrzeug.Truncate();
+						foreach (Kraftfahrzeug kraftfahrzeug in this.KraftfahrzeugListe)
+						{
+							kraftfahrzeug.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
+							kfzListeIterator += kraftfahrzeug.Save();
+						}
+					}
+					command.Connection.Open();
+				}
+				return result;
 			}
 			catch (Exception ex)
 			{
@@ -174,8 +267,8 @@ namespace VRentalsClasses.Models
 				command.Connection = DBConnection.GetConnection();
 				command.Connection.Open();
 			}
-			command.CommandText = $"delete from {SCHEMA}.{TABLE} where adresse_id = :aid";
-			command.Parameters.AddWithValue("aid", this.Adresse_Id);
+			command.CommandText = $"delete from {SCHEMA}.{TABLE} where ausgabenstelle_id = :asid";
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id);
 			try
 			{
 				result = command.ExecuteNonQuery();

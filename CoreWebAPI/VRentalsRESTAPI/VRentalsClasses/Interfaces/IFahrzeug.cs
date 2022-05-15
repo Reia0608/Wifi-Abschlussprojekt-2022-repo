@@ -8,6 +8,6 @@ namespace VRentalsClasses.Interfaces
 {
     public interface IFahrzeug
     {
-        public IAdresse? AktuellerStandort { get; set; }
+        public int? AktuellerStandort { get; set; }
     }
 }

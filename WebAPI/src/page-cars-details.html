@@ -1,0 +1,199 @@
+<div class="container">
+	<div class="row mt-2">
+		<div class="col-12 border-bottom">
+			<h2 class="text-light">Artikel Daten</h2>
+		</div>
+	</div>
+	<div class="row mt-2 py-3 border-bottom">
+		<div class="col-2 text-light text-end">Gruppe</div>
+		<div class="col-3">
+			<select name="selectGruppe" id="selectGruppe" class="form-select form-select-sm"></select>
+		</div>
+		<div class="col-2 text-light text-end">Kategorie</div>
+		<div class="col-3">
+			<select name="selectKategorie" id="selectKategorie" class="form-select form-select-sm"></select>
+		</div>
+	</div>
+	<div class="row mt-3">
+		<div class="col-4">
+
+			<div class="row">
+				<div class="col-12" id="imageContainer">
+					<img src="./images/LeerBild.jpg" style="width: 500px;" id="imgBild" />
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12">
+					<span class="text-light" id="fileName"></span>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-8">
+
+			<div class="row ">
+				<div class="col-4 text-light text-end">Nummer</div>
+				<div class="col-6"><input type="text" class="form-control form-control-sm" id="textNummer" /></div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col-4 text-light text-end">Name</div>
+				<div class="col-8"><input type="text" class="form-control form-control-sm" id="textName" /></div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col-4 text-light text-end">Preis Einkauf</div>
+				<div class="col-4">
+					<div class="input-group input-group-sm">
+						<input type="text" class="form-control form-control-sm" id="textPreisEk" />
+						<span class="input-group-text">€</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col-4 text-light text-end">Preis Verkauf</div>
+				<div class="col-4">
+					<div class="input-group input-group-sm">
+						<input type="text" class="form-control form-control-sm" id="textPreisVk" />
+						<span class="input-group-text">€</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col-4 text-light text-end">Packungsinhalt</div>
+				<div class="col-4"><input type="text" class="form-control form-control-sm" id="textPackung" /></div>
+				<div class="col-4">
+					<select class="form-select form-select-sm" id="selectEinheit">
+						<option value="stk">Stk.</option>
+						<option value="l">Liter</option>
+						<option value="ml">ml</option>
+						<option value="g">g</option>
+						<option value="kg">Kg</option>
+						<option value="to">to</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col-4 text-light text-end">Beschreibung</div>
+				<div class="col-8"><textarea class="form-control form-control-sm" rows="3" id="textBeschreibung"></textarea></div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col-4 text-light text-end">letzter Einkauf</div>
+				<div class="col-3"><input type="date" class="form-control form-control-sm" id="dateLetzterEinkauf" /></div>
+			</div>
+
+		</div>
+	</div> <!-- /.row -->
+	<div class="row mt-5">
+		<div class="col-12">
+
+			<div class="accordion" id="accordionArtikel">
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="accordionHeaderBewegung">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPanelBewegung" aria-expanded="true" aria-controls="accordionPanelBewegung">
+							Artikel Bewegung(en)
+						</button>
+					</h2>
+					<div id="accordionPanelBewegung" class="accordion-collapse collapse show" aria-labelledby="accordionHeaderBewegung">
+						<div class="accordion-body">
+							<table class="table table-dark table-striped" id="tableBewegungList">
+								<thead>
+									<tr>
+										<th><button type="button" class="btn btn-outline-light btn-sm" id="buttonBewegungNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neu</button></th>
+										<th>Datum</th>
+										<th>Menge</th>
+										<th>Umlauf</th>
+										<th>Grund</th>
+										<th>von</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="accordionHeaderWert">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPanelWert" aria-expanded="false" aria-controls="accordionPanelWert">
+							Wert(e)
+						</button>
+					</h2>
+					<div id="accordionPanelWert" class="accordion-collapse collapse" aria-labelledby="accordionHeaderWert">
+						<div class="accordion-body" id="accordionPanelWertBody">
+
+						</div>
+					</div>
+
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="accordionHeaderKalender">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPanelKalender" aria-expanded="false" aria-controls="accordionPanelKalender">
+								Kalender
+							</button>
+						</h2>
+						<div id="accordionPanelKalender" class="accordion-collapse collapse" aria-labelledby="accordionHeaderKalender">
+							<div class="accordion-body" id="accordionPanelKalenderBody">
+	
+							</div>
+						</div>
+		
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<nav class="navbar fixed-bottom navbar-light bg-dark">
+		<div class="container">
+			<button type="button" class="btn btn-outline-light" id="buttonArtikelSpeichern"><span class="iconify me-2" data-icon="mdi-content-save"></span>Speichern</button>
+		</div>
+	</nav>
+
+	<div class="modal fade" id="modalBewegung" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Artikel Bewegung</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-6">
+							<label for="textMenge">Anzahl/Menge</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>
+							<input type="text" class="form-control" id="textMenge" />
+							<div class="valid-feedback">Ok!</div>
+							<div class="invalid-feedback">Keine Nr. oder falsches Format!</div>														
+						</div>
+						<div class="col-6">
+							<label for="selectUmlauf">Umlauf</label>
+							<select name="selectUmlauf" id="selectUmlauf" class="form-select">
+								<option value="0">Unbekannt</option>
+								<option value="1">Eingang</option>
+								<option value="2">Ausgang</option>
+								<option value="4">PrivatEntnahme</option>
+							</select>
+							<div class="valid-feedback">Ok!</div>
+							<div class="invalid-feedback">Unbekannt ist nicht erlaubt!</div>														
+					</div>
+					</div>
+					<div class="row mt-2">
+						<div class="col-12">
+							<label for="textGrund">Grund</label>
+							<textarea class="form-control" id="textGrund" row="3"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+					<button type="button" class="btn btn-primary" id="buttonModalBewegungSpeichern">Speichern</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</div>

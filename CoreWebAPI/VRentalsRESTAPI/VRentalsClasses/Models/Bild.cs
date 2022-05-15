@@ -99,7 +99,7 @@ namespace VRentalsClasses.Models
 		#region properties
 		[JsonPropertyName("bilder_id")]
 		public int? Bilder_Id { get; set; }
-		[JsonPropertyName("bildbyte")]
+		[JsonIgnore()]
 		public byte[]? BildBytes { get; set; }
 		[JsonPropertyName("bild_url")]
 		public string? Bild_Url { get; set; }
@@ -136,7 +136,7 @@ namespace VRentalsClasses.Models
 
 			if (this.Bilder_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set bild = :bil, bild_url = :url where bilder_id = :bid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_url = :url where bilder_id = :bid";
 			}
 			else
 			{
@@ -146,7 +146,6 @@ namespace VRentalsClasses.Models
 			}
 
 			command.Parameters.AddWithValue("bid", this.Bilder_Id);
-			command.Parameters.AddWithValue("bil", this.BildBytes == null ? (object)DBNull.Value : this.BildBytes);
 			command.Parameters.AddWithValue("url", String.IsNullOrEmpty(this.Bild_Url) ? (object)DBNull.Value : (object)this.Bild_Url);
 
 			try

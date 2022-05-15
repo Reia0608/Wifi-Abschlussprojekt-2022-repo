@@ -213,6 +213,6 @@ namespace VRentalsClasses.Models
 			}
 			return result;
 		}
-
-	}
+        #endregion
+    }
 }

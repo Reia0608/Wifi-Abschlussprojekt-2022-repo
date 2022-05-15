@@ -116,14 +116,15 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("mietpreis")]
 		public double? MietPreis { get; set; }
 		[JsonIgnore]
-		public List<byte[]>? BildBytesList { get; set; }
+		public List<Bild>? BildListe { get; set; }
 
         // In welchen Ausgabestellen befindet sich diese Art/ Kategorie von Anhänger?
-        public List<Adresse>? AdressenList { get; set; }
-		public IAdresse? AktuellerStandort { get; set; }
+        public List<Adresse>? AdressenListe { get; set; }
+		public int? AktuellerStandort { get; set; }
 		public List<Ausgaben>? KostenListe { get; set; }
 
 		public List<Schaden>? SchadenListe { get; set; }
+		public int? Ausgabenstelle_Id { get; set; }
 
 		#endregion
 

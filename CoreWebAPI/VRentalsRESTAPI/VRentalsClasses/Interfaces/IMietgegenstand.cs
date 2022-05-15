@@ -31,9 +31,9 @@ namespace VRentalsClasses.Interfaces
         // Gehört der Gegenstand einer Kategorie an?
         public string? Kategorie { get; set; }
         // Eine von Fotos des Gegenstands.
-        public List<byte[]>? BildBytesList { get; set; }
+        public List<Bild>? BildListe { get; set; }
         // Wo ist der Gegenstand vorzufinden?
-        public List<Adresse>? AdressenList { get; set; }
+        public List<Adresse>? AdressenListe { get; set; }
 
         #endregion
         //************************************************************************
