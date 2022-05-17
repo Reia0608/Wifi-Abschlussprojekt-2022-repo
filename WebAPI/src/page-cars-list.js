@@ -1,4 +1,4 @@
-import "./app.js";
+import Helper from "./helper.js";
 
 export default class PageCarsList 
 {
@@ -13,17 +13,19 @@ export default class PageCarsList
             {
 				let html = '';
                 let iterator = 1;
+				this.Helper = new Helper();
 				for (let kraftfahrzeug of response) 
                 {
+					// WIP: putting kraftfahrzeugid into html code potentially harmful?!
 					html += `
-                        <ul class="list-group list-group-horizontal-sm">
-                        <li class="list-group-item col-1 ">${iterator}</li>
-                        <li class="list-group-item col-2 ">${kraftfahrzeug.marke}</li>
-                        <li class="list-group-item col-3 ">${kraftfahrzeug.modell}</li>
-                        <li class="list-group-item col-4 ">${kraftfahrzeug.gegenstandzustand}</li>
-                        <li class="list-group-item col-5 ">${kraftfahrzeug.aktuellerstandort}</li>
-                        <li class="list-group-item col-6 ">${kraftfahrzeug.mietpreis}</li>
-                        <li class="list-group-item col-7 ">${kraftfahrzeug.kennzeichen}</li>
+                        <ul class="list-group list-group-horizontal-sm clickable" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeugid}">
+                        <li class="list-group-item col-1" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeugid}>${iterator}</li>
+                        <li class="list-group-item col-2">${kraftfahrzeug.marke}</li>
+                        <li class="list-group-item col-3">${kraftfahrzeug.modell}</li>
+                        <li class="list-group-item col-4">${this.Helper.GegenstandZustandConverter(kraftfahrzeug.gegenstandzustand)}</li>
+                        <li class="list-group-item col-5">${kraftfahrzeug.aktuellerstandort}</li>
+                        <li class="list-group-item col-6">${kraftfahrzeug.mietpreis}</li>
+                        <li class="list-group-item col-7">${kraftfahrzeug.kennzeichen}</li>
                         </ul>
 					`;
                     iterator++;
@@ -35,34 +37,33 @@ export default class PageCarsList
 				// events
 				//--------------------------------------
 				// ListGroupElement-click
-				ulCarList.addEventListener('click', (e) => 
+				ulCarList.addEventListener('click', (pointerCoordinates) => 
                 {
 					let button = null;
 
-					if (e.target.nodeName == 'PATH' && e.target.parentElement.nodeName == 'SVG' && e.target.parentElement.parentElement.nodeName == 'BUTTON') 
+					if (pointerCoordinates.target.nodeName == 'PATH' && pointerCoordinates.target.parentElement.nodeName == 'SVG' && pointerCoordinates.target.parentElement.parentElement.nodeName == 'BUTTON') 
                     {
-                        button = e.target.parentElement.parentElement;
+                        button = pointerCoordinates.target.parentElement.parentElement;
                     }
-					else if (e.target.nodeName == 'SVG' && e.target.parentElement.nodeName == 'BUTTON')
+					else if (pointerCoordinates.target.nodeName == 'SVG' && pointerCoordinates.target.parentElement.nodeName == 'BUTTON')
                     {
-                        button = e.target.parentElement;
+                        button = pointerCoordinates.target.parentElement;
                     } 
-					else if (e.target.nodeName == 'BUTTON') 
+					else if (pointerCoordinates.target.nodeName == 'BUTTON') 
                     {
-                        button = e.target;
+                        button = pointerCoordinates.target;
                     }
 
 					if (button) 
                     {
 
 					}
-					else if (e.target.nodeName == 'TD') 
+					else if (pointerCoordinates.target.nodeName == 'LI') 
                     {
-						let kraftfahrzeugid = e.target.parentElement.dataset.kraftfahrzeugid;
-						window.open('#kraftfahrzeugdetail?kid=' + kraftfahrzeugid, '_self');
+						let kraftfahrzeugid = pointerCoordinates.target.parentElement.dataset.kraftfahrzeugId;
+						window.open('#cardetails?kid=' + kraftfahrzeugid, '_self');
 					}
 				});
-
 			}, (ex) => 
             {
 				alert(ex);

@@ -1,97 +1,80 @@
 <div class="container">
 	<div class="row mt-2">
 		<div class="col-12 border-bottom">
-			<h2 class="text-light">Artikel Daten</h2>
+			<h2 class="">KfZ Daten</h2>
 		</div>
 	</div>
 	<div class="row mt-2 py-3 border-bottom">
-		<div class="col-2 text-light text-end">Gruppe</div>
-		<div class="col-3">
-			<select name="selectGruppe" id="selectGruppe" class="form-select form-select-sm"></select>
-		</div>
-		<div class="col-2 text-light text-end">Kategorie</div>
+		<div class="col-2 text-end">Kategorie</div>
 		<div class="col-3">
 			<select name="selectKategorie" id="selectKategorie" class="form-select form-select-sm"></select>
 		</div>
 	</div>
 	<div class="row mt-3">
-		<div class="col-4">
-
+		<div class="col-4-sm">
 			<div class="row">
-				<div class="col-12" id="imageContainer">
-					<img src="./images/LeerBild.jpg" style="width: 500px;" id="imgBild" />
+				<div id="carouselControlImages" class="carousel slide" data-bs-ride="carousel" id="carouselControlImages">
+					<div class="carousel-indicators">
+					  <button type="button" data-bs-target="#carouselControlImages" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+					  <button type="button" data-bs-target="#carouselControlImages" data-bs-slide-to="1" aria-label="Slide 2"></button>
+					  <button type="button" data-bs-target="#carouselControlImages" data-bs-slide-to="2" aria-label="Slide 3"></button>
+					</div>
+					<div class="carousel-inner" id="imgContainer">
+					  <div class="carousel-item active">
+						<img src=".\..\media\LeerBild.jpg" class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer1">
+					  </div>
+					</div>
+					<button class="carousel-control-prev" type="button" data-bs-target="#carouselControlImages" data-bs-slide="prev">
+					  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					  <span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#carouselControlImages" data-bs-slide="next">
+					  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+					  <span class="visually-hidden">Next</span>
+					</button>
+				  </div>
 				</div>
-			</div>
-
 			<div class="row">
 				<div class="col-12">
-					<span class="text-light" id="fileName"></span>
+					<span class="" id="fileName"></span>
 				</div>
 			</div>
-
 		</div>
 		<div class="col-8">
-
 			<div class="row ">
-				<div class="col-4 text-light text-end">Nummer</div>
-				<div class="col-6"><input type="text" class="form-control form-control-sm" id="textNummer" /></div>
+				<div class="col-4 text-end">Marke</div>
+				<div class="col-6"><input type="text" class="form-control form-control-sm" id="inputMarke" /></div>
 			</div>
-
 			<div class="row mt-3">
-				<div class="col-4 text-light text-end">Name</div>
-				<div class="col-8"><input type="text" class="form-control form-control-sm" id="textName" /></div>
+				<div class="col-4 text-end">Modell</div>
+				<div class="col-8"><input type="text" class="form-control form-control-sm" id="inputModell" /></div>
 			</div>
-
 			<div class="row mt-3">
-				<div class="col-4 text-light text-end">Preis Einkauf</div>
+				<div class="col-4 text-end">Kennzeichen</div>
+				<div class="col-8"><input type="text" class="form-control form-control-sm" id="inputKennzeichen" /></div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Mietpreis</div>
 				<div class="col-4">
 					<div class="input-group input-group-sm">
-						<input type="text" class="form-control form-control-sm" id="textPreisEk" />
+						<input type="text" class="form-control form-control-sm" id="inputMietpreis" />
 						<span class="input-group-text">€</span>
 					</div>
 				</div>
 			</div>
-
 			<div class="row mt-3">
-				<div class="col-4 text-light text-end">Preis Verkauf</div>
-				<div class="col-4">
-					<div class="input-group input-group-sm">
-						<input type="text" class="form-control form-control-sm" id="textPreisVk" />
-						<span class="input-group-text">€</span>
-					</div>
-				</div>
-			</div>
-
-			<div class="row mt-3">
-				<div class="col-4 text-light text-end">Packungsinhalt</div>
-				<div class="col-4"><input type="text" class="form-control form-control-sm" id="textPackung" /></div>
-				<div class="col-4">
-					<select class="form-select form-select-sm" id="selectEinheit">
-						<option value="stk">Stk.</option>
-						<option value="l">Liter</option>
-						<option value="ml">ml</option>
-						<option value="g">g</option>
-						<option value="kg">Kg</option>
-						<option value="to">to</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="row mt-3">
-				<div class="col-4 text-light text-end">Beschreibung</div>
+				<div class="col-4 text-end">Beschreibung</div>
 				<div class="col-8"><textarea class="form-control form-control-sm" rows="3" id="textBeschreibung"></textarea></div>
 			</div>
 
 			<div class="row mt-3">
-				<div class="col-4 text-light text-end">letzter Einkauf</div>
+				<div class="col-4 text-end">letzter Einkauf</div>
 				<div class="col-3"><input type="date" class="form-control form-control-sm" id="dateLetzterEinkauf" /></div>
 			</div>
-
 		</div>
 	</div> <!-- /.row -->
 	<div class="row mt-5">
 		<div class="col-12">
-
 			<div class="accordion" id="accordionArtikel">
 				<div class="accordion-item">
 					<h2 class="accordion-header" id="accordionHeaderBewegung">
@@ -128,7 +111,6 @@
 
 						</div>
 					</div>
-
 					<div class="accordion-item">
 						<h2 class="accordion-header" id="accordionHeaderKalender">
 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPanelKalender" aria-expanded="false" aria-controls="accordionPanelKalender">
@@ -137,63 +119,58 @@
 						</h2>
 						<div id="accordionPanelKalender" class="accordion-collapse collapse" aria-labelledby="accordionHeaderKalender">
 							<div class="accordion-body" id="accordionPanelKalenderBody">
-	
 							</div>
 						</div>
-		
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav class="navbar fixed-bottom navbar-light bg-dark">
+			<div class="container">
+				<button type="button" class="btn btn-outline-light" id="buttonKfzSpeichern"><span class="iconify me-2" data-icon="mdi-content-save"></span>Speichern</button>
+				<button type="button" class="btn btn-outline-light" id="buttonKfzAbrechen"><span class="iconify me-2" data-icon="ic:outline-cancel"></span>Abbrechen</button>
+			</div>
+		</nav>
+		<div class="modal fade" id="modalBewegung" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Artikel Bewegung</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-6">
+								<label for="textMenge">Anzahl/Menge</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>
+								<input type="text" class="form-control" id="textMenge" />
+								<div class="valid-feedback">Ok!</div>
+								<div class="invalid-feedback">Keine Nr. oder falsches Format!</div>														
+							</div>
+							<div class="col-6">
+								<label for="selectUmlauf">Umlauf</label>
+								<select name="selectUmlauf" id="selectUmlauf" class="form-select">
+									<option value="0">Unbekannt</option>
+									<option value="1">Eingang</option>
+									<option value="2">Ausgang</option>
+									<option value="4">PrivatEntnahme</option>
+								</select>
+								<div class="valid-feedback">Ok!</div>
+								<div class="invalid-feedback">Unbekannt ist nicht erlaubt!</div>														
+						</div>
+						</div>
+						<div class="row mt-2">
+							<div class="col-12">
+								<label for="textGrund">Grund</label>
+								<textarea class="form-control" id="textGrund" row="3"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+						<button type="button" class="btn btn-primary" id="buttonModalBewegungSpeichern">Speichern</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
-	<nav class="navbar fixed-bottom navbar-light bg-dark">
-		<div class="container">
-			<button type="button" class="btn btn-outline-light" id="buttonArtikelSpeichern"><span class="iconify me-2" data-icon="mdi-content-save"></span>Speichern</button>
-		</div>
-	</nav>
-
-	<div class="modal fade" id="modalBewegung" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Artikel Bewegung</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-6">
-							<label for="textMenge">Anzahl/Menge</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>
-							<input type="text" class="form-control" id="textMenge" />
-							<div class="valid-feedback">Ok!</div>
-							<div class="invalid-feedback">Keine Nr. oder falsches Format!</div>														
-						</div>
-						<div class="col-6">
-							<label for="selectUmlauf">Umlauf</label>
-							<select name="selectUmlauf" id="selectUmlauf" class="form-select">
-								<option value="0">Unbekannt</option>
-								<option value="1">Eingang</option>
-								<option value="2">Ausgang</option>
-								<option value="4">PrivatEntnahme</option>
-							</select>
-							<div class="valid-feedback">Ok!</div>
-							<div class="invalid-feedback">Unbekannt ist nicht erlaubt!</div>														
-					</div>
-					</div>
-					<div class="row mt-2">
-						<div class="col-12">
-							<label for="textGrund">Grund</label>
-							<textarea class="form-control" id="textGrund" row="3"></textarea>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-					<button type="button" class="btn btn-primary" id="buttonModalBewegungSpeichern">Speichern</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
 </div>

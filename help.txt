@@ -48,4 +48,46 @@ https://stackoverflow.com/questions/1684291/sql-like-condition-to-check-for-inte
 ==========================================================
 ====================== Firebase login=====================
 ==========================================================
+
 cmd to log into firebase account if error occours: firebase login --interactive
+
+===========================================================
+====================== CSS specificity=====================
+===========================================================
+
+https://www.smashingmagazine.com/2007/07/css-specificity-things-you-should-know/
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
+
+1	type selectors	(CSS)	h1 + ::before
+10	class selectors	(CSS)	.example + [type="radio"] + :hover
+100	id selectors	(CSS)	#example
+1000	style attribute	(HTML)	<h1 style="color:blue">
+
+===============================================================
+======================= Change icon colors=====================
+===============================================================
+
+[CSS Code]
+/* force the icon color to change into #0d6efd*/
+.carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230d6efd' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+   }
+   
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230d6efd' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+}
+========================================================================================
+======================= Dynamically load images into Carousel items=====================
+========================================================================================
+
+https://exchangetuts.com/add-slides-to-bootstrap-3-carousel-dynamically-using-jquery-1639746853029869
+
+==========================================================
+====================== TODO=====================
+==========================================================
+https://stackoverflow.com/questions/236624/how-to-access-html-element-without-id
+
+https://jquery.com/
+
+https://firebase.google.com/docs/storage/web/upload-files

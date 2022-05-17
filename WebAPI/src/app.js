@@ -21,7 +21,7 @@ export default class Application
 		this.Main = document.querySelector('main');
 		this.Footer = document.querySelector('footer');
         this.Aside = document.querySelector('aside');
-		this.apiBaseUrl = 'http://localhost:59968/api/';
+		this.apiBaseUrl = 'https://localhost:44322/api/';
 		this.Benutzer = null;
 
 		new LoginManager(this);
@@ -237,7 +237,7 @@ export default class Application
 			credentials: 'include'
 		}).then((response) => 
 		{
-			if (r.status == 200) return r.json();
+			if (response.status == 200) return response.json();
 			else throw new Error(response.status + ' ' + response.statusText);
 		})
 		.then(successCallback)
@@ -245,7 +245,8 @@ export default class Application
 	}
 
 
-	ApiKraftfahrzeugSet(successCallback, errorCallback, kraftfahrzeug) {
+	ApiKraftfahrzeugSet(successCallback, errorCallback, kraftfahrzeug) 
+	{
 		fetch(this.apiBaseUrl + 'kraftfahrzeug' + (kraftfahrzeug.kraftfahrzeugid ? '/' + kraftfahrzeug.kraftfahrzeugid : ''), 
 		{
 			method: kraftfahrzeug.kraftfahrzeugid ? 'PUT' : 'POST',

@@ -149,7 +149,7 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("schadenliste")]
 		public List<Schaden>? SchadenListe { get; set; }
 
-		[JsonIgnore()]
+		[JsonPropertyName("bildliste")]
 		public List<Bild>? BildListe { get; set; }
 
 		[JsonPropertyName("adressenlist")]

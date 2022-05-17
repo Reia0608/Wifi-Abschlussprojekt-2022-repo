@@ -8,6 +8,8 @@
 1. // WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
 -> Anhaenger.cs + Kraftfahrzeug.cs
 
+2. Add a highlight and a "clickable-mouse-icon" on ul elements hover in page-cars-list.js
+
 
 ===== Priority 3=====
 
