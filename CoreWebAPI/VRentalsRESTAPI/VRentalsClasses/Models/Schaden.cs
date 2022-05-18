@@ -89,15 +89,17 @@ namespace VRentalsClasses.Models
 		public Schaden(NpgsqlDataReader reader)
 		{
 			Schaden_Id = reader.GetInt32(0);
-			SchadensArt = reader.IsDBNull(1) ? null : reader.GetString(1);
-			Beschreibung = reader.IsDBNull(2) ? null : reader.GetString(2);
-			AnfallendeKosten = reader.IsDBNull(3) ? null : reader.GetDouble(3);
+			SchadensDatum = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1);
+			SchadensArt = reader.IsDBNull(2) ? null : reader.GetString(2);
+			Beschreibung = reader.IsDBNull(3) ? null : reader.GetString(3);
+			AnfallendeKosten = reader.IsDBNull(4) ? null : reader.GetDouble(4);
 		}
 
 		#endregion
 		//************************************************************************
 		#region properties
 		public int? Schaden_Id { get; set; }
+		public DateTime? SchadensDatum { get; set; }
 		public string? SchadensArt { get; set; }
 
 		public string? Beschreibung { get; set; }
@@ -116,9 +118,10 @@ namespace VRentalsClasses.Models
 			schaden = new Schaden()
 			{
 				Schaden_Id = reader.GetInt32(0),
-				SchadensArt = reader.IsDBNull(1) ? null : reader.GetString(1),
-				Beschreibung = reader.IsDBNull(2) ? null : reader.GetString(2),
-				AnfallendeKosten = reader.IsDBNull(3) ? null : reader.GetDouble(3),
+				SchadensDatum = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1),
+				SchadensArt = reader.IsDBNull(2) ? null : reader.GetString(2),
+				Beschreibung = reader.IsDBNull(3) ? null : reader.GetString(3),
+				AnfallendeKosten = reader.IsDBNull(4) ? null : reader.GetDouble(4),
 			};
 			return schaden;
 		}
@@ -135,7 +138,7 @@ namespace VRentalsClasses.Models
 
 			if (this.Schaden_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set schadensart = :sart, beschreibung = :bes, anfallendekosten = :afk where schaden_id = :sid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set schadensart = :sart, beschreibung = :bes, anfallendekosten = :afk, schaden_datum = :sd where schaden_id = :sid";
 			}
 			else
 			{
@@ -148,6 +151,7 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("sart", String.IsNullOrEmpty(this.SchadensArt) ? (object)DBNull.Value : (object)this.SchadensArt);
 			command.Parameters.AddWithValue("bes", String.IsNullOrEmpty(this.Beschreibung) ? (object)DBNull.Value : (object)this.Beschreibung);
 			command.Parameters.AddWithValue("afk", this.AnfallendeKosten.HasValue ? (object)this.AnfallendeKosten.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("sd", !this.SchadensDatum.HasValue ? (object)DBNull.Value : (object)this.SchadensDatum.Value);
 			try
 			{
 				result = command.ExecuteNonQuery();

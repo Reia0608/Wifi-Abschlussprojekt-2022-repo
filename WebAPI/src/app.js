@@ -21,7 +21,7 @@ export default class Application
 		this.Main = document.querySelector('main');
 		this.Footer = document.querySelector('footer');
         this.Aside = document.querySelector('aside');
-		this.apiBaseUrl = 'https://localhost:44322/api/';
+		this.apiBaseUrl = 'http://localhost:59968/api/';
 		this.Benutzer = null;
 
 		new LoginManager(this);

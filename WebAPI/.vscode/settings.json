@@ -1,0 +1,11 @@
+{
+	"liveServer.settings.port": 5500,
+	"liveServer.settings.root": "/",
+	"liveServer.settings.CustomBrowser": "chrome",
+	"liveServer.settings.https": {
+		"enable": false,
+		"cert": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\WebAPI\\src\\https\\localhost.pem",
+		"key": "C:\\Users\\Nadia\\Desktop\\Sami\\Abschlussprojekt2022\\Wifi-Abschlussprojekt-2022-repo\\WebAPI\\src\\https\\localhost.key",
+		"passphrase": "wifi"
+	},
+}

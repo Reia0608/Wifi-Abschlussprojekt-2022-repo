@@ -34,7 +34,7 @@ namespace VRentalsRESTAPI
 				options.AddPolicy(name: corsName,
 													builder =>
 													{
-														builder.WithOrigins("https://localhost:5500", "https://localhost:5501");
+														builder.WithOrigins("http://localhost:5500", "http://localhost:5501");
 														builder.AllowAnyHeader();
 														builder.AllowCredentials();
 														builder.AllowAnyMethod();

@@ -189,7 +189,8 @@ CREATE TABLE rentals.tbl_schaden
     schaden_id numeric(10) NOT NULL,
     schadensart character varying,
     beschreibung text,
-    anfallendekosten double precision
+    anfallendekosten double precision,
+	schaden_datum date,
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_schaden

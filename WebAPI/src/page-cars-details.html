@@ -64,7 +64,7 @@
 			</div>
 			<div class="row mt-3">
 				<div class="col-4 text-end">Beschreibung</div>
-				<div class="col-8"><textarea class="form-control form-control-sm" rows="3" id="textBeschreibung"></textarea></div>
+				<div class="col-8"><textarea class="form-control form-control-sm" rows="3" id="textareaBeschreibung"></textarea></div>
 			</div>
 
 			<div class="row mt-3">
@@ -77,22 +77,21 @@
 		<div class="col-12">
 			<div class="accordion" id="accordionArtikel">
 				<div class="accordion-item">
-					<h2 class="accordion-header" id="accordionHeaderBewegung">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPanelBewegung" aria-expanded="true" aria-controls="accordionPanelBewegung">
-							Artikel Bewegung(en)
+					<h2 class="accordion-header" id="accordionHeaderSchaden">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPanelSchaden" aria-expanded="true" aria-controls="accordionPanelSchaden">
+							KfZ Schadensliste
 						</button>
 					</h2>
-					<div id="accordionPanelBewegung" class="accordion-collapse collapse show" aria-labelledby="accordionHeaderBewegung">
+					<div id="accordionPanelSchaden" class="accordion-collapse collapse show" aria-labelledby="accordionHeaderSchaden">
 						<div class="accordion-body">
-							<table class="table table-dark table-striped" id="tableBewegungList">
+							<table class="table table-dark table-striped" id="tableSchadenList">
 								<thead>
 									<tr>
-										<th><button type="button" class="btn btn-outline-light btn-sm" id="buttonBewegungNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neu</button></th>
+										<th><button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neu</button></th>
 										<th>Datum</th>
-										<th>Menge</th>
-										<th>Umlauf</th>
-										<th>Grund</th>
-										<th>von</th>
+										<th>Art des Schadens</th>
+										<th>Beschreibung</th>
+										<th>Anfallende Kosten</th>
 									</tr>
 								</thead>
 								<tbody></tbody>
@@ -131,28 +130,33 @@
 				<button type="button" class="btn btn-outline-light" id="buttonKfzAbrechen"><span class="iconify me-2" data-icon="ic:outline-cancel"></span>Abbrechen</button>
 			</div>
 		</nav>
-		<div class="modal fade" id="modalBewegung" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal fade" id="modalSchaden" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Artikel Bewegung</h5>
+						<h5 class="modal-title" id="exampleModalLabel">KfZ Schaden</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-6">
-								<label for="textMenge">Anzahl/Menge</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>
-								<input type="text" class="form-control" id="textMenge" />
+								<label for="labelAnfallendeKosten">Anfallende Kosten</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>
+								<input type="text" class="form-control" id="labelAnfallendeKosten" />
 								<div class="valid-feedback">Ok!</div>
 								<div class="invalid-feedback">Keine Nr. oder falsches Format!</div>														
 							</div>
 							<div class="col-6">
-								<label for="selectUmlauf">Umlauf</label>
-								<select name="selectUmlauf" id="selectUmlauf" class="form-select">
+								<label for="selectSchadenArt">Art des Schadens</label>
+								<select name="selectSchadenArt" id="selectSchadenArt" class="form-select">
 									<option value="0">Unbekannt</option>
-									<option value="1">Eingang</option>
-									<option value="2">Ausgang</option>
-									<option value="4">PrivatEntnahme</option>
+									<option value="1">Blechschaden</option>
+									<option value="2">Glasbruch</option>
+									<option value="3">Marderschaden</option>
+									<option value="4">Lackschaden</option>
+									<option value="5">Parkschaden</option>
+									<option value="6">Frostschaden</option>
+									<option value="7">Totalschaden</option>
+									<option value="8">Sonstiger Schaden</option>
 								</select>
 								<div class="valid-feedback">Ok!</div>
 								<div class="invalid-feedback">Unbekannt ist nicht erlaubt!</div>														
@@ -160,14 +164,14 @@
 						</div>
 						<div class="row mt-2">
 							<div class="col-12">
-								<label for="textGrund">Grund</label>
-								<textarea class="form-control" id="textGrund" row="3"></textarea>
+								<label for="labelBeschreibung">Beschreibung</label>
+								<textarea class="form-control" id="labelBeschreibung" row="3"></textarea>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-						<button type="button" class="btn btn-primary" id="buttonModalBewegungSpeichern">Speichern</button>
+						<button type="button" class="btn btn-primary" id="buttonModalSchadenSpeichern">Speichern</button>
 					</div>
 				</div>
 			</div>

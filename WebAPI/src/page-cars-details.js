@@ -30,8 +30,8 @@ export default class PageCarsDetails
 
 			if(args.kid)
 			{
-				let kraftfahrzeugId = parseInt(args.kid);
-				this.datenLaden(kraftfahrzeugId);
+				let kraftfahrzeugid = parseInt(args.kid);
+				this.datenLaden(kraftfahrzeugid);
 			}
 			
 			// this.app.ApiGruppeGetList((response) => 
@@ -107,7 +107,7 @@ export default class PageCarsDetails
 			// 			this.kraftfahrzeug = 
 			// 			{
 			// 				kraftfahrzeugid: null,
-			// 				bewegunglist: []
+			// 				schadenlist: []
 			// 			};
 			// 		}
 			// 	}, (ex) => 
@@ -163,20 +163,17 @@ export default class PageCarsDetails
 				const inputModell = this.app.Main.querySelector('#inputModell');
 				const inputKennzeichen = this.app.Main.querySelector('#inputKennzeichen');
 				const inputMietpreis = this.app.Main.querySelector('#inputMietpreis');
-				const textBeschreibung = this.app.Main.querySelector('#textBeschreibung');
-				const dateLetzterEinkauf = this.app.Main.querySelector('#dateLetzterEinkauf');
+				const textareaBeschreibung = this.app.Main.querySelector('#textareaBeschreibung');
+				//const dateLetzterEinkauf = this.app.Main.querySelector('#dateLetzterEinkauf');
 
-				if (textName.value && textNummer.value) 
+				if (inputMarke.value && inputModell.value) 
 				{
-					this.kraftfahrzeug.kategorieid = this.gruppeList[selectGruppe.selectedIndex].kategorielist[selectKategorie.selectedIndex].kategorieid;
-					this.kraftfahrzeug.name = textName.value;
-					this.kraftfahrzeug.nummer = textNummer.value;
-					this.kraftfahrzeug.preisek = textPreisEk.value && !isNaN(textPreisEk.value) ? parseFloat(textPreisEk.value) : null;
-					this.kraftfahrzeug.preisvk = textPreisVk.value && !isNaN(textPreisVk.value) ? parseFloat(textPreisVk.value) : null;
-					this.kraftfahrzeug.packung = textPackung.value && !isNaN(textPackung.value) ? parseInt(textPackung.value) : null;
-					this.kraftfahrzeug.einheit = selectEinheit.value;
-					this.kraftfahrzeug.beschreibung = textBeschreibung.value;
-					this.kraftfahrzeug.letztereinkauf = dateLetzterEinkauf.value ? new Date(dateLetzterEinkauf.value).toISOString() : null;
+					this.kraftfahrzeug.kraftfahrzeugid = parseFloat(args.app.kid);
+					this.kraftfahrzeug.marke = inputMarke.value;
+					this.kraftfahrzeug.modell = inputModell.value;
+					this.kraftfahrzeug.kennzeichen = inputKennzeichen.value;
+					this.kraftfahrzeug.mietpreis = inputMietpreis.value && !isNaN(inputMietpreis.value) ? parseFloat(inputMietpreis.value) : null;
+					this.kraftfahrzeug.beschreibung = textareaBeschreibung.value;
 
 
 					this.app.ApiKraftfahrzeugSet((response) => 
@@ -198,85 +195,86 @@ export default class PageCarsDetails
 				}
 				else 
 				{
-					alert('Name und Nummer ist Pflicht!');
+					alert('Marke und Modell sind Pflicht!');
 				}
 			});
 
 
 			//------------------------------------------------------------------------------------------
-			// alles rund um die Bewegung
-			const buttonBewegungNeu = args.app.Main.querySelector('#buttonBewegungNeu');
-			const modalBewegung = args.app.Main.querySelector('#modalBewegung');
-			const dialogBewegung = new bootstrap.Modal(modalBewegung);
-			const buttonModalBewegungSpeichern = args.app.Main.querySelector('#buttonModalBewegungSpeichern');
-			const textMenge = args.app.Main.querySelector('#textMenge');
-			const selectUmlauf = args.app.Main.querySelector('#selectUmlauf');
-			const textGrund = args.app.Main.querySelector('#textGrund');			
-			const tableBewegungList = this.app.Main.querySelector('#tableBewegungList>tbody');
+			// alles rund um den Schaden
+			const buttonSchadenNeu = args.app.Main.querySelector('#buttonSchadenNeu');
+			const modalSchaden = args.app.Main.querySelector('#modalSchaden');
+			const dialogSchaden = new bootstrap.Modal(modalSchaden);
+			const buttonModalSchadenSpeichern = args.app.Main.querySelector('#buttonModalSchadenSpeichern');
+			const labelAnfallendeKosten = args.app.Main.querySelector('#labelAnfallendeKosten');
+			const selectSchadenArt = args.app.Main.querySelector('#selectSchadenArt');
+			const labelBeschreibung = args.app.Main.querySelector('#labelBeschreibung');			
+			const tableSchadenList = this.app.Main.querySelector('#tableSchadenList>tbody');
 
 			//---------------------------
-			buttonBewegungNeu.addEventListener( 'click', (e) => 
+			buttonSchadenNeu.addEventListener( 'click', (e) => 
 			{
-				textMenge.value = '';
-				selectUmlauf.value = '0';
-				textGrund.value = '';
-				this.bewegung = null;
-				this.bewegungOp = 'i';
-				textMenge.classList.remove('is-invalid', 'is-valid');
-				selectUmlauf.classList.remove('is-invalid', 'is-valid');
+				labelAnfallendeKosten.value = '';
+				selectSchadenArt.value = '0';
+				labelBeschreibung.value = '';
+				this.schaden = null;
+				this.schadenOp = 'i';
+				labelAnfallendeKosten.classList.remove('is-invalid', 'is-valid');
+				selectSchadenArt.classList.remove('is-invalid', 'is-valid');
 
-				dialogBewegung.show();
+				dialogSchaden.show();
 			});
 
 			//---------------------------
-			buttonModalBewegungSpeichern.addEventListener('click', (e) => 
+			buttonModalSchadenSpeichern.addEventListener('click', (e) => 
 			{
+				let schadensArtText = "Unbekannt";
 				let saveOk = true;
-				textMenge.classList.remove('is-invalid', 'is-valid');
-				selectUmlauf.classList.remove('is-invalid', 'is-valid');
+				labelAnfallendeKosten.classList.remove('is-invalid', 'is-valid');
+				selectSchadenArt.classList.remove('is-invalid', 'is-valid');
 
-				if (!textMenge.value || (textMenge.value && isNaN(textMenge.value))) 
+				if (!labelAnfallendeKosten.value || (labelAnfallendeKosten.value && isNaN(labelAnfallendeKosten.value))) 
 				{
 					saveOk = false;
-					textMenge.classList.add('is-invalid');
+					labelAnfallendeKosten.classList.add('is-invalid');
 				}
-				else textMenge.classList.add('is-valid');
+				else labelAnfallendeKosten.classList.add('is-valid');
 
-				if (selectUmlauf.value == '0') 
+				if (selectSchadenArt.value == '0') 
 				{
 					saveOk = false;
-					selectUmlauf.classList.add('is-invalid');
+					selectSchadenArt.classList.add('is-invalid');
 				}
-				else selectUmlauf.classList.add('is-valid');
+				else selectSchadenArt.classList.add('is-valid');
 
 				if (saveOk) 
 				{
-					if (!this.bewegung) 
+					if (!this.schaden) 
 					{
-						this.bewegung = 
+						this.schaden = 
 						{
-							bewegungid: null,
+							schadenid: null,
 							datum: new Date().toISOString()
 						};
 					}
-
-					this.bewegung.personid = args.app.Benutzer.personid;
-					this.bewegung.menge = (textMenge.value && !isNaN(textMenge.value) ? parseInt(textMenge.value) : 0);
-					this.bewegung.umlauf = parseInt(selectUmlauf.value);
-					this.bewegung.grund = textGrund.value;
-					if (this.bewegungOp == 'i') 
+					schadensArtText = selectSchadenArt.options[selectSchadenArt.selectedIndex].text;
+					this.schaden.schadenid = parseFloat(args.kid);
+					this.schaden.anfallendekosten = (labelAnfallendeKosten.value && !isNaN(labelAnfallendeKosten.value) ? parseInt(labelAnfallendeKosten.value) : 0);
+					this.schaden.schadensart = schadensArtText;
+					this.schaden.beschreibung = labelBeschreibung.value;
+					if (this.schadenOp == 'i') 
 					{
-						if (this.kraftfahrzeug && !this.kraftfahrzeug.bewegunglist) this.kraftfahrzeug.bewegunglist = [];
-						this.kraftfahrzeug.bewegunglist.push(this.bewegung);
+						if (this.kraftfahrzeug && !this.kraftfahrzeug.schadenlist) this.kraftfahrzeug.schadenlist = [];
+						this.kraftfahrzeug.schadenlist.push(this.schaden);
 					}
 
-					this.bewegungListAnzeigen();
-					dialogBewegung.hide();
+					this.schadenListAnzeigen();
+					dialogSchaden.hide();
 				}
 			});
 
 			//---------------------------
-			tableBewegungList.addEventListener('click', (e) => 
+			tableSchadenList.addEventListener('click', (e) => 
 			{
 				let btn = null;
 				if (e.target.nodeName.toUpperCase() == 'PATH' && e.target.parentElement.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.parentElement.nodeName == 'BUTTON') btn = e.target.parentElement.parentElement;
@@ -288,28 +286,50 @@ export default class PageCarsDetails
 					if (confirm('Wollen Sie wirklich löschen?')) 
 					{
 						let idx = parseInt(btn.id.split('_')[1]);
-						//this.kraftfahrzeug.bewegunglist = this.kraftfahrzeug.bewegunglist.splice(idx, 1);
-						args.app.ApiBewegungDelete((response) => 
+						this.kraftfahrzeug.schadenlist = this.kraftfahrzeug.schadenlist.splice(idx, 1);
+						args.app.ApiSchadenDelete((response) => 
 						{
-							this.kraftfahrzeug.bewegunglist = response;
-							this.bewegungListAnzeigen();
+							this.kraftfahrzeug.schadenlist = response;
+							this.schadenListAnzeigen();
 
 						}, (ex) => 
 						{
 							alert(ex);
-						}, this.kraftfahrzeug.bewegunglist[idx].bewegungid);
+						}, this.kraftfahrzeug.schadenlist[idx].schadenid);
 					}	
 				}
 				else if (e.target.nodeName == 'TD') 
 				{
 					let idx = parseInt(e.target.parentElement.dataset.idx);
-					this.bewegung = this.kraftfahrzeug.bewegunglist[idx];
-					this.bewegungOp = 'u';
-					textMenge.value = this.bewegung.menge;
-					selectUmlauf.value = this.bewegung.umlauf;
-					textGrund.value = this.bewegung.grund;
+					this.schaden = this.kraftfahrzeug.schadenlist[idx];
+					this.schadenOp = 'u';
+					labelAnfallendeKosten.value = this.schaden.anfallendekosten;
+					switch(this.schaden.schadensart)
+					{
+						case 'Unbekannt': selectSchadenArt.value = 0;
+							break;
+						case 'Blechschaden': selectSchadenArt.value = 1;
+							break;
+						case 'Glasbruch': selectSchadenArt.value = 2;
+							break;
+						case 'Marderschaden': selectSchadenArt.value = 3;
+							break;
+						case 'Lackschaden': selectSchadenArt.value = 4;
+							break;
+						case 'Parkschaden': selectSchadenArt.value = 5;
+							break;
+						case 'Frostschaden': selectSchadenArt.value = 6;
+							break;
+						case 'Totalschaden': selectSchadenArt.value = 7;
+							break;
+						case 'Sonstiger Schaden': selectSchadenArt.value = 8;
+							break;
+						default: selectSchadenArt.value = 0;
+							break;
+					}
+					labelBeschreibung.value = this.schaden.beschreibung;
 
-					dialogBewegung.show();
+					dialogSchaden.show();
 				}
 			});
 		}); // LoadHTML
@@ -344,10 +364,10 @@ export default class PageCarsDetails
 
 			// if (this.kraftfahrzeug.BildListe) 
 			// {
-			// 	imgBild.src = this.app.apiBaseUrl + 'kraftfahrzeug/' + this.kraftfahrzeug.kraftfahrzeugid + '/bild';
+			// 	imgBild.src = this.app.apiBaseUrl + 'kraftfahrzeug/' + this.kraftfahrzeug.kraftfahrzeugId + '/bild';
 			// }
 
-			//this.bewegungListAnzeigen();
+			this.schadenListAnzeigen();
 
 			// let ctl = null;
 			// for (let wertGruppe of this.wertGruppeList) 
@@ -382,44 +402,43 @@ export default class PageCarsDetails
 	}
 
 	//----------------------------------------------------------------------------------------
-	// bewegungen anzeigen
-	// bewegungListAnzeigen() 
-	// {
-	// 	if (this.kraftfahrzeug.bewegunglist && this.kraftfahrzeug.bewegunglist.length > 0) 
-	// 	{
-	// 		const dateFormatter = new Intl.DateTimeFormat('de-AT', 
-	// 		{
-	// 			dateStyle: 'medium'
-	// 		});
-	// 		const tableBewegungList = this.app.Main.querySelector('#tableBewegungList>tbody');
-	// 		let appointments = [];
-	// 		let html = '';
-	// 		let idx = 0;
-	// 		for (let b of this.kraftfahrzeug.bewegunglist) 
-	// 		{
-	// 			appointments.push(
-	// 			{
-	// 				date: new Date(b.datum),
-	// 				text: b.umlauftext + ' ' + b.menge,
-	// 				class: b.umlauf == 1 ? 'bg-success' : (b.umlauf == 2 ? 'bg-danger' : 'bg-info')
-	// 			});
+	// schaden anzeigen
+	schadenListAnzeigen() 
+	{
+		if (this.kraftfahrzeug.schadenlist && this.kraftfahrzeug.schadenlist.length > 0) 
+		{
+			const dateFormatter = new Intl.DateTimeFormat('de-AT', 
+			{
+				dateStyle: 'medium'
+			});
+			const tableSchadenList = this.app.Main.querySelector('#tableSchadenList>tbody');
+			let appointments = [];
+			let html = '';
+			let idx = 0;
+			for (let schadenitem of this.kraftfahrzeug.schadenlist) 
+			{
+				appointments.push(
+				{
+					date: new Date(schadenitem.datum),
+					text: schadenitem.schadensart + ' ' + schadenitem.anfallendekosten,
+					class: schadenitem.schadensart == 1 ? 'bg-success' : (schadenitem.schadensart == 2 ? 'bg-danger' : 'bg-info')
+				});
 
-	// 			html += `
-	// 				<tr data-idx="${idx}">
-	// 					<td>
-	// 						<button type="button" class="btn btn-outline-light btn-sm" id="buttonBewegungDel_${idx}"><span class="iconify" data-icon="mdi-delete"></span></button>
-	// 					</td>
-	// 					<td class="element-clickable">${(b.datum ? dateFormatter.format(new Date(b.datum)) : '&nbsp;')}</td>
-	// 					<td class="element-clickable">${(b.menge ? b.menge : '&nbsp;')}</td>
-	// 					<td class="element-clickable">${(b.umlauftext ? b.umlauftext : '&nbsp;')}</td>
-	// 					<td class="element-clickable">${(b.grund ? b.grund : '&nbsp;')}</td>
-	// 					<td class="element-clickable">${(b.personname ? b.personname : '&nbsp;')}</td>
-	// 				</tr>
-	// 			`;
-	// 			idx++;
-	// 		}
-	// 		tableBewegungList.innerHTML = html;
-	// 		this.calendar.Appointments = appointments;
-	// 	}
-	// }
+				html += `
+					<tr data-idx="${idx}">
+						<td>
+							<button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenDel_${idx}"><span class="iconify" data-icon="mdi-delete"></span></button>
+						</td>
+						<td class="element-clickable">${(schadenitem.datum ? dateFormatter.format(new Date(schadenitem.datum)) : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
+					</tr>
+				`;
+				idx++;
+			}
+			tableSchadenList.innerHTML = html;
+			this.calendar.Appointments = appointments;
+		}
+	}
 }
