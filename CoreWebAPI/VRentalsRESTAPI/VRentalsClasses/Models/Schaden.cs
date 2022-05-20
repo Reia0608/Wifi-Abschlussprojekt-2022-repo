@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_schaden";
-		private const string COLUMNS = "schaden_id, schadensart, beschreibung, anfallendekosten";
+		private const string COLUMNS = "schaden_id, schadensart, beschreibung, anfallendekosten, schaden_datum";
 		#endregion
 
 		//************************************************************************
@@ -40,7 +40,7 @@ namespace VRentalsClasses.Models
 				{
 					schaden = new Schaden();
 					{
-						schaden = schaden.CreateSchaden(reader);
+						schaden = new Schaden(reader);
 					};
 				}
 			}
@@ -59,7 +59,7 @@ namespace VRentalsClasses.Models
 		public static List<Schaden> GetList()
 		{
 			List<Schaden> schadenListe = new List<Schaden>();
-			Schaden schaden = new Schaden();
+			Schaden schaden = null;
 
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
@@ -72,7 +72,7 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				schadenListe.Add(schaden = schaden.CreateSchaden(reader));
+				schadenListe.Add(schaden = new Schaden(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
@@ -89,42 +89,37 @@ namespace VRentalsClasses.Models
 		public Schaden(NpgsqlDataReader reader)
 		{
 			Schaden_Id = reader.GetInt32(0);
-			SchadensDatum = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1);
-			SchadensArt = reader.IsDBNull(2) ? null : reader.GetString(2);
-			Beschreibung = reader.IsDBNull(3) ? null : reader.GetString(3);
-			AnfallendeKosten = reader.IsDBNull(4) ? null : reader.GetDouble(4);
+			SchadensArt = reader.IsDBNull(1) ? null : reader.GetString(1);
+			Beschreibung = reader.IsDBNull(2) ? null : reader.GetString(2);
+			AnfallendeKosten = reader.IsDBNull(3) ? null : reader.GetDouble(3);
+			SchadensDatum = reader.IsDBNull(4) ? null : (DateTime?)reader.GetDateTime(4);
 		}
 
 		#endregion
 		//************************************************************************
 		#region properties
+		[JsonPropertyName("schaden_id")]
 		public int? Schaden_Id { get; set; }
-		public DateTime? SchadensDatum { get; set; }
+
+		[JsonPropertyName("schadensart")]
 		public string? SchadensArt { get; set; }
 
+		[JsonPropertyName("beschreibung")]
 		public string? Beschreibung { get; set; }
 
+		[JsonPropertyName("anfallendekosten")]
 		public double? AnfallendeKosten { get; set; }
 
+		[JsonIgnore()]
 		public List<byte[]>? SchadenBildListe { get; set; }
+
+		[JsonPropertyName("schaden_datum")]
+		public DateTime? SchadensDatum { get; set; }
+
+
 		#endregion
 		//************************************************************************
 		#region public methods
-
-		public Schaden CreateSchaden(NpgsqlDataReader reader)
-		{
-			Schaden schaden = new Schaden();
-
-			schaden = new Schaden()
-			{
-				Schaden_Id = reader.GetInt32(0),
-				SchadensDatum = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1),
-				SchadensArt = reader.IsDBNull(2) ? null : reader.GetString(2),
-				Beschreibung = reader.IsDBNull(3) ? null : reader.GetString(3),
-				AnfallendeKosten = reader.IsDBNull(4) ? null : reader.GetDouble(4),
-			};
-			return schaden;
-		}
 
 		public int Save()
 		{
@@ -144,7 +139,7 @@ namespace VRentalsClasses.Models
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Schaden_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:sid, :sart, :bes, :afk)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:sid, :sart, :bes, :afk, :sd)";
 			}
 
 			command.Parameters.AddWithValue("sid", this.Schaden_Id);
@@ -152,6 +147,39 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("bes", String.IsNullOrEmpty(this.Beschreibung) ? (object)DBNull.Value : (object)this.Beschreibung);
 			command.Parameters.AddWithValue("afk", this.AnfallendeKosten.HasValue ? (object)this.AnfallendeKosten.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("sd", !this.SchadensDatum.HasValue ? (object)DBNull.Value : (object)this.SchadensDatum.Value);
+			try
+			{
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				command.Connection.Close();
+			}
+			return result;
+		}
+
+		public int Save(int id)
+		{
+			int result = -1;
+			NpgsqlCommand command = new NpgsqlCommand();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			command.CommandText = $"update {SCHEMA}.{TABLE} set schadensart = :sart, beschreibung = :bes, anfallendekosten = :afk, schaden_datum = :sd where schaden_id = :sid";
+			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
+			command.Parameters.AddWithValue("sid", id);
+			command.Parameters.AddWithValue("sart", String.IsNullOrEmpty(this.SchadensArt) ? (object)DBNull.Value : (object)this.SchadensArt);
+			command.Parameters.AddWithValue("bes", String.IsNullOrEmpty(this.Beschreibung) ? (object)DBNull.Value : (object)this.Beschreibung);
+			command.Parameters.AddWithValue("afk", this.AnfallendeKosten.HasValue ? (object)this.AnfallendeKosten.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("sd", !this.SchadensDatum.HasValue ? (object)DBNull.Value : (object)this.SchadensDatum.Value);
+
 			try
 			{
 				result = command.ExecuteNonQuery();
@@ -177,7 +205,7 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 			command.CommandText = $"delete from {SCHEMA}.{TABLE} where schaden_id = :sid";
-			command.Parameters.AddWithValue("aid", this.Schaden_Id);
+			command.Parameters.AddWithValue("sid", this.Schaden_Id);
 			try
 			{
 				result = command.ExecuteNonQuery();

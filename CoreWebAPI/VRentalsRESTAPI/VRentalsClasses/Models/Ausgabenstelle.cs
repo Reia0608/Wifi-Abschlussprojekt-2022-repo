@@ -40,7 +40,7 @@ namespace VRentalsClasses.Models
 				{
 					ausgabenstelle = new Ausgabenstelle();
 					{
-						ausgabenstelle = ausgabenstelle.CreateAusgabenstelle(reader);
+						ausgabenstelle = new Ausgabenstelle(reader);
 					};
 				}
 			}
@@ -72,7 +72,7 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				ausgabenstelleListe.Add(ausgabenstelle = ausgabenstelle.CreateAusgabenstelle(reader));
+				ausgabenstelleListe.Add(ausgabenstelle = new Ausgabenstelle(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
@@ -110,18 +110,6 @@ namespace VRentalsClasses.Models
 
 		//************************************************************************
 		#region public methods
-
-		public Ausgabenstelle CreateAusgabenstelle(NpgsqlDataReader reader)
-		{
-			Ausgabenstelle ausgabenstelle = new Ausgabenstelle();
-
-			ausgabenstelle = new Ausgabenstelle()
-			{
-				Ausgabenstelle_Id = reader.GetInt32(0),
-				Adresse_Id = reader.IsDBNull(1) ? null : reader.GetInt32(1),
-			};
-			return ausgabenstelle;
-		}
 
 		public int Save()
 		{

@@ -45,7 +45,7 @@ namespace VRentalsClasses.Models
                 try
                 {
 					reader.Read();
-					benutzer = benutzer.CreateBenutzer(reader);
+					benutzer = new Benutzer(reader);
 				}
 				catch (Exception ex)
 				{
@@ -86,7 +86,7 @@ namespace VRentalsClasses.Models
 			try
             {
 				reader.Read();
-				benutzer = benutzer.CreateBenutzer(reader);	
+				benutzer = new Benutzer(reader);	
 			}
 			catch (Exception ex)
             {
@@ -131,7 +131,7 @@ namespace VRentalsClasses.Models
             {
 				while (reader.Read())
 				{
-					benutzerList.Add(benutzer = benutzer.CreateBenutzer(reader));
+					benutzerList.Add(benutzer = new Benutzer(reader));
 				}
 			}
 			catch (Exception ex)
@@ -213,7 +213,7 @@ namespace VRentalsClasses.Models
 					command.Parameters.AddWithValue("username", userName);
 					NpgsqlDataReader reader = command.ExecuteReader();
 					reader.Read();
-					benutzer = benutzer.CreateBenutzer(reader);
+					benutzer = new Benutzer(reader);
 					reader.Close();
 					if (benutzer.PasswortHash != benutzer.GetPasswordHash(pwd)) throw new Exception("Passwort stimmt nicht überein!");
 				}
@@ -247,7 +247,7 @@ namespace VRentalsClasses.Models
             {
 				while(reader.Read())
                 {
-					benutzerList.Add(benutzer = benutzer.CreateBenutzer(reader));
+					benutzerList.Add(benutzer = new Benutzer(reader));
 				}
 			}
 			catch (Exception ex)
@@ -345,30 +345,6 @@ namespace VRentalsClasses.Models
 
 		//************************************************************************
 		#region public methods
-
-		public Benutzer CreateBenutzer(NpgsqlDataReader reader)
-        {
-			Benutzer benutzer = new Benutzer();
-
-			benutzer = new Benutzer()
-			{
-				UserId = reader.GetInt32(0),
-				Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
-				Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
-				Geschlecht = reader.IsDBNull(3) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(3),
-				UserName = reader.IsDBNull(4) ? null : reader.GetString(4),
-				PasswortHash = reader.IsDBNull(5) ? null : reader.GetString(5),
-				Rolle = reader.IsDBNull(6) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(6),
-				Geburtsdatum = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
-				GeburtsOrt = reader.IsDBNull(8) ? null : reader.GetString(8),
-				//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
-				RegistrierungsTag = reader.IsDBNull(9) ? null : (DateTime?)reader.GetDateTime(9),
-				LetzteAnmeldung = reader.IsDBNull(10) ? null : (DateTime?)reader.GetDateTime(10),
-				BenutzerMerkmal = reader.IsDBNull(11) ? null : reader.GetString(11),
-				MerkmalGiltBis = reader.IsDBNull(12) ? null : reader.GetDateTime(12),
-			};
-			return benutzer;
-        }
 
 		public string GetPasswordHash(string pwd)
 		{

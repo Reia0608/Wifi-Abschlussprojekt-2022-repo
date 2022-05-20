@@ -65,7 +65,7 @@ namespace VRentalsClasses.Models
 				{
 					kraftfahrzeug = new Kraftfahrzeug();
 					{
-						kraftfahrzeug = kraftfahrzeug.CreateKraftfahrzeug(reader);
+						kraftfahrzeug = new Kraftfahrzeug(reader);
 					};
 				}
 			}
@@ -97,7 +97,7 @@ namespace VRentalsClasses.Models
             
             while (reader.Read())
             {
-				kraftfahrzeugListe.Add(kraftfahrzeug = kraftfahrzeug.CreateKraftfahrzeug(reader));	
+				kraftfahrzeugListe.Add(kraftfahrzeug = new Kraftfahrzeug(reader));	
             }
             reader.Close();
             DBConnection.GetConnection().Close();
@@ -175,25 +175,6 @@ namespace VRentalsClasses.Models
 		//************************************************************************
 		#region public methods
 
-		public Kraftfahrzeug CreateKraftfahrzeug(NpgsqlDataReader reader)
-		{
-			Kraftfahrzeug kraftfahrzeug = new Kraftfahrzeug();
-
-			kraftfahrzeug = new Kraftfahrzeug()
-			{
-				KraftfahrzeugId = reader.GetInt32(0),
-				MietPreis = reader.IsDBNull(1) ? null : reader.GetDouble(1),
-				GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2),
-				Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3),
-				Marke = reader.IsDBNull(4) ? null : reader.GetString(4),
-				Modell = reader.IsDBNull(5) ? null : reader.GetString(5),
-				Ausgabenstelle_Id = reader.IsDBNull(6) ? null : reader.GetInt32(6),
-				AktuellerStandort = reader.IsDBNull(7) ? null : reader.GetInt32(7),
-				Kennzeichen = reader.IsDBNull(8) ? null : reader.GetString(8),
-			};
-			return kraftfahrzeug;
-		}
-
 		public int Save()
 		{
 			int result = -1;
@@ -224,9 +205,88 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (int)this.Ausgabenstelle_Id : (object)DBNull.Value);
 			command.Parameters.AddWithValue("aso", this.AktuellerStandort.HasValue ? (int)this.AktuellerStandort : (object)DBNull.Value);
 			command.Parameters.AddWithValue("ken", String.IsNullOrEmpty(this.Kennzeichen) ? (object)DBNull.Value : (object)this.Kennzeichen);
+
 			try
 			{
 				result = command.ExecuteNonQuery();
+				if (result == 1)
+				{
+					if (this.KostenListe != null && this.KostenListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Ausgaben ausgaben in this.KostenListe)
+						{
+							ausgaben.Ausgaben_Id = this.KraftfahrzeugId;
+							iterator += ausgaben.Save();
+						}
+
+						if (iterator == this.KostenListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -2;
+						}
+					}
+
+					if (this.SchadenListe != null && this.SchadenListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Schaden schaden in this.SchadenListe)
+						{
+							schaden.Schaden_Id = this.KraftfahrzeugId;
+							iterator += schaden.Save();
+						}
+
+						if (iterator == this.SchadenListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -3;
+						}
+					}
+
+					if (this.BildListe != null && this.BildListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Bild bild in this.BildListe)
+						{
+							bild.Bilder_Id = this.KraftfahrzeugId;
+							iterator += bild.Save();
+						}
+
+						if (iterator == this.BildListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -4;
+						}
+					}
+
+					if (this.AdressenListe != null && this.AdressenListe.Count > 0)
+					{
+						int iterator = 0;
+						foreach (Adresse adresse in this.AdressenListe)
+						{
+							adresse.Adresse_Id = this.KraftfahrzeugId;
+							iterator += adresse.Save();
+						}
+
+						if (iterator == this.AdressenListe.Count)
+						{
+							result = 1;
+						}
+						else
+						{
+							result = -5;
+						}
+					}
+				}
 			}
 			catch (Exception ex)
 			{
@@ -352,8 +412,6 @@ namespace VRentalsClasses.Models
 					//		iterator += kraftfahrzeug.Save();
 					//	}
 					//}
-
-					command.Connection.Open();
 				}
 			}
 			catch (Exception ex)

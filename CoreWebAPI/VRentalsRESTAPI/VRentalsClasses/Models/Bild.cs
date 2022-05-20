@@ -21,9 +21,9 @@ namespace VRentalsClasses.Models
 		//************************************************************************
 		#region static methods
 		// WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
-		public static Anhaenger Get(int bilder_id)
+		public static Bild Get(int bilder_id)
 		{
-			Anhaenger anhaenger = new Anhaenger();
+			Bild bild = new Bild();	
 
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
@@ -39,9 +39,9 @@ namespace VRentalsClasses.Models
 			{
 				if (reader.Read())
 				{
-					anhaenger = new Anhaenger();
+					bild = new Bild();
 					{
-						anhaenger = anhaenger.CreateAnhaenger(reader);
+						bild = new Bild(reader);
 					};
 				}
 			}
@@ -54,7 +54,7 @@ namespace VRentalsClasses.Models
 				reader.Close();
 				DBConnection.GetConnection().Close();
 			}
-			return anhaenger;
+			return bild;
 		}
 
 		public static List<Bild> GetList()
@@ -73,7 +73,7 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				bilderListe.Add(bild = bild.CreateBild(reader));
+				bilderListe.Add(bild = new Bild(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
@@ -110,19 +110,6 @@ namespace VRentalsClasses.Models
 
 		//************************************************************************
 		#region public methods
-
-		public Bild CreateBild(NpgsqlDataReader reader)
-		{
-			Bild bild = new Bild();
-
-			bild = new Bild()
-			{
-				Bilder_Id = reader.GetInt32(0),
-				BildBytes = reader.IsDBNull(1) ? null : (byte[])reader.GetValue(1),
-				Bild_Url = reader.IsDBNull(2) ? null : reader.GetString(2),
-		};
-			return bild;
-		}
 
 		public int Save()
 		{

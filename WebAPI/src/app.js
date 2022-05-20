@@ -151,15 +151,16 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiBenutzerLogoff(successCallback, errorCallback) {
+	ApiBenutzerLogoff(successCallback, errorCallback) 
+	{
 		fetch(this.apiBaseUrl + 'benutzer/logoff', {
 			method: 'DELETE',
 			cache: 'no-cache',
 			credentials: 'include'
 		})
-		.then((r) => {
-			if (r.status == 200) successCallback();
-			else throw new Error(r.status + ' ' + r.statusText);
+		.then((response) => {
+			if (response.status == 200) successCallback();
+			else throw new Error(response.status + ' ' + response.statusText);
 		})
 		.catch(errorCallback);
 	}
@@ -296,6 +297,125 @@ export default class Application
 			}
 			else throw new Error(response.status + ' ' + response.statusText);
 		})
+		.catch(errorCallback);
+	}
+
+	ApiKraftfahrzeugDelete(successCallback, errorCallback, id) 
+	{
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + id, 
+		{
+			method: 'DELETE'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) return response.json();
+			else if (response.status == 204) errorCallback('Daten unvollständig!');
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	//==================================================================================
+	// Schaden
+
+	ApiSchadenGetList(successCallback, errorCallback)
+	{
+		fetch(this.apiBaseUrl + 'schaden', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		}).then((response) => 
+		{
+			if (response.status == 200) return response.json();
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiSchadenGet(successCallback, errorCallback, schadenId)
+	{
+		fetch(this.apiBaseUrl + 'schaden/' + schadenId, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		}).then((response) => 
+		{
+			if (response.status == 200) return response.json();
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiSchadenSet(successCallback, errorCallback, schaden)
+	{
+		fetch(this.apiBaseUrl + 'schaden' + (schaden.schadenId ? '/' + schaden.schadenId : ''), 
+		{
+			method: schaden.schadenId ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(schaden)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				return response.json();
+			}
+			else if (response.status == 204) 
+			{
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiSchadenSetBild(successCallback, errorCallback, schaden, bild) 
+	{
+		let data = new FormData();
+		data.append("file", bild);
+
+		fetch(this.apiBaseUrl + 'schaden/' + schaden.schadenId + '/bild', 
+		{
+			method: 'PUT',
+			cache: 'no-cache',
+			body: data
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				successCallback();
+			}
+			else if (response.status == 204) 
+			{
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.catch(errorCallback);
+	}
+
+	ApiSchadenDelete(successCallback, errorCallback, id) 
+	{
+		fetch(this.apiBaseUrl + 'schaden/' + id, 
+		{
+			method: 'DELETE'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) return response.json();
+			else if (response.status == 204) errorCallback('Daten unvollständig!');
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.then(successCallback)
 		.catch(errorCallback);
 	}
 }

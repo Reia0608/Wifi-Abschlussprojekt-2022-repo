@@ -15,8 +15,8 @@ namespace VRentalsClasses.Models
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_adresse";
 		private const string COLUMNS = "adresse_id, bezeichnung, land, stadt_ort, plz, strasse, strassennummer";
-		#endregion
 
+		#endregion
 		//************************************************************************
 		#region static methods
 		// WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
@@ -40,7 +40,7 @@ namespace VRentalsClasses.Models
 				{
 					adresse = new Adresse();
 					{
-						adresse = adresse.CreateAdresse(reader);
+						adresse = new Adresse(reader);
 					};
 				}
 			}
@@ -72,7 +72,7 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				adresseListe.Add(adresse = adresse.CreateAdresse(reader));
+				adresseListe.Add(adresse = new Adresse(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
@@ -125,23 +125,6 @@ namespace VRentalsClasses.Models
 
 		//************************************************************************
 		#region public methods
-
-		public Adresse CreateAdresse(NpgsqlDataReader reader)
-		{
-			Adresse adresse = new Adresse();
-
-			adresse = new Adresse()
-			{
-				Adresse_Id = reader.GetInt32(0),
-				Bezeichnung = reader.IsDBNull(1) ? null : reader.GetString(1),
-				Land = reader.IsDBNull(2) ? null : reader.GetString(2),
-				Stadt_Ort = reader.IsDBNull(3) ? null : reader.GetString(3),
-				PLZ = reader.IsDBNull(4) ? null : reader.GetString(4),
-				Strasse = reader.IsDBNull(5) ? null : reader.GetString(5),
-				StrassenNummer = reader.IsDBNull(6) ? null : reader.GetString(6),
-		};
-			return adresse;
-		}
 
 		public int Save()
 		{

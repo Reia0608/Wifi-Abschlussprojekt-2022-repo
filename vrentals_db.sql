@@ -410,7 +410,7 @@ ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben
 	
 ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
 	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeuge_id) REFERENCES rentals.tbl_kraftfahrzeuge (kraftfahrzeuge_id);
-	
+
 ALTER TABLE rentals.tbl_mietgegenstand
 	ADD CONSTRAINT mietgegenstand_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
 	

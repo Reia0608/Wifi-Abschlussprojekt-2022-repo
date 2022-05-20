@@ -41,7 +41,7 @@ namespace VRentalsClasses.Models
 				{
 					anhaenger = new Anhaenger();
 					{
-						anhaenger = anhaenger.CreateAnhaenger(reader);
+						anhaenger = new Anhaenger(reader);
 					};
 				}
 			}
@@ -73,7 +73,7 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				anhaengerListe.Add(anhaenger = anhaenger.CreateAnhaenger(reader));
+				anhaengerListe.Add(anhaenger = new Anhaenger(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
@@ -130,24 +130,6 @@ namespace VRentalsClasses.Models
 
 		//************************************************************************
 		#region public methods
-
-		public Anhaenger CreateAnhaenger(NpgsqlDataReader reader)
-		{
-			Anhaenger anhaenger = new Anhaenger();
-
-			anhaenger = new Anhaenger()
-			{
-				Anhaenger_Id = reader.GetInt32(0),
-				Art = reader.IsDBNull(1) ? null : reader.GetString(1),
-				GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2),
-				Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3),
-				Marke = reader.IsDBNull(4) ? null : reader.GetString(4),
-				Modell = reader.IsDBNull(5) ? null : reader.GetString(5),
-				MietPreis = reader.IsDBNull(6) ? null : reader.GetDouble(6),
-
-		};
-			return anhaenger;
-		}
 
 		public int Save()
 		{

@@ -1,4 +1,5 @@
 import  "./../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
+import Helper from "./helper.js";
 import ComponentCalendar from "./component-calendar.js";
 
 export default class PageCarsDetails 
@@ -19,7 +20,7 @@ export default class PageCarsDetails
 			const buttonKfzSpeichern = args.app.Main.querySelector('#buttonKfzSpeichern');
 			const selectGruppe = args.app.Main.querySelector('#selectGruppe');
 			const selectKategorie = args.app.Main.querySelector('#selectKategorie');
-			const accordionPanelWertBody = args.app.Main.querySelector('#accordionPanelWertBody');
+			const modalSchadenBody = args.app.Main.querySelector('#modalSchadenBody');
 			const accordionPanelKalenderBody = args.app.Main.querySelector('#accordionPanelKalenderBody');
 			
 			this.calendar = new ComponentCalendar(
@@ -58,63 +59,43 @@ export default class PageCarsDetails
 			// 		selectKategorie.innerHTML = html;
 			// 	}
 
-			// 	this.app.ApiWertGruppeGetList((response) => 
-			// 	{
-			// 		this.wertGruppeList = response;
-			// 		let whtml = '';
-			// 		for (let wg of response) 
-			// 		{
+			this.app.ApiSchadenGetList((response) => 
+			{
+				this.schadenList = response;
+				let modalSchadenBodyHtml = '';
+				for (let schadenitem of response) 
+				{
+					modalSchadenBodyHtml += `
+					<tr data-idx="${schadenitem.schadenid}">
+						<td>
+							<button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenDel_${schadenitem.schadenid}"><span class="iconify" data-icon="mdi-delete"></span></button>
+						</td>
+						<td class="element-clickable">${(schadenitem.datum ? dateFormatter.format(new Date(schadenitem.datum)) : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
+					</tr>
+					`;
+				}
+				modalSchadenBody.innerHTML = modalSchadenBodyHtml;
 
-			// 			whtml += `
-			// 				<div class="row mt-2 border-bottom pb-2">
-			// 					<div class="col-3 text-end">
-			// 						${wg.name}
-			// 					</div>
-			// 					<div class="col-6">
-			// 			`;
+				if (args.kid) 
+				{
+					this.datenLaden(args.kid);
+				}
+				else 
+				{
+					this.kraftfahrzeug = 
+					{
+						kraftfahrzeugid: null,
+						schadenlist: []
+					};
+				}
+			}, (ex) => 
+			{
+				alert(ex);
+			});
 
-			// 			if (wg.multiselect) 
-			// 			{
-			// 				whtml += `<ul class="list-group list-group-flush" id="listWG_${wg.wertgruppeid}">`;
-			// 				for (let w of wg.wertlist) {
-			// 					whtml += `
-			// 						<li class="list-group-item">
-			// 							<div class="form-check">
-			// 								<input class="form-check-input" type="checkbox" id="checkboxWert_${w.wertid}" data-wert-gruppe-id="${wg.wertgruppeid}">
-			// 								<label class="form-check-label" for="checkboxWert_${w.wertid}">${w.name}</label>
-			// 							</div>
-			// 						</li>
-			// 					`;
-			// 				}
-			// 				whtml += '</ul>';
-			// 			}
-			// 			else 
-			// 			{
-			// 				whtml += `<select class="form-select form-select-sm" id="selectWG_${wg.wertgruppeid}">`;
-			// 				for (let w of wg.wertlist) 
-			// 				{
-			// 					whtml += `<option value="${w.wertid}">${w.name}</option>`;
-			// 				}
-			// 				whtml += '</select>';
-			// 			}
-			// 			whtml += "</div></div>";
-			// 		}
-			// 		accordionPanelWertBody.innerHTML = whtml;
-
-			// 		if (args.aid) this.datenLaden(args.aid);
-			// 		else 
-			// 		{
-			// 			this.kraftfahrzeug = 
-			// 			{
-			// 				kraftfahrzeugid: null,
-			// 				schadenlist: []
-			// 			};
-			// 		}
-			// 	}, (ex) => 
-			// 	{
-			// 		alert(ex);
-			// 	});
-			// });
 			//-------------------------------------------------------------
 			// selects
 			// selectGruppe.addEventListener('change', (e) => 
@@ -179,7 +160,8 @@ export default class PageCarsDetails
 					this.app.ApiKraftfahrzeugSet((response) => 
 					{
 						this.kraftfahrzeug = response;
-						if (this.bild) {
+						if (this.bild) 
+						{
 							this.app.ApiKraftfahrzeugSetBild(() => 
 							{
 
@@ -203,8 +185,7 @@ export default class PageCarsDetails
 			//------------------------------------------------------------------------------------------
 			// alles rund um den Schaden
 			const buttonSchadenNeu = args.app.Main.querySelector('#buttonSchadenNeu');
-			const modalSchaden = args.app.Main.querySelector('#modalSchaden');
-			const dialogSchaden = new bootstrap.Modal(modalSchaden);
+			const dialogSchaden = new bootstrap.Modal(modalSchadenBody);
 			const buttonModalSchadenSpeichern = args.app.Main.querySelector('#buttonModalSchadenSpeichern');
 			const labelAnfallendeKosten = args.app.Main.querySelector('#labelAnfallendeKosten');
 			const selectSchadenArt = args.app.Main.querySelector('#selectSchadenArt');
@@ -268,8 +249,30 @@ export default class PageCarsDetails
 						this.kraftfahrzeug.schadenlist.push(this.schaden);
 					}
 
+					// Update the database.
+					this.app.ApiSchadenSet((response) => 
+					{
+						this.schaden = response;
+						if (this.bild) 
+						{
+							this.app.ApiSchadenSetBild(() => 
+							{
+
+							}, (ex) => 
+							{
+								alert(ex);
+							}, this.schaden, this.bild);
+						}
+					}, (ex) => 
+					{
+						alert(ex);
+					}, this.schaden);
+
+					console.log("database was updated!");
+
 					this.schadenListAnzeigen();
 					dialogSchaden.hide();
+					
 				}
 			});
 
@@ -287,7 +290,7 @@ export default class PageCarsDetails
 					{
 						let idx = parseInt(btn.id.split('_')[1]);
 						this.kraftfahrzeug.schadenlist = this.kraftfahrzeug.schadenlist.splice(idx, 1);
-						args.app.ApiSchadenDelete((response) => 
+						this.app.ApiSchadenDelete((response) => 
 						{
 							this.kraftfahrzeug.schadenlist = response;
 							this.schadenListAnzeigen();
@@ -304,29 +307,7 @@ export default class PageCarsDetails
 					this.schaden = this.kraftfahrzeug.schadenlist[idx];
 					this.schadenOp = 'u';
 					labelAnfallendeKosten.value = this.schaden.anfallendekosten;
-					switch(this.schaden.schadensart)
-					{
-						case 'Unbekannt': selectSchadenArt.value = 0;
-							break;
-						case 'Blechschaden': selectSchadenArt.value = 1;
-							break;
-						case 'Glasbruch': selectSchadenArt.value = 2;
-							break;
-						case 'Marderschaden': selectSchadenArt.value = 3;
-							break;
-						case 'Lackschaden': selectSchadenArt.value = 4;
-							break;
-						case 'Parkschaden': selectSchadenArt.value = 5;
-							break;
-						case 'Frostschaden': selectSchadenArt.value = 6;
-							break;
-						case 'Totalschaden': selectSchadenArt.value = 7;
-							break;
-						case 'Sonstiger Schaden': selectSchadenArt.value = 8;
-							break;
-						default: selectSchadenArt.value = 0;
-							break;
-					}
+					selectSchadenArt.value =  new Helper().SchadensArtConverter(this.schaden.schadensart);
 					labelBeschreibung.value = this.schaden.beschreibung;
 
 					dialogSchaden.show();
