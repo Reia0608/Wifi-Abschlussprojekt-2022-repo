@@ -14,9 +14,9 @@ namespace VRentalsClasses.Models
         //************************************************************************
         #region constants
         private const string SCHEMA = "rentals";
-        private const string TABLE = "tbl_kraftfahrzeuge";
+        private const string TABLE = "tbl_kraftfahrzeug";
 		private const string BILDER = "tbl_bilder";
-        private const string COLUMNS = "kraftfahrzeuge_id, mietpreis, gegenstandzustand, kategorie, marke, modell, ausgabenstelle_id, aktueller_standort_id, kennzeichen";
+        private const string COLUMNS = "kraftfahrzeug_id, mietpreis, gegenstandzustand, kategorie, marke, modell, ausgabenstelle_id, aktueller_standort_id, kennzeichen";
 		#endregion
 
 		//************************************************************************
@@ -29,7 +29,7 @@ namespace VRentalsClasses.Models
 				command.Connection = DBConnection.GetConnection();
 				command.Connection.Open();
 			}
-			command.CommandText = $"delete from {SCHEMA}.{TABLE} where kraftfahrzeuge_id = :kid";
+			command.CommandText = $"delete from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid";
 			command.Parameters.AddWithValue("kid", kraftfahrzeug.KraftfahrzeugId);
 			try
             {
@@ -56,7 +56,7 @@ namespace VRentalsClasses.Models
 			
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeuge_id = :kid";
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid";
             command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
             NpgsqlDataReader reader = command.ExecuteReader();
 			try
@@ -117,7 +117,6 @@ namespace VRentalsClasses.Models
 			MietPreis = reader.IsDBNull(1) ? null : reader.GetDouble(1);
 			GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2);
 			Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3);
-			//SchadenListe = reader.IsDBNull(5) ? null : reader.GetString(5);
 			//BildBytesList = reader.IsDBNull(6) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(6);
 			//BildVorhanden = reader.IsDBNull(4) ? null : reader.GetBool(4);
 			//AdressenList = reader.IsDBNull(8) ? null : reader.GetString(8);
@@ -131,7 +130,7 @@ namespace VRentalsClasses.Models
 		#endregion
 		//************************************************************************
 		#region properties
-		[JsonPropertyName("kraftfahrzeugid")]
+		[JsonPropertyName("kraftfahrzeug_id")]
 		public int? KraftfahrzeugId { get; set; }
 
 		[JsonPropertyName("mietpreis")]
@@ -187,7 +186,7 @@ namespace VRentalsClasses.Models
 
 			if (this.KraftfahrzeugId.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeuge_id = :kid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeug_id = :kid";
 			}
 			else
 			{
@@ -309,7 +308,7 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeuge_id = :kid";
+			command.CommandText = $"update {SCHEMA}.{TABLE} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeug_id = :kid";
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("kid", id);
 			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
@@ -434,7 +433,7 @@ namespace VRentalsClasses.Models
 				command.Connection = DBConnection.GetConnection();
 				command.Connection.Open();
 			}
-			command.CommandText = $"delete from {SCHEMA}.{TABLE} where kraftfahrzeuge_id = :kid";
+			command.CommandText = $"delete from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid";
 			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId);
 			try
 			{

@@ -51,20 +51,20 @@ namespace VRentalsRESTAPI.Controllers
         }
 
         // PUT: api/<SchadenController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Schaden schaden)
+        [HttpPut]
+        public IActionResult Put([FromBody] Schaden schaden)
         {
             IActionResult result = null;
             try
             {
-                Schaden dbSchaden = Schaden.Get(id);
+                Schaden dbSchaden = Schaden.Get(schaden.Schaden_Id);
                 if (dbSchaden == null)
                 {
                     result = NotFound();
                 }
                 else
                 {
-                    if (schaden.Save(id) == 1)
+                    if (schaden.Save() == 1)
                     {
                         result = Ok(schaden);
                     }
@@ -91,11 +91,11 @@ namespace VRentalsRESTAPI.Controllers
             {
                 if (schaden.Delete() == 1)
                 {
-                    result = Ok("damage entry deleted!");
+                    result = Ok();
                 }
                 else
                 {
-                    result = NotFound("damage entry not found!");
+                    result = NotFound();
                 }
             }
             catch (Exception ex)

@@ -124,8 +124,14 @@ export default class Application
 		})
 		.then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200) 
+			{
+				return response.json();
+			}
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
@@ -145,8 +151,14 @@ export default class Application
 			credentials: 'include'
 		}).then((response)=>
 		{
-			if (response.status == 200 || response.status == 401) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200 || response.status == 401)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		}).then(successCallback)
 		.catch(errorCallback);
 	}
@@ -159,8 +171,14 @@ export default class Application
 			credentials: 'include'
 		})
 		.then((response) => {
-			if (response.status == 200) successCallback();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200) 
+			{
+				return successCallback();
+			}
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.catch(errorCallback);
 	}
@@ -190,8 +208,14 @@ export default class Application
 		})
 		.then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
@@ -205,8 +229,14 @@ export default class Application
 		})
 		.then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
@@ -223,23 +253,35 @@ export default class Application
 			credentials: 'include'
 		}).then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
 	}
 
-	ApiKraftfahrzeugGet(successCallback, errorCallback, kraftfahrzeugId) 
+	ApiKraftfahrzeugGet(successCallback, errorCallback, kraftfahrzeug_id) 
 	{
-		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeugId, 
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug_id, 
 		{
 			method: 'GET',
 			credentials: 'include'
 		}).then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
@@ -248,9 +290,9 @@ export default class Application
 
 	ApiKraftfahrzeugSet(successCallback, errorCallback, kraftfahrzeug) 
 	{
-		fetch(this.apiBaseUrl + 'kraftfahrzeug' + (kraftfahrzeug.kraftfahrzeugid ? '/' + kraftfahrzeug.kraftfahrzeugid : ''), 
+		fetch(this.apiBaseUrl + 'kraftfahrzeug' + (kraftfahrzeug.kraftfahrzeug_id ? '/' + kraftfahrzeug.kraftfahrzeug_id : ''), 
 		{
-			method: kraftfahrzeug.kraftfahrzeugid ? 'PUT' : 'POST',
+			method: kraftfahrzeug.kraftfahrzeug_id ? 'PUT' : 'POST',
 			cache: 'no-cache',
 			headers: 
 			{
@@ -268,7 +310,10 @@ export default class Application
 			{
 				errorCallback('Daten sind unvollständig!');
 			}
-			else throw new Error(response.status + ' ' + response.statusText);
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
@@ -279,7 +324,7 @@ export default class Application
 		let data = new FormData();
 		data.append("file", bild);
 
-		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug.kraftfahrzeugid + '/bild', 
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug.kraftfahrzeug_id + '/bild', 
 		{
 			method: 'PUT',
 			cache: 'no-cache',
@@ -295,7 +340,10 @@ export default class Application
 			{
 				errorCallback('Daten sind unvollständig!');
 			}
-			else throw new Error(response.status + ' ' + response.statusText);
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.catch(errorCallback);
 	}
@@ -308,11 +356,19 @@ export default class Application
 		})
 		.then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else if (response.status == 204) errorCallback('Daten unvollständig!');
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200) 
+			{
+				return successCallback;
+			}
+			else if (response.status == 204)
+			{
+				errorCallback('Daten unvollständig!');
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
-		.then(successCallback)
 		.catch(errorCallback);
 	}
 
@@ -327,23 +383,35 @@ export default class Application
 			credentials: 'include'
 		}).then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200) 
+			{
+				return response.json();
+			}
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
 	}
 
-	ApiSchadenGet(successCallback, errorCallback, schadenId)
+	ApiSchadenGet(successCallback, errorCallback, schaden_id)
 	{
-		fetch(this.apiBaseUrl + 'schaden/' + schadenId, 
+		fetch(this.apiBaseUrl + 'schaden' + schaden_id, 
 		{
 			method: 'GET',
 			credentials: 'include'
 		}).then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
 		.then(successCallback)
 		.catch(errorCallback);
@@ -351,9 +419,9 @@ export default class Application
 
 	ApiSchadenSet(successCallback, errorCallback, schaden)
 	{
-		fetch(this.apiBaseUrl + 'schaden' + (schaden.schadenId ? '/' + schaden.schadenId : ''), 
+		fetch(this.apiBaseUrl + 'schaden', 
 		{
-			method: schaden.schadenId ? 'PUT' : 'POST',
+			method: schaden.schaden_id ? 'PUT' : 'POST',
 			cache: 'no-cache',
 			headers: 
 			{
@@ -382,7 +450,7 @@ export default class Application
 		let data = new FormData();
 		data.append("file", bild);
 
-		fetch(this.apiBaseUrl + 'schaden/' + schaden.schadenId + '/bild', 
+		fetch(this.apiBaseUrl + 'schaden/' + schaden.schaden_id + '/bild', 
 		{
 			method: 'PUT',
 			cache: 'no-cache',
@@ -411,11 +479,19 @@ export default class Application
 		})
 		.then((response) => 
 		{
-			if (response.status == 200) return response.json();
-			else if (response.status == 204) errorCallback('Daten unvollständig!');
-			else throw new Error(response.status + ' ' + response.statusText);
+			if (response.status == 200)
+			{
+				return successCallback;
+			} 
+			else if (response.status == 204)
+			{
+				errorCallback('Daten unvollständig!');
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
 		})
-		.then(successCallback)
 		.catch(errorCallback);
 	}
 }

@@ -98,43 +98,43 @@ GRANT USAGE ON rentals.tbl_kontakt_seq TO vrentalsuser;
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kontakt TO vrentalsuser;
 
 -- #########################################################################
--- ###################### TABLE kraftfahrzeuge #############################
+-- ###################### TABLE kraftfahrzeug #############################
 -- #########################################################################
 
-CREATE TABLE rentals.tbl_kraftfahrzeuge
+CREATE TABLE rentals.tbl_kraftfahrzeug
 (
-    kraftfahrzeuge_id numeric(10) NOT NULL,
+    kraftfahrzeug_id numeric(10) NOT NULL,
     mietpreis double precision,
     gegenstandzustand integer,
-    kategorie character varying(50)
+    kategorie character varying(50),
 	marke character varying,
 	modell character varying,
-	ausgabenstelle_id numeric;
-	kennzeichen character varying;
+	ausgabenstelle_id numeric,
+	kennzeichen character varying
 	-- bilder liste
 	-- standortliste
 	--aktuellerstandort
 );
 
-ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeug
 	OWNER TO postgres;
 	
-ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
-	ADD CONSTRAINT kraftfahrzeuge_pk PRIMARY KEY (kraftfahrzeuge_id);
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeug
+	ADD CONSTRAINT kraftfahrzeuge_pk PRIMARY KEY (kraftfahrzeug_id);
 
-ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeug
     ADD COLUMN bilder_id NUMERIC;
 	
-ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeug
     ADD COLUMN aktueller_standort_id numeric;
 
-ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeug
     ADD COLUMN adresse_id numeric;
 
-CREATE SEQUENCE rentals.tbl_kraftfahrzeuge_seq START WITH 1 INCREMENT BY 1;
-GRANT USAGE ON rentals.tbl_kraftfahrzeuge_seq TO vrentalsuser;
+CREATE SEQUENCE rentals.tbl_kraftfahrzeug_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_kraftfahrzeug_seq TO vrentalsuser;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kraftfahrzeuge TO vrentalsuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kraftfahrzeug TO vrentalsuser;
 
 
 -- #########################################################################
@@ -165,19 +165,19 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_ausgaben TO vrentalsuser;
 -- ##################### TABLE kraftfahrzeuge_ausgaben #####################
 -- #########################################################################
 
-CREATE TABLE rentals.tbl_kraftfahrzeuge_ausgaben
+CREATE TABLE rentals.tbl_kraftfahrzeug_ausgaben
 (
-    kraftfahrzeuge_id numeric(10) NOT NULL,
+    kraftfahrzeug_id numeric(10) NOT NULL,
     ausgaben_id numeric(10) NOT NULL
 );
 
-ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeuge_ausgaben
+ALTER TABLE IF EXISTS rentals.tbl_kraftfahrzeug_ausgaben
     OWNER TO postgres;
 	
-ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben
-	ADD CONSTRAINT kraftfahrzeuge_ausgaben_pk PRIMARY KEY (kraftfahrzeuge_id, ausgaben_id);
+ALTER TABLE rentals.tbl_kraftfahrzeug_ausgaben
+	ADD CONSTRAINT kraftfahrzeuge_ausgaben_pk PRIMARY KEY (kraftfahrzeug_id, ausgaben_id);
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kraftfahrzeuge_ausgaben TO vrentalsuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_kraftfahrzeug_ausgaben TO vrentalsuser;
 
 
 -- #########################################################################
@@ -191,6 +191,7 @@ CREATE TABLE rentals.tbl_schaden
     beschreibung text,
     anfallendekosten double precision,
 	schaden_datum date,
+	kraftfahrzeug_id numeric
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_schaden
@@ -215,7 +216,7 @@ CREATE TABLE rentals.tbl_ausgabenstelle
 (
     ausgabenstelle_id numeric NOT NULL,
     anhaenger_id numeric,
-    kraftfahrzeuge_id numeric,
+    kraftfahrzeug_id numeric,
     adresse_id numeric
 );
 
@@ -244,10 +245,10 @@ CREATE TABLE rentals.tbl_anhaenger
     gegenstandzustand integer,
     kategorie character varying,
     bilder_id numeric,
-    adresse_id numeric
+    adresse_id numeric,
 	marke character varying,
 	modell character varying,
-	mietpreis DOUBLE,
+	mietpreis DOUBLE PRECISION
 );
 
 ALTER TABLE rentals.tbl_anhaenger
@@ -344,7 +345,7 @@ CREATE TABLE rentals.tbl_mietgegenstand
 (
     mietgegenstand_id numeric NOT NULL,
     anhaenger_id numeric,
-    kraftfahrzeuge_id numeric
+    kraftfahrzeug_id numeric
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_mietgegenstand
@@ -393,32 +394,35 @@ ALTER TABLE rentals.tbl_anhaenger
 ALTER TABLE rentals.tbl_ausgabenstelle 
 	ADD CONSTRAINT ausgabenstelle_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
 
-ALTER TABLE rentals.tbl_kraftfahrzeuge 
+ALTER TABLE rentals.tbl_kraftfahrzeug
 	ADD CONSTRAINT kraftfahrzeuge_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
 	
-ALTER TABLE rentals.tbl_kraftfahrzeuge 
+ALTER TABLE rentals.tbl_kraftfahrzeug
 	ADD CONSTRAINT kraftfahrzeuge_ausgabenstelle_fk FOREIGN KEY (ausgabenstelle_id) REFERENCES rentals.tbl_ausgabenstelle (ausgabenstelle_id);
 	
-ALTER TABLE rentals.tbl_kraftfahrzeuge 
+ALTER TABLE rentals.tbl_kraftfahrzeug
 	ADD CONSTRAINT aktueller_kfz_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);
 
-ALTER TABLE rentals.tbl_kraftfahrzeuge 
+ALTER TABLE rentals.tbl_kraftfahrzeug
 	ADD CONSTRAINT kraftfahrzeuge_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
 
-ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
+ALTER TABLE rentals.tbl_kraftfahrzeug_ausgaben 
 	ADD CONSTRAINT kraftfahrzeugeausgaben_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
 	
-ALTER TABLE rentals.tbl_kraftfahrzeuge_ausgaben 
-	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeuge_id) REFERENCES rentals.tbl_kraftfahrzeuge (kraftfahrzeuge_id);
+ALTER TABLE rentals.tbl_kraftfahrzeug_ausgaben 
+	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
 
 ALTER TABLE rentals.tbl_mietgegenstand
 	ADD CONSTRAINT mietgegenstand_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
 	
 ALTER TABLE rentals.tbl_mietgegenstand
-	ADD CONSTRAINT mietgegenstand_kraftfahrzeuge_fk FOREIGN KEY (kraftfahrzeuge_id) REFERENCES rentals.tbl_kraftfahrzeuge (kraftfahrzeuge_id);
+	ADD CONSTRAINT mietgegenstand_kraftfahrzeuge_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
 
 ALTER TABLE rentals.tbl_bewegung
 	ADD CONSTRAINT bewegung_mietgegenstand_fk FOREIGN KEY (mietgegenstand_id) REFERENCES rentals.tbl_mietgegenstand (mietgegenstand_id);
 	
 ALTER TABLE rentals.tbl_users
 	ADD CONSTRAINT users_kontakt_fk FOREIGN KEY (kontakt_id) REFERENCES rentals.tbl_kontakt (kontakt_id);
+	
+ALTER TABLE rentals.tbl_Schaden
+	ADD CONSTRAINT schaden_kraftfahrzeuge_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
