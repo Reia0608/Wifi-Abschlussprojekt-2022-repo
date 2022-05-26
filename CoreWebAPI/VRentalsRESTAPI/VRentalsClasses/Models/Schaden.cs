@@ -56,9 +56,43 @@ namespace VRentalsClasses.Models
 			return schaden;
 		}
 
+		public static List<Schaden>? GetKfzSchaden(int? kraftfahrzeug_id)
+		{
+			List<Schaden> schadenList = new List<Schaden>();
+			Schaden? schaden = null;
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid";
+			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
+			NpgsqlDataReader reader = command.ExecuteReader();
+			try
+			{
+				while (reader.Read())
+				{
+					schadenList.Add(schaden = new Schaden(reader));
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
+			return schadenList;
+		}
+
 		public static List<Schaden> GetList()
 		{
-			List<Schaden> schadenListe = new List<Schaden>();
+			List<Schaden> schadenList = new List<Schaden>();
 			Schaden schaden = null;
 
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
@@ -72,11 +106,11 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				schadenListe.Add(schaden = new Schaden(reader));
+				schadenList.Add(schaden = new Schaden(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
-			return schadenListe;
+			return schadenList;
 		}
 		#endregion
 		//************************************************************************

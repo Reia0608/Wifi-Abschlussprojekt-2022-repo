@@ -178,6 +178,9 @@ namespace VRentalsClasses.Models
 		{
 			int result = -1;
 			NpgsqlCommand command = new NpgsqlCommand();
+			System.Data.ConnectionState x = DBConnection.GetConnection().FullState;
+
+
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
 				command.Connection = DBConnection.GetConnection();

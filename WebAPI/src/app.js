@@ -319,34 +319,34 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiKraftfahrzeugSetBild(successCallback, errorCallback, kraftfahrzeug, bild) 
-	{
-		let data = new FormData();
-		data.append("file", bild);
+	// ApiKraftfahrzeugSetBild(successCallback, errorCallback, kraftfahrzeug, bild) 
+	// {
+	// 	let data = new FormData();
+	// 	data.append("file", bild);
 
-		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug.kraftfahrzeug_id + '/bild', 
-		{
-			method: 'PUT',
-			cache: 'no-cache',
-			body: data
-		})
-		.then((response) => 
-		{
-			if (response.status == 200) 
-			{
-				successCallback();
-			}
-			else if (response.status == 204) 
-			{
-				errorCallback('Daten sind unvollständig!');
-			}
-			else
-			{
-				throw new Error(response.status + ' ' + response.statusText);
-			} 
-		})
-		.catch(errorCallback);
-	}
+	// 	fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug.kraftfahrzeug_id + '/bild', 
+	// 	{
+	// 		method: 'PUT',
+	// 		cache: 'no-cache',
+	// 		body: data
+	// 	})
+	// 	.then((response) => 
+	// 	{
+	// 		if (response.status == 200) 
+	// 		{
+	// 			successCallback();
+	// 		}
+	// 		else if (response.status == 204) 
+	// 		{
+	// 			errorCallback('Daten sind unvollständig!');
+	// 		}
+	// 		else
+	// 		{
+	// 			throw new Error(response.status + ' ' + response.statusText);
+	// 		} 
+	// 	})
+	// 	.catch(errorCallback);
+	// }
 
 	ApiKraftfahrzeugDelete(successCallback, errorCallback, id) 
 	{
@@ -378,6 +378,27 @@ export default class Application
 	ApiSchadenGetList(successCallback, errorCallback)
 	{
 		fetch(this.apiBaseUrl + 'schaden', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		}).then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				return response.json();
+			}
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiSchadenGetKfzList(successCallback, errorCallback, kraftfahrzeug_id)
+	{
+		fetch(this.apiBaseUrl + 'schaden/kfz/' + kraftfahrzeug_id, 
 		{
 			method: 'GET',
 			credentials: 'include'
@@ -445,22 +466,97 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiSchadenSetBild(successCallback, errorCallback, schaden, bild) 
-	{
-		let data = new FormData();
-		data.append("file", bild);
+	// ApiSchadenSetBild(successCallback, errorCallback, schaden, bild) 
+	// {
+	// 	let data = new FormData();
+	// 	data.append("file", bild);
 
-		fetch(this.apiBaseUrl + 'schaden/' + schaden.schaden_id + '/bild', 
+	// 	fetch(this.apiBaseUrl + 'schaden/' + schaden.schaden_id + '/bild', 
+	// 	{
+	// 		method: 'PUT',
+	// 		cache: 'no-cache',
+	// 		body: data
+	// 	})
+	// 	.then((response) => 
+	// 	{
+	// 		if (response.status == 200) 
+	// 		{
+	// 			successCallback();
+	// 		}
+	// 		else if (response.status == 204) 
+	// 		{
+	// 			errorCallback('Daten sind unvollständig!');
+	// 		}
+	// 		else throw new Error(response.status + ' ' + response.statusText);
+	// 	})
+	// 	.catch(errorCallback);
+	// }
+
+	ApiSchadenDelete(successCallback, errorCallback, id) 
+	{
+		fetch(this.apiBaseUrl + 'schaden/' + id, 
 		{
-			method: 'PUT',
+			method: 'DELETE'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				return successCallback;
+			} 
+			else if (response.status == 204)
+			{
+				errorCallback('Daten unvollständig!');
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.catch(errorCallback);
+	}
+
+	//==================================================================================
+	// Bilder
+
+	ApiBilderGetKfzList(successCallback, errorCallback, kraftfahrzeug_id)
+	{
+		fetch(this.apiBaseUrl + 'bilder/kfz/' + kraftfahrzeug_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		}).then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				return response.json();
+			}
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBilderSet(successCallback, errorCallback, bild)
+	{
+		fetch(this.apiBaseUrl + 'bilder', 
+		{
+			method: bild.bilder_id ? 'PUT' : 'POST',
 			cache: 'no-cache',
-			body: data
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(bild)
 		})
 		.then((response) => 
 		{
 			if (response.status == 200) 
 			{
-				successCallback();
+				return response.json();
 			}
 			else if (response.status == 204) 
 			{
@@ -468,12 +564,13 @@ export default class Application
 			}
 			else throw new Error(response.status + ' ' + response.statusText);
 		})
+		.then(successCallback)
 		.catch(errorCallback);
 	}
 
-	ApiSchadenDelete(successCallback, errorCallback, id) 
+	ApiBilderDelete(successCallback, errorCallback, bilder_id) 
 	{
-		fetch(this.apiBaseUrl + 'schaden/' + id, 
+		fetch(this.apiBaseUrl + 'bilder/' + bilder_id, 
 		{
 			method: 'DELETE'
 		})

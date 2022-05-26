@@ -13,16 +13,16 @@
 	<div class="row mt-3">
 		<div class="col-4-sm">
 			<div class="row">
-				<div id="carouselControlImages" class="carousel slide" data-bs-ride="carousel" id="carouselControlImages">
+				<div class="carousel slide" data-bs-ride="carousel" id="carouselControlImages">
 					<div class="carousel-indicators">
 					  <button type="button" data-bs-target="#carouselControlImages" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
 					  <button type="button" data-bs-target="#carouselControlImages" data-bs-slide-to="1" aria-label="Slide 2"></button>
 					  <button type="button" data-bs-target="#carouselControlImages" data-bs-slide-to="2" aria-label="Slide 3"></button>
 					</div>
 					<div class="carousel-inner" id="imgContainer">
-					  <div class="carousel-item active">
-						<img src=".\..\media\LeerBild.jpg" class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer1">
-					  </div>
+						<div class="carousel-item" data-idx="${iterator+1}">
+							<img src=".\..\media\LeerBild.jpg" class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_leerBild">
+						</div>
 					</div>
 					<button class="carousel-control-prev" type="button" data-bs-target="#carouselControlImages" data-bs-slide="prev">
 					  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -33,10 +33,6 @@
 					  <span class="visually-hidden">Next</span>
 					</button>
 				  </div>
-				</div>
-			<div class="row">
-				<div class="col-12">
-					<span class="" id="fileName"></span>
 				</div>
 			</div>
 		</div>
@@ -61,15 +57,6 @@
 						<span class="input-group-text">€</span>
 					</div>
 				</div>
-			</div>
-			<div class="row mt-3">
-				<div class="col-4 text-end">Beschreibung</div>
-				<div class="col-8"><textarea class="form-control form-control-sm" rows="3" id="textareaBeschreibung"></textarea></div>
-			</div>
-
-			<div class="row mt-3">
-				<div class="col-4 text-end">letzter Einkauf</div>
-				<div class="col-3"><input type="date" class="form-control form-control-sm" id="dateLetzterEinkauf" /></div>
 			</div>
 		</div>
 	</div> <!-- /.row -->
@@ -176,6 +163,10 @@
 								<label for="labelBeschreibung">Beschreibung</label>
 								<textarea class="form-control" id="labelBeschreibung" row="3"></textarea>
 							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col-4 text-end">Datum des Schadens</div>
+							<div class="col-3"><input type="date" class="form-control form-control-sm" id="divDateSchaden" /></div>
 						</div>
 					</div>
 					<div class="modal-footer">

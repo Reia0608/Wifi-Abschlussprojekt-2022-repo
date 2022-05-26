@@ -16,10 +16,10 @@ export default class PageCarsList
 				this.Helper = new Helper();
 				for (let kraftfahrzeug of response) 
                 {
-					// WIP: putting kraftfahrzeugid into html code potentially harmful?!
+					// WIP: putting kraftfahrzeug_id into html code potentially harmful?!
 					html += `
-                        <ul class="list-group list-group-horizontal-sm clickable" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeugid}">
-                        <li class="list-group-item col-1" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeugid}>${iterator}</li>
+                        <ul class="list-group list-group-horizontal-sm clickable" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
+                        <li class="list-group-item col-1" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}>${iterator}</li>
                         <li class="list-group-item col-2">${kraftfahrzeug.marke}</li>
                         <li class="list-group-item col-3">${kraftfahrzeug.modell}</li>
                         <li class="list-group-item col-4">${this.Helper.GegenstandZustandConverter(kraftfahrzeug.gegenstandzustand)}</li>
@@ -60,8 +60,8 @@ export default class PageCarsList
 					}
 					else if (pointerCoordinates.target.nodeName == 'LI') 
                     {
-						let kraftfahrzeugid = pointerCoordinates.target.parentElement.dataset.kraftfahrzeugId;
-						window.open('#cardetails?kid=' + kraftfahrzeugid, '_self');
+						let kraftfahrzeug_id = pointerCoordinates.target.parentElement.dataset.kraftfahrzeugId;
+						window.open('#cardetails?kid=' + kraftfahrzeug_id, '_self');
 					}
 				});
 			}, (ex) => 

@@ -6,101 +6,601 @@
 	},
 	"item": [
 		{
-			"name": "pageInit",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:59968/api/page/init?bm=a66445014683406686e363088388d983",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "59968",
-					"path": [
-						"api",
-						"page",
-						"init"
-					],
-					"query": [
-						{
-							"key": "pwd",
-							"value": "wifi",
-							"disabled": true
+			"name": "BenutzerController",
+			"item": [
+				{
+					"name": "Select One User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/dcd3be3a73e74822941367aa4cebc9f2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"dcd3be3a73e74822941367aa4cebc9f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Benutzer Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/login?benutzer=reia&pwd=wifi",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"login"
+							],
+							"query": [
+								{
+									"key": "loginData",
+									"value": "{\"benutzer\": \"reia\", \"pwd\": \"wifi\"}",
+									"disabled": true
+								},
+								{
+									"key": "benutzer",
+									"value": "reia"
+								},
+								{
+									"key": "pwd",
+									"value": "wifi"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Benutzer Logoff",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/logoff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"logoff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "dcd3be3a73e74822941367aa4cebc9f2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New User",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "bm",
-							"value": "a66445014683406686e363088388d983"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Select All Users",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:59968/api/benutzer/SelectAll",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "59968",
-					"path": [
-						"api",
-						"benutzer",
-						"SelectAll"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Benutzer Login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:59968/api/benutzer/login?benutzer=reia&pwd=wifi",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "59968",
-					"path": [
-						"api",
-						"benutzer",
-						"login"
-					],
-					"query": [
-						{
-							"key": "loginData",
-							"value": "{\"benutzer\": \"reia\", \"pwd\": \"wifi\"}",
-							"disabled": true
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n     \"Vorname\":\"daniel\", \"Nachname\": \"dusentrieb\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "benutzer",
-							"value": "reia"
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "KraftfahrzeugController",
+			"item": [
+				{
+					"name": "Create new Kraftfahrzeug",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mietpreis\": 500,\r\n    \"gegenstandzustand\": 0,\r\n    \"kategorie\": \"PKW\",\r\n    \"marke\": \"VW\",\r\n    \"modell\": \"xyz\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "pwd",
-							"value": "wifi"
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Select All Kraftfahrzeuge",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select One Kraftfahrzeug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change exisiting Kraftfahrzeug WIP",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"gegenstandzustand\": 1,\r\n    \"marke\": \"Volvo\",\r\n    \"modell\": \"abc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete One Kraftfahrzeug",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug",
+								"10"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Benutzer Logoff",
+			"name": "AnhaengerController",
+			"item": [
+				{
+					"name": "Create new Anhaenger",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mietpreis\": 250,\r\n    \"gegenstandzustand\": 0,\r\n    \"kategorie\": \"Anhänger\",\r\n    \"marke\": \"cde\",\r\n    \"modell\": \"vwx\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select All Anhaenger",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select One Anhaenger",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change exisiting Anhaenger",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"gegenstandzustand\": 1,\r\n    \"marke\": \"Volvo\",\r\n    \"modell\": \"abc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete One Anhaenger",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SchadenController",
+			"item": [
+				{
+					"name": "Create new Schaden",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schadensart\": \"Blechschaden\",\r\n    \"anfallendekosten\": 400,\r\n    \"beschreibung\": \"blablabla\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/schaden",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"schaden"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select All Schaden",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/schaden",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"schaden"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select One Schaden",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/schaden/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"schaden",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change exisiting Schaden",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schaden_id\": 5,\r\n    \"schadensart\": \"Total Schaden\",\r\n    \"anfallendekosten\": 400,\r\n    \"beschreibung\": \"blablabla\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/schaden/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"schaden",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete One Schaden",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/schaden/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"schaden",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PageController",
+			"item": [
+				{
+					"name": "pageInit",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/page/init?bm=a66445014683406686e363088388d983",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"page",
+								"init"
+							],
+							"query": [
+								{
+									"key": "pwd",
+									"value": "wifi",
+									"disabled": true
+								},
+								{
+									"key": "bm",
+									"value": "a66445014683406686e363088388d983"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AusgabenstelleController",
+			"item": [
+				{
+					"name": "Create new Ausgabenstelle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search with Term",
 			"request": {
-				"method": "DELETE",
+				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:59968/api/benutzer/logoff",
+					"raw": "http://localhost:59968/api/benutzer/search/daniel",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -109,61 +609,31 @@
 					"path": [
 						"api",
 						"benutzer",
-						"logoff"
+						"search",
+						"daniel"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Select One User",
+			"name": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:59968/api/benutzer/?id=a66445014683406686e363088388d983",
-					"protocol": "http",
+					"raw": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"tools",
+						"ietf",
+						"org"
 					],
-					"port": "59968",
 					"path": [
-						"api",
-						"benutzer",
-						""
+						"html",
+						"rfc7231"
 					],
-					"query": [
-						{
-							"key": "id",
-							"value": "a66445014683406686e363088388d983"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create New User",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:59968/api/benutzer?benutzer={ \"vorname\": \"daniel\", \"nachname\": \"dusentrieb\", \"username\": \"dusi\", \"passwort\": \"wifi\"}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "59968",
-					"path": [
-						"api",
-						"benutzer"
-					],
-					"query": [
-						{
-							"key": "benutzer",
-							"value": "{ \"vorname\": \"daniel\", \"nachname\": \"dusentrieb\", \"username\": \"dusi\", \"passwort\": \"wifi\"}"
-						}
-					]
+					"hash": "section-6.5.1"
 				}
 			},
 			"response": []

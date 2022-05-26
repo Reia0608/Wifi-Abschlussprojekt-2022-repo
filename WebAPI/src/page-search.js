@@ -21,7 +21,7 @@ export default class PageSearch
                         {
                             html += `
                                 <li class="list-group-item bg-dark border-bottom">
-                                    <a href="#kraftfahrzeugDetail?aid=${kfz.kraftfahrzeugid}" class="text-decoration-none">
+                                    <a href="#kraftfahrzeugDetail?aid=${kfz.kraftfahrzeug_id}" class="text-decoration-none">
                                     <div class="d-flex">
                                         <span class="feld-name">Typ:</span><span class="feld-wert">Artikel</span>
                                     </div>

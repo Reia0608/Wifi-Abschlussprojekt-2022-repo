@@ -15,13 +15,13 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_bilder";
-		private const string COLUMNS = "bilder_id, bild, bild_url";
+		private const string COLUMNS = "bilder_id, bild_bytes, bild_url, kraftfahrzeug_id, anhaenger_id, users_id";
 		#endregion
 
 		//************************************************************************
 		#region static methods
 		// WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
-		public static Bild Get(int bilder_id)
+		public static Bild Get(int? bilder_id)
 		{
 			Bild bild = new Bild();	
 
@@ -55,6 +55,30 @@ namespace VRentalsClasses.Models
 				DBConnection.GetConnection().Close();
 			}
 			return bild;
+		}
+
+		public static List<Bild> GetKfzBildList(int kraftfahrzeug_id)
+		{
+			List<Bild> bilderListe = new List<Bild>();
+			Bild bild = new Bild();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid"; // WIP: order by?
+			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				bilderListe.Add(bild = new Bild(reader));
+			}
+			reader.Close();
+			DBConnection.GetConnection().Close();
+			return bilderListe;
 		}
 
 		public static List<Bild> GetList()
@@ -92,6 +116,9 @@ namespace VRentalsClasses.Models
 			Bilder_Id = reader.GetInt32(0);
 			BildBytes = reader.IsDBNull(1) ? null : (byte[])reader.GetValue(1);
 			Bild_Url = reader.IsDBNull(2) ? null : reader.GetString(2);
+			KraftfahrzeugId = reader.IsDBNull(3) ? null : reader.GetInt32(3);
+			AnhaengerId = reader.IsDBNull(4) ? null : reader.GetInt32(4);
+			UsersId = reader.IsDBNull(5) ? null : reader.GetInt32(5);
 		}
 
 		#endregion
@@ -99,10 +126,21 @@ namespace VRentalsClasses.Models
 		#region properties
 		[JsonPropertyName("bilder_id")]
 		public int? Bilder_Id { get; set; }
-		[JsonIgnore()]
+
+		[JsonPropertyName("bild_bytes")]
 		public byte[]? BildBytes { get; set; }
+
 		[JsonPropertyName("bild_url")]
 		public string? Bild_Url { get; set; }
+
+		[JsonPropertyName("kraftfahrzeug_id")]
+		public int? KraftfahrzeugId { get; set; }
+
+		[JsonPropertyName("anhaenger_id")]
+		public int? AnhaengerId { get; set; }
+
+		[JsonPropertyName("users_id")]
+		public int? UsersId { get; set; }
 
 
 
@@ -123,18 +161,21 @@ namespace VRentalsClasses.Models
 
 			if (this.Bilder_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_url = :url where bilder_id = :bid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid where bilder_id = :bid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Bilder_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bid, :bil, :url)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bid, :bbs, :url, :kid, :aid, :uid)";
 			}
 
 			command.Parameters.AddWithValue("bid", this.Bilder_Id);
+			command.Parameters.AddWithValue("bbs", this.BildBytes == null ? (object)DBNull.Value : this.BildBytes);
 			command.Parameters.AddWithValue("url", String.IsNullOrEmpty(this.Bild_Url) ? (object)DBNull.Value : (object)this.Bild_Url);
-
+			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId.HasValue ? (object)this.KraftfahrzeugId.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("aid", this.AnhaengerId.HasValue ? (object)this.AnhaengerId.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("uid", this.UsersId.HasValue ? (object)this.UsersId.Value : (object)DBNull.Value);
 			try
 			{
 				result = command.ExecuteNonQuery();
@@ -160,11 +201,14 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set bild = :bil, bild_url = :url where bilder_id = :bid";
+			command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid where bilder_id = :bid";
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("bid", id);
-			command.Parameters.AddWithValue("bil", this.BildBytes == null ? (object)DBNull.Value : this.BildBytes);
+			command.Parameters.AddWithValue("bbs", this.BildBytes == null ? (object)DBNull.Value : this.BildBytes);
 			command.Parameters.AddWithValue("url", String.IsNullOrEmpty(this.Bild_Url) ? (object)DBNull.Value : (object)this.Bild_Url);
+			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId.HasValue ? (object)this.KraftfahrzeugId.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("aid", this.AnhaengerId.HasValue ? (object)this.AnhaengerId.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("uid", this.UsersId.HasValue ? (object)this.UsersId.Value : (object)DBNull.Value);
 
 			try
 			{

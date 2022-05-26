@@ -14,35 +14,35 @@ namespace VRentalsRESTAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SchadenController : ControllerBase
+    public class BilderController : ControllerBase
     {
-        // GET: api/<SchadenController>
+        // GET: api/<BilderController>
         [HttpGet()]
-        public IEnumerable<Schaden> SelectAll()
+        public IEnumerable<Bild> SelectAll()
         {
-            return Schaden.GetList();
+            return Bild.GetList();
         }
 
         [HttpGet("kfz/{id}")]
-        public IEnumerable<Schaden> SelectAllFromKfz(int id)
+        public IEnumerable<Bild> SelectAllFromKfz(int id)
         {
-            return Schaden.GetKfzSchaden(id);
+            return Bild.GetKfzBildList(id);
         }
 
-        // GET: api/<SchadenController>/5
+        // GET: api/<BilderController>/5
         [HttpGet("{id}")]
-        public Schaden Get(int id) => Schaden.Get(id);
+        public Bild Get(int id) => Bild.Get(id);
 
-        // POST: api/<SchadenController>
+        // POST: api/<BilderController>
         [HttpPost]
-        public IActionResult Post([FromBody] Schaden schaden)
+        public IActionResult Post([FromBody] Bild bild)
         {
             IActionResult result = null;
             try
             {
-                if (schaden.Save() == 1)
+                if (bild.Save() == 1)
                 {
-                    result = Ok(schaden);
+                    result = Ok(bild);
                 }
                 else
                 {
@@ -56,23 +56,23 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-        // PUT: api/<SchadenController>/5
+        // PUT: api/<BilderController>/5
         [HttpPut]
-        public IActionResult Put([FromBody] Schaden schaden)
+        public IActionResult Put([FromBody] Bild bild)
         {
             IActionResult result = null;
             try
             {
-                Schaden dbSchaden = Schaden.Get(schaden.Schaden_Id);
-                if (dbSchaden == null)
+                Bild dbBild = Bild.Get(bild.Bilder_Id);
+                if (dbBild == null)
                 {
                     result = NotFound();
                 }
                 else
                 {
-                    if (schaden.Save() == 1)
+                    if (bild.Save() == 1)
                     {
-                        result = Ok(schaden);
+                        result = Ok(bild);
                     }
                     else
                     {
@@ -87,15 +87,15 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-        //DELETE: api/<SchadenController>/5
+        //DELETE: api/<BilderController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Schaden schaden = Schaden.Get(id);
+            Bild bild = Bild.Get(id);
             IActionResult result = null;
             try
             {
-                if (schaden.Delete() == 1)
+                if (bild.Delete() == 1)
                 {
                     result = Ok();
                 }

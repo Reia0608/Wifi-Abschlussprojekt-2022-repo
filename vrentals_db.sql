@@ -37,7 +37,7 @@ ALTER ROLE vrentalsuser
 
 CREATE TABLE rentals.tbl_users
 (
-    users_id serial NOT NULL,
+    users_id NUMERIC NOT NULL,
     vorname character varying,
     nachname character varying,
     geschlecht integer,
@@ -295,7 +295,11 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_adresse TO vrentalsuser;
 CREATE TABLE rentals.tbl_bilder
 (
     bilder_id numeric(10) NOT NULL,
-    bild bytea
+    bild_bytes bytea,
+	kraftfahrzeug_id numeric,
+	anhaenger_id numeric,
+	users_id numeric,
+	schaden_id numeric
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bilder
@@ -410,13 +414,13 @@ ALTER TABLE rentals.tbl_kraftfahrzeug_ausgaben
 	ADD CONSTRAINT kraftfahrzeugeausgaben_ausgaben_fk FOREIGN KEY (ausgaben_id) REFERENCES rentals.tbl_ausgaben (ausgaben_id);
 	
 ALTER TABLE rentals.tbl_kraftfahrzeug_ausgaben 
-	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeuge_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+	ADD CONSTRAINT kraftfahrzeugeausgaben_fahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
 
 ALTER TABLE rentals.tbl_mietgegenstand
 	ADD CONSTRAINT mietgegenstand_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
 	
 ALTER TABLE rentals.tbl_mietgegenstand
-	ADD CONSTRAINT mietgegenstand_kraftfahrzeuge_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+	ADD CONSTRAINT mietgegenstand_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
 
 ALTER TABLE rentals.tbl_bewegung
 	ADD CONSTRAINT bewegung_mietgegenstand_fk FOREIGN KEY (mietgegenstand_id) REFERENCES rentals.tbl_mietgegenstand (mietgegenstand_id);
@@ -424,5 +428,17 @@ ALTER TABLE rentals.tbl_bewegung
 ALTER TABLE rentals.tbl_users
 	ADD CONSTRAINT users_kontakt_fk FOREIGN KEY (kontakt_id) REFERENCES rentals.tbl_kontakt (kontakt_id);
 	
-ALTER TABLE rentals.tbl_Schaden
-	ADD CONSTRAINT schaden_kraftfahrzeuge_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+ALTER TABLE rentals.tbl_schaden
+	ADD CONSTRAINT schaden_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+	
+ALTER TABLE rentals.tbl_bilder
+	ADD CONSTRAINT bilder_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+	
+ALTER TABLE rentals.tbl_bilder
+	ADD CONSTRAINT bilder_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
+	
+ALTER TABLE rentals.tbl_bilder
+	ADD CONSTRAINT bilder_users_fk FOREIGN KEY (users_id) REFERENCES rentals.tbl_users (users_id);
+	
+ALTER TABLE rentals.tbl_bilder
+	ADD CONSTRAINT bilder_schaden_fk FOREIGN KEY (schaden_id) REFERENCES rentals.tbl_schaden (schaden_id);
