@@ -11,10 +11,7 @@ export default class PageCarsDetails
 		args.app.Body.style.paddingBottom = '60px';
 		args.app.LoadHTML('./page-cars-details.html', args.app.Main, () => 
 		{
-			const imgContainer1 = args.app.Main.querySelector('#imgContainer');
-			const carouselControlImages = args.app.Main.querySelector('#carouselControlImages');
-			const imgBild = args.app.Main.querySelector('#imgBild');
-			const fileName = args.app.Main.querySelector('#fileName');
+			const imgContainer = args.app.Main.querySelector('#imgContainer');
 			const buttonKfzSpeichern = args.app.Main.querySelector('#buttonKfzSpeichern');
 			const modalSchadenBody = args.app.Main.querySelector('#modalSchadenBody');
 			const buttonSchadenNeu = args.app.Main.querySelector('#buttonSchadenNeu');
@@ -24,6 +21,8 @@ export default class PageCarsDetails
 			const selectSchadenArt = args.app.Main.querySelector('#selectSchadenArt');
 			const labelBeschreibung = args.app.Main.querySelector('#labelBeschreibung');	
 			const divDateSchaden = args.app.Main.querySelector('#divDateSchaden');
+
+			var uploaded_image;
 			
 
 			if(args.kid)
@@ -34,28 +33,32 @@ export default class PageCarsDetails
 
 			//-------------------------------------------------------------
 			// drag & drop Bild
-			imgContainer1.addEventListener('dragover', (event) => 
+			imgContainer.addEventListener('dragover', (event) => 
 			{
 				event.stopPropagation();
 				event.preventDefault();
 				event.dataTransfer.dropEffect = 'copy';
 		 	});
 
-			imgContainer1.addEventListener('drop', (event) => 
+			imgContainer.addEventListener('drop', (event) => 
 			{
 				event.stopPropagation();
 				event.preventDefault();
 				const fileList = event.dataTransfer.files;
-				fileName.innerText = fileList[0].name;
 				this.bild = fileList[0];
 				const reader = new FileReader();
 				reader.addEventListener('load', (event) => 
 				{
-					imgContainer1.src = event.target.result;
+				 imgBild.src = event.target.result;
 				});
 				reader.readAsDataURL(fileList[0]);
 			});
 
+			imgContainer.addEventListener('click', (event) =>
+			{
+
+			});
+			
 			//-------------------------------------------------------------
 			// speichern
 			buttonKfzSpeichern.addEventListener('click', (e) => 
@@ -257,7 +260,7 @@ export default class PageCarsDetails
 			// 	imgBild.src = this.app.apiBaseUrl + 'kraftfahrzeug/' + this.kraftfahrzeug.kraftfahrzeug_id + '/bild';
 			// }
 
-			this.bilderAnzeigen();
+			//this.bilderAnzeigen();
 			this.schadenListAnzeigen();
 
 		}, (ex) => 

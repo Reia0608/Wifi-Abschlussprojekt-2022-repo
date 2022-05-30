@@ -18,7 +18,7 @@ export default class Helper
     //=============================================================================
 	// public methods
 	//=============================================================================
-
+	
     GegenstandZustandConverter(typeNumber)
     {
         switch(typeNumber)
