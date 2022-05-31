@@ -27,21 +27,6 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("{id}")]
         public Kraftfahrzeug Get(int id) => Kraftfahrzeug.Get(id);
 
-        [HttpGet("{id}/bild")]
-        public FileStreamResult GetBild(int id)
-        {
-            Kraftfahrzeug kraftfahrzeug = Kraftfahrzeug.Get(id);
-            if (kraftfahrzeug?.BildListe != null)
-            {
-                foreach(Bild bild in kraftfahrzeug.BildListe)
-                {
-                    MemoryStream memoryStream = new MemoryStream(bild.BildBytes);
-                    return new FileStreamResult(memoryStream, "image/jpeg");
-                } 
-            }
-            return null;
-        }
-
         // POST: api/<KraftfahrzeugController>
         [HttpPost]
         public IActionResult Post([FromBody] Kraftfahrzeug kraftfahrzeug)

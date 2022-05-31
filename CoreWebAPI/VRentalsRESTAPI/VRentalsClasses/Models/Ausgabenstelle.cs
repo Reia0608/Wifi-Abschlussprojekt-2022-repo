@@ -58,7 +58,7 @@ namespace VRentalsClasses.Models
 
 		public static List<Ausgabenstelle> GetList()
 		{
-			List<Ausgabenstelle> ausgabenstelleListe = new List<Ausgabenstelle>();
+			List<Ausgabenstelle> ausgabenstellenList = new List<Ausgabenstelle>();
 			Ausgabenstelle ausgabenstelle = new Ausgabenstelle();
 
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
@@ -72,11 +72,11 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				ausgabenstelleListe.Add(ausgabenstelle = new Ausgabenstelle(reader));
+				ausgabenstellenList.Add(ausgabenstelle = new Ausgabenstelle(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
-			return ausgabenstelleListe;
+			return ausgabenstellenList;
 		}
 		#endregion
 		//************************************************************************
@@ -100,6 +100,9 @@ namespace VRentalsClasses.Models
 
 		[JsonPropertyName("adresse_id")]
 		public int? Adresse_Id { get; set; }
+
+		[JsonPropertyName("ausgabenstellen_adresse")]
+		public Adresse AusgabenstellenAdresse; 
 
 		[JsonPropertyName("anhaengerliste")]
 		public List<Anhaenger>? AnhaengerListe { get; set; } = null;

@@ -6,13 +6,13 @@ export default class PageCarsDetails
 	constructor(args) 
 	{
 		this.app = args.app;
-		this.gruppeList = null;
 
 		args.app.Body.style.paddingBottom = '60px';
 		args.app.LoadHTML('./page-cars-details.html', args.app.Main, () => 
 		{
 			const imgContainer = args.app.Main.querySelector('#imgContainer');
 			const buttonKfzSpeichern = args.app.Main.querySelector('#buttonKfzSpeichern');
+			const buttonKfzAbbrechen = args.app.Main.querySelector('#buttonKfzAbbrechen');
 			const modalSchadenBody = args.app.Main.querySelector('#modalSchadenBody');
 			const buttonSchadenNeu = args.app.Main.querySelector('#buttonSchadenNeu');
 			const dialogSchaden = new bootstrap.Modal(modalSchadenBody);
@@ -21,9 +21,9 @@ export default class PageCarsDetails
 			const selectSchadenArt = args.app.Main.querySelector('#selectSchadenArt');
 			const labelBeschreibung = args.app.Main.querySelector('#labelBeschreibung');	
 			const divDateSchaden = args.app.Main.querySelector('#divDateSchaden');
-
-			var uploaded_image;
+			const imgBild = this.app.Main.querySelector('#imgBild');
 			
+			var kfzbild = {};
 
 			if(args.kid)
 			{
@@ -49,7 +49,11 @@ export default class PageCarsDetails
 				const reader = new FileReader();
 				reader.addEventListener('load', (event) => 
 				{
-				 imgBild.src = event.target.result;
+					// convert the image into a base64 string that can be saved as Byte[].
+					let base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+					kfzbild.bild_bytes = base64String;
+
+					imgBild.src = event.target.result;	
 				});
 				reader.readAsDataURL(fileList[0]);
 			});
@@ -70,7 +74,14 @@ export default class PageCarsDetails
 
 				if (inputMarke.value && inputModell.value) 
 				{
-					this.kraftfahrzeug.kraftfahrzeug_id = parseInt(args.kid);
+					if(args.kid)
+					{
+						this.kraftfahrzeug.kraftfahrzeug_id = parseInt(args.kid);
+					}
+					else
+					{
+						this.kraftfahrzeug = {};
+					}
 					this.kraftfahrzeug.marke = inputMarke.value;
 					this.kraftfahrzeug.modell = inputModell.value;
 					this.kraftfahrzeug.kennzeichen = inputKennzeichen.value;
@@ -79,15 +90,16 @@ export default class PageCarsDetails
 					this.app.ApiKraftfahrzeugSet((response) => 
 					{
 						this.kraftfahrzeug = response;
-						if (this.bild) 
+						if (kfzbild.bild_bytes) 
 						{
-							this.app.ApiKraftfahrzeugSetBild(() => 
+							kfzbild.kraftfahrzeug_id = this.kraftfahrzeug.kraftfahrzeug_id;
+							this.app.ApiBilderSet(() => 
 							{
 
 							}, (ex) => 
 							{
 								alert(ex);
-							}, this.kraftfahrzeug, this.bild);
+							}, kfzbild);
 						}
 					}, (ex) => 
 					{
@@ -102,6 +114,12 @@ export default class PageCarsDetails
 				location.hash = '#carlist';
 			});
 
+			//-------------------------------------------------------------
+			// Vorgang abbrechen
+			buttonKfzAbbrechen.addEventListener('click', (e) =>
+			{
+				location.hash = '#carlist';
+			});
 
 			//------------------------------------------------------------------------------------------
 			// alles rund um den Schaden
@@ -173,13 +191,14 @@ export default class PageCarsDetails
 						console.log("database was updated!");
 						if (this.bild) 
 						{
+							this.bild.schaden_id = this.schaden.schaden_id;
 							this.app.ApiSchadenSetBild(() => 
 							{
 
 							}, (ex) => 
 							{
 								alert(ex);
-							}, this.schaden, this.bild);
+							}, this.bild);
 						}
 					}, (ex) => 
 					{
@@ -235,25 +254,37 @@ export default class PageCarsDetails
 		{
 			this.kraftfahrzeug = response;
 
-			const bildliste = response.bildliste;
-			const imgBild = this.app.Main.querySelector('#imgBild');
+			//const bildliste = response.bildliste;
 
 			inputMarke.value = this.kraftfahrzeug.marke;
 			inputModell.value = this.kraftfahrzeug.modell;
 			inputKennzeichen.value = this.kraftfahrzeug.kennzeichen;
 			inputMietpreis.value = this.kraftfahrzeug.mietpreis;
 
-			if (bildliste != null)
+			// Kfz Bild anzeigen
+			this.app.ApiBilderGetKfzList((response) =>
 			{
-				for(var iterator=0 ; iterator< bildliste.length ; iterator++) 
+				if(response != null)
 				{
-					$('<div class="item"><img src="'+bildliste.Bild_Url[iterator]+'"><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
-					$('<li data-target="#carouselControlImages" data-slide-to="'+iterator+'"></li>').appendTo('.carousel-indicators')
+					let bildliste = response;
+					imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
 				}
-				$('.item').first().addClass('active'); 
-				$('.carousel-indicators > li').first().addClass('active');
-				$('#carouselControlImages').carousel(); 
-			}
+			}, (ex) => 
+			{
+				alert(ex);
+			}, this.kraftfahrzeug.kraftfahrzeug_id);
+			// if (bildliste != null)
+			// {
+
+			// 	for(var iterator=0 ; iterator< bildliste.length ; iterator++) 
+			// 	{
+			// 		$('<div class="item"><img src="'+bildliste.Bild_Url[iterator]+'"><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
+			// 		$('<li data-target="#carouselControlImages" data-slide-to="'+iterator+'"></li>').appendTo('.carousel-indicators')
+			// 	}
+			// 	$('.item').first().addClass('active'); 
+			// 	$('.carousel-indicators > li').first().addClass('active');
+			// 	$('#carouselControlImages').carousel(); 
+			// }
 
 			// if (this.kraftfahrzeug.bildliste) 
 			// {
@@ -310,48 +341,48 @@ export default class PageCarsDetails
 	}
 
 	// Bilder anzeigen
-	bilderAnzeigen()
-	{
-		const imgContainer = this.app.Main.querySelector('#imgContainer');
-		let html = '';
-		let leerBildPath = ".\..\media\LeerBild.jpg";
+	// bilderAnzeigen()
+	// {
+	// 	const imgContainer = this.app.Main.querySelector('#imgContainer');
+	// 	let html = '';
+	// 	let leerBildPath = ".\..\media\LeerBild.jpg";
 
-		this.app.ApiBilderGetKfzList((response) =>
-		{
-			this.kraftfahrzeug.bildliste = response;
-			let iterator = 0;
-			for (let bilditem of this.kraftfahrzeug.bildliste)
-			{
-				if (iterator == 0)
-				{
-					html =  				
-					`
-					<div class="carousel-item active d-block w-100" alt="Kein Bild vorhanden!" data-idx="${iterator}">
-					<img src=${bilditem.bild_bytes ? bilditem.bild_bytes : '&nbsp;'}. class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_${bilditem.bilder_id}">
-					</div>
-					`;
-				}
-				else
-				{
-					html += 
-				`
-				<div class="carousel-item" alt="Kein Bild vorhanden!" data-idx="${iterator}">
-				<img src=${bilditem.bild_bytes ? bilditem.bild_bytes : '&nbsp;'}. class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_${bilditem.bilder_id}">
-				</div>
-				`;
-				}
-				iterator++;
-			}
-			// html +=
-			// `
-			// <div class="carousel-item" data-idx="${iterator+1}">
-			// 	<img src="${leerBildPath}" class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_leerBild">
-			// </div>
-			// `;
-			imgContainer.innerHTML = html;
-		}, (ex) => 
-		{
-			alert(ex);
-		}, this.kraftfahrzeug.kraftfahrzeug_id);
-	}
+	// 	this.app.ApiBilderGetKfzList((response) =>
+	// 	{
+	// 		this.kraftfahrzeug.bildliste = response;
+	// 		let iterator = 0;
+	// 		for (let bilditem of this.kraftfahrzeug.bildliste)
+	// 		{
+	// 			if (iterator == 0)
+	// 			{
+	// 				html =  				
+	// 				`
+	// 				<div class="carousel-item active d-block w-100" alt="Kein Bild vorhanden!" data-idx="${iterator}">
+	// 				<img src=${bilditem.bild_bytes ? bilditem.bild_bytes : '&nbsp;'}. class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_${bilditem.bilder_id}">
+	// 				</div>
+	// 				`;
+	// 			}
+	// 			else
+	// 			{
+	// 				html += 
+	// 			`
+	// 			<div class="carousel-item" alt="Kein Bild vorhanden!" data-idx="${iterator}">
+	// 			<img src=${bilditem.bild_bytes ? bilditem.bild_bytes : '&nbsp;'}. class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_${bilditem.bilder_id}">
+	// 			</div>
+	// 			`;
+	// 			}
+	// 			iterator++;
+	// 		}
+	// 		// html +=
+	// 		// `
+	// 		// <div class="carousel-item" data-idx="${iterator+1}">
+	// 		// 	<img src="${leerBildPath}" class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_leerBild">
+	// 		// </div>
+	// 		// `;
+	// 		imgContainer.innerHTML = html;
+	// 	}, (ex) => 
+	// 	{
+	// 		alert(ex);
+	// 	}, this.kraftfahrzeug.kraftfahrzeug_id);
+	// }
 }

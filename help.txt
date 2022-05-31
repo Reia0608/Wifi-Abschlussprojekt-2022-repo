@@ -98,6 +98,12 @@ https://github.com/ritwickdey/vscode-live-server/blob/master/docs/settings.md
 
 https://mdbootstrap.com/docs/standard/plugins/drag-and-drop/
 
+====================================================================
+======================= Upload via file browser=====================
+====================================================================
+
+https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canvas
+
 ==========================================================
 ====================== TODO=====================
 ==========================================================

@@ -72,7 +72,7 @@ namespace VRentalsRESTAPI.Controllers
                 {
                     if (bild.Save() == 1)
                     {
-                        result = Ok(bild);
+                        result = Ok();
                     }
                     else
                     {

@@ -1,51 +1,40 @@
 import Helper from "./helper.js";
 
-export default class PageCarsList 
+export default class PageAusgabenstellenList 
 {
 	constructor(args) 
 	{
         this.app = args.app;
-		args.app.LoadHTML('./page-cars-list.html', args.app.Main, () => 
+		args.app.LoadHTML('./page-ausgabenstellen-list.html', args.app.Main, () => 
 		{
-			const buttonKfzNeu = this.app.Main.querySelector('#buttonKfzNeu');
-            const ulCarList = this.app.Main.querySelector('#ulCarList');
+            const ulIssuingOfficeList = this.app.Main.querySelector('#ulIssuingOfficeList');
 
-			this.app.ApiKraftfahrzeugGetList((response) => 
+			this.app.ApiAusgabenstellenGetList((response) => 
             {
 				let html = '';
                 let iterator = 1;
 				this.Helper = new Helper();
-				for (let kraftfahrzeug of response) 
+				for (let ausgabenstelle of response) 
                 {
 					// WIP: putting kraftfahrzeug_id into html code potentially harmful?!
 					html += 
 					`
-                        <ul class="list-group list-group-horizontal-sm clickable" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
-							<li class="list-group-item col-1" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}>${iterator}</li>
-							<li class="list-group-item col-2">${kraftfahrzeug.marke}</li>
-							<li class="list-group-item col-3">${kraftfahrzeug.modell}</li>
-							<li class="list-group-item col-4">${this.Helper.GegenstandZustandConverter(kraftfahrzeug.gegenstandzustand)}</li>
-							<li class="list-group-item col-5">${kraftfahrzeug.aktuellerstandort}</li>
-							<li class="list-group-item col-6">${kraftfahrzeug.mietpreis}</li>
-							<li class="list-group-item col-7">${kraftfahrzeug.kennzeichen}</li>
+                        <ul class="list-group list-group-horizontal-sm clickable" data-kraftfahrzeug-id="${ausgabenstelle.ausgabenstelle_id}">
+							<li class="list-group-item col-1" data-kraftfahrzeug-id="${ausgabenstelle.ausgabenstelle_id}>${iterator}</li>
+							<li class="list-group-item col-2">test</li>
+							<li class="list-group-item col-3">test</li>
                         </ul>
 					`;
                     iterator++;
 				}
 
-				ulCarList.innerHTML = html;
+				ulIssuingOfficeList.innerHTML = html;
 
 				//--------------------------------------
 				// events
 				//--------------------------------------
-
-				buttonKfzNeu.addEventListener('click', ()=>
-				{
-					window.open('#cardetails', '_self');
-				});
-
-				// ListGroupElement-click
-				ulCarList.addEventListener('click', (pointerCoordinates) => 
+				// ListElement-click
+				ulIssuingOfficeList.addEventListener('click', (pointerCoordinates) => 
                 {
 					let button = null;
 
