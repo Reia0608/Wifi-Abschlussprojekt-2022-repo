@@ -30,6 +30,10 @@ export default class PageCarsDetails
 				let kraftfahrzeug_id = parseInt(args.kid);
 				this.datenLaden(kraftfahrzeug_id);
 			}
+			else
+			{
+				this.schadenListAnzeigen(); 
+			}
 
 			//-------------------------------------------------------------
 			// drag & drop Bild
@@ -89,7 +93,6 @@ export default class PageCarsDetails
 
 					this.app.ApiKraftfahrzeugSet((response) => 
 					{
-						this.kraftfahrzeug = response;
 						if (kfzbild.bild_bytes) 
 						{
 							kfzbild.kraftfahrzeug_id = this.kraftfahrzeug.kraftfahrzeug_id;
@@ -110,7 +113,6 @@ export default class PageCarsDetails
 				{
 					alert('Marke und Modell sind Pflicht!');
 				}
-
 				location.hash = '#carlist';
 			});
 
@@ -167,7 +169,7 @@ export default class PageCarsDetails
 						this.schaden = 
 						{
 							schaden_id: null,
-							schaden_datum: new Date().toISOString()
+							schaden_datum: new Date()
 						};
 					}
 					schadensArtText = selectSchadenArt.options[selectSchadenArt.selectedIndex].text;
@@ -175,37 +177,53 @@ export default class PageCarsDetails
 					this.schaden.anfallendekosten = (labelAnfallendeKosten.value && !isNaN(labelAnfallendeKosten.value) ? parseInt(labelAnfallendeKosten.value) : 0);
 					this.schaden.schadensart = schadensArtText;
 					this.schaden.beschreibung = labelBeschreibung.value;
-					this.schaden.schaden_datum = divDateSchaden.value;
 
-					if (this.kraftfahrzeug && !this.kraftfahrzeug.schadenlist)
+					if(divDateSchaden.value == "")
 					{
-						this.kraftfahrzeug.schadenlist = [];
-					} 
+						this.schaden.schaden_datum = null;
+					}
+					else
+					{
+						this.schaden.schaden_datum = divDateSchaden.value;
+					}
+					
+					// WIP causes error when schaden is made without an existing car.
+					if(!this.kraftfahrzeug)
+					{
+						this.kraftfahrzeug = null;
+						if (!this.kraftfahrzeug.schadenlist)
+						{
+							this.kraftfahrzeug.schadenlist = [];
+						} 
+					}
+					
 					this.kraftfahrzeug.schadenlist.push(this.schaden);
 					
 
 					// Update the database.
-					this.app.ApiSchadenSet((response) => 
+					this.app.ApiSchadenSet(() => 
 					{
-						this.schaden = response;
 						console.log("database was updated!");
 						if (this.bild) 
 						{
 							this.bild.schaden_id = this.schaden.schaden_id;
 							this.app.ApiSchadenSetBild(() => 
 							{
-
+								this.datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
 							}, (ex) => 
 							{
 								alert(ex);
 							}, this.bild);
+						}
+						else
+						{
+							this.datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
 						}
 					}, (ex) => 
 					{
 						alert(ex);
 					}, this.schaden);
 
-					this.schadenListAnzeigen();
 					dialogSchaden.hide();
 				}
 			});
@@ -214,9 +232,18 @@ export default class PageCarsDetails
 			tableSchadenList.addEventListener('click', (e) => 
 			{
 				let btn = null;
-				if (e.target.nodeName.toUpperCase() == 'PATH' && e.target.parentElement.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.parentElement.nodeName == 'BUTTON') btn = e.target.parentElement.parentElement;
-				else if (e.target.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.nodeName == 'BUTTON') btn = e.target.parentElement;
-				else if (e.target.nodeName == 'BUTTON') btn = e.target;
+				if (e.target.nodeName.toUpperCase() == 'PATH' && e.target.parentElement.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.parentElement.nodeName == 'BUTTON')
+				{
+					btn = e.target.parentElement.parentElement;
+				} 
+				else if (e.target.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.nodeName == 'BUTTON')
+				{
+					btn = e.target.parentElement;
+				} 
+				else if (e.target.nodeName == 'BUTTON') 
+				{
+					btn = e.target;
+				}
 
 				if (btn) 
 				{
@@ -226,7 +253,8 @@ export default class PageCarsDetails
 			
 						this.app.ApiSchadenDelete(() => 
 						{
-							this.schadenListAnzeigen();
+							console.log("entry was deleted!");
+							this.datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
 						}, (ex) => 
 						{
 							alert(ex);
@@ -264,15 +292,17 @@ export default class PageCarsDetails
 			// Kfz Bild anzeigen
 			this.app.ApiBilderGetKfzList((response) =>
 			{
-				if(response != null)
+				if(response != null && response.length > 0)
 				{
 					let bildliste = response;
 					imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
 				}
+				this.schadenListAnzeigen();
 			}, (ex) => 
 			{
 				alert(ex);
 			}, this.kraftfahrzeug.kraftfahrzeug_id);
+
 			// if (bildliste != null)
 			// {
 
@@ -292,8 +322,6 @@ export default class PageCarsDetails
 			// }
 
 			//this.bilderAnzeigen();
-			this.schadenListAnzeigen();
-
 		}, (ex) => 
 		{
 			alert(ex);
@@ -307,37 +335,49 @@ export default class PageCarsDetails
 	schadenListAnzeigen() 
 	{
 		const tableSchadenList = this.app.Main.querySelector('#tableSchadenList');
+		const trSchadenHeader = this.app.Main.querySelector('#trSchadenHeader');
 		const dateFormatter = new Intl.DateTimeFormat('de-AT', 
 		{
 			dateStyle: 'medium'
 		});
 		let html = '';
 
-		this.app.ApiSchadenGetKfzList((response) => 
+		if(typeof this.kraftfahrzeug != "undefined")
 		{
-			this.kraftfahrzeug.schadenlist = response;
-			let iterator = 0;
-			for (let schadenitem of this.kraftfahrzeug.schadenlist) 
+			this.app.ApiSchadenGetKfzList((response) => 
 			{
-				html += 
-				`
-				<tr data-idx="${iterator}">
-					<td>
-						<button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenDel_${schadenitem.schaden_id}"><span class="iconify" data-icon="mdi-delete"></span></button>
-					</td>
-					<td class="element-clickable">${(schadenitem.schaden_datum ? dateFormatter.format(new Date(schadenitem.schaden_datum)) : '&nbsp;')}</td>
-					<td class="element-clickable">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
-					<td class="element-clickable">${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
-					<td class="element-clickable">${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
-				</tr>
-				`;
-				iterator++;
-			}
-			tableSchadenList.innerHTML = html;
-		}, (ex) => 
+				this.kraftfahrzeug.schadenlist = response;
+				let iterator = 0;
+				for (let schadenitem of this.kraftfahrzeug.schadenlist) 
+				{
+					html += 
+					`
+					<tr data-idx="${iterator}">
+						<td>
+							<button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenDel_${schadenitem.schaden_id}"><span class="iconify" data-icon="mdi-delete"></span></button>
+						</td>
+						<td class="element-clickable">${(schadenitem.schaden_datum ? dateFormatter.format(new Date(schadenitem.schaden_datum)) : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
+						<td class="element-clickable">${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
+					</tr>
+					`;
+					iterator++;
+				}
+				tableSchadenList.innerHTML = html;
+			}, (ex) => 
+			{
+				alert(ex);
+			}, this.kraftfahrzeug.kraftfahrzeug_id);
+		}
+		else
 		{
-			alert(ex);
-		}, this.kraftfahrzeug.kraftfahrzeug_id);
+			html = 
+			`
+			<td>Erzeugen Sie bitte ein Fahrzeug um den Schaden eintragen zu können!</td>
+			`
+			trSchadenHeader.innerHTML = html;
+		}		
 	}
 
 	// Bilder anzeigen

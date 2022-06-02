@@ -428,7 +428,7 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
-				return response.json();
+				return successCallback();
 			}
 			else if (response.status == 204) 
 			{
@@ -436,7 +436,6 @@ export default class Application
 			}
 			else throw new Error(response.status + ' ' + response.statusText);
 		})
-		.then(successCallback)
 		.catch(errorCallback);
 	}
 
@@ -450,7 +449,7 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
-				return successCallback;
+				successCallback();
 			} 
 			else if (response.status == 204)
 			{

@@ -42,7 +42,7 @@ namespace VRentalsRESTAPI.Controllers
             {
                 if (schaden.Save() == 1)
                 {
-                    result = Ok(schaden);
+                    result = Ok();
                 }
                 else
                 {
@@ -72,7 +72,7 @@ namespace VRentalsRESTAPI.Controllers
                 {
                     if (schaden.Save() == 1)
                     {
-                        result = Ok(schaden);
+                        result = Ok();
                     }
                     else
                     {

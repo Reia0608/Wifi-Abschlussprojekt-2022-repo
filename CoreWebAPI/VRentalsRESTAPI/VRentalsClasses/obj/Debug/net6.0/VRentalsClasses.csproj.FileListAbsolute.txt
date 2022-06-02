@@ -47,3 +47,16 @@ C:\Reia\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClass
 C:\Reia\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.pdb
 C:\Reia\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\ref\VRentalsClasses.dll
 C:\Users\Nadia\Desktop\Sami\Abschlussprojekt2022\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\bin\Debug\net6.0\vrentals-3d8a2-firebase-adminsdk-p9d2p-bef31c847c.json
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\bin\Debug\net6.0\vrentals-3d8a2-firebase-adminsdk-p9d2p-bef31c847c.json
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\bin\Debug\net6.0\VRentalsClasses.deps.json
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\bin\Debug\net6.0\VRentalsClasses.dll
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\bin\Debug\net6.0\VRentalsClasses.pdb
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.csproj.AssemblyReference.cache
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.GeneratedMSBuildEditorConfig.editorconfig
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.AssemblyInfoInputs.cache
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.AssemblyInfo.cs
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.csproj.CoreCompileInputs.cache
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.dll
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\refint\VRentalsClasses.dll
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\VRentalsClasses.pdb
+C:\Reia\Wifi-Abschlussprojekt-2022-repo\Wifi-Abschlussprojekt-2022-repo\CoreWebAPI\VRentalsRESTAPI\VRentalsClasses\obj\Debug\net6.0\ref\VRentalsClasses.dll

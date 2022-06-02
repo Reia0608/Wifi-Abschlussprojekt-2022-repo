@@ -15,7 +15,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_bilder";
-		private const string COLUMNS = "bilder_id, bild_bytes, bild_url, kraftfahrzeug_id, anhaenger_id, users_id";
+		private const string COLUMNS = "bilder_id, bild_bytes, bild_url, kraftfahrzeug_id, anhaenger_id, users_id, schaden_id";
 		#endregion
 
 		//************************************************************************
@@ -57,10 +57,9 @@ namespace VRentalsClasses.Models
 			return bild;
 		}
 
-		public static List<Bild> GetKfzBildList(int kraftfahrzeug_id)
+		public static List<Bild> GetKfzBildList(int? kraftfahrzeug_id)
 		{
 			List<Bild> bilderListe = new List<Bild>();
-			Bild bild = new Bild();
 
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
@@ -74,7 +73,7 @@ namespace VRentalsClasses.Models
 
 			while (reader.Read())
 			{
-				bilderListe.Add(bild = new Bild(reader));
+				bilderListe.Add(new Bild(reader));
 			}
 			reader.Close();
 			DBConnection.GetConnection().Close();
@@ -119,6 +118,7 @@ namespace VRentalsClasses.Models
 			KraftfahrzeugId = reader.IsDBNull(3) ? null : reader.GetInt32(3);
 			AnhaengerId = reader.IsDBNull(4) ? null : reader.GetInt32(4);
 			UsersId = reader.IsDBNull(5) ? null : reader.GetInt32(5);
+			SchadenId = reader.IsDBNull(6) ? null : reader.GetInt32(6);
 		}
 
 		#endregion
@@ -142,6 +142,9 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("users_id")]
 		public int? UsersId { get; set; }
 
+		[JsonPropertyName("schaden_id")]
+		public int? SchadenId { get; set; }
+
 
 
 		#endregion
@@ -161,13 +164,13 @@ namespace VRentalsClasses.Models
 
 			if (this.Bilder_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid where bilder_id = :bid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where bilder_id = :bid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Bilder_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bid, :bbs, :url, :kid, :aid, :uid)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bid, :bbs, :url, :kid, :aid, :uid, :sid)";
 			}
 
 			command.Parameters.AddWithValue("bid", this.Bilder_Id);
@@ -176,6 +179,7 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId.HasValue ? (object)this.KraftfahrzeugId.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("aid", this.AnhaengerId.HasValue ? (object)this.AnhaengerId.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("uid", this.UsersId.HasValue ? (object)this.UsersId.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("sid", this.SchadenId.HasValue ? (object)this.SchadenId.Value : (object)DBNull.Value);
 			try
 			{
 				result = command.ExecuteNonQuery();
@@ -201,7 +205,7 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid where bilder_id = :bid";
+			command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where bilder_id = :bid";
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("bid", id);
 			command.Parameters.AddWithValue("bbs", this.BildBytes == null ? (object)DBNull.Value : this.BildBytes);
@@ -209,6 +213,7 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId.HasValue ? (object)this.KraftfahrzeugId.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("aid", this.AnhaengerId.HasValue ? (object)this.AnhaengerId.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("uid", this.UsersId.HasValue ? (object)this.UsersId.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("sid", this.SchadenId.HasValue ? (object)this.SchadenId.Value : (object)DBNull.Value);
 
 			try
 			{
