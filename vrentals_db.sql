@@ -215,9 +215,9 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_schaden TO vrentalsuser;
 CREATE TABLE rentals.tbl_ausgabenstelle
 (
     ausgabenstelle_id numeric NOT NULL,
-    anhaenger_id numeric,
-    kraftfahrzeug_id numeric,
-    adresse_id numeric
+    adresse_id numeric,
+	ausgabenstelle_bezeichnung character varying,
+	ausgabenstelle_adresse character varying
 );
 
 ALTER TABLE rentals.tbl_ausgabenstelle
@@ -395,9 +395,6 @@ ALTER TABLE rentals.tbl_anhaenger
 ALTER TABLE rentals.tbl_anhaenger 
 	ADD CONSTRAINT anhaenger_bilder_fk FOREIGN KEY (bilder_id) REFERENCES rentals.tbl_bilder (bilder_id);
 
-ALTER TABLE rentals.tbl_ausgabenstelle 
-	ADD CONSTRAINT ausgabenstelle_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
-
 ALTER TABLE rentals.tbl_kraftfahrzeug
 	ADD CONSTRAINT kraftfahrzeuge_adresse_fk FOREIGN KEY (adresse_id) REFERENCES rentals.tbl_adresse (adresse_id);
 	
@@ -442,3 +439,17 @@ ALTER TABLE rentals.tbl_bilder
 	
 ALTER TABLE rentals.tbl_bilder
 	ADD CONSTRAINT bilder_schaden_fk FOREIGN KEY (schaden_id) REFERENCES rentals.tbl_schaden (schaden_id);
+	
+ALTER TABLE rentals.tbl_adresse
+	ADD CONSTRAINT adresse_users_fk FOREIGN KEY (users_id) REFERENCES rentals.tbl_users (users_id);
+	
+ALTER TABLE rentals.tbl_adresse
+	ADD CONSTRAINT adresse_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
+	
+ALTER TABLE rentals.tbl_adresse
+	ADD CONSTRAINT adresse_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+	
+ALTER TABLE rentals.tbl_adresse
+	ADD CONSTRAINT adresse_ausgabenstelle_fk FOREIGN KEY (ausgabenstelle_id) REFERENCES rentals.tbl_ausgabenstelle (ausgabenstelle_id);
+	
+

@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_adresse";
-		private const string COLUMNS = "adresse_id, bezeichnung, land, stadt_ort, plz, strasse, strassennummer";
+		private const string COLUMNS = "adresse_id, bezeichnung, land, stadt_ort, plz, strasse, strassennummer, anhaenger_id, kraftfahrzeug_id, ausgabenstelle_id, users_id";
 
 		#endregion
 		//************************************************************************
@@ -95,6 +95,10 @@ namespace VRentalsClasses.Models
 			PLZ = reader.IsDBNull(4) ? null : reader.GetString(4);
 			Strasse = reader.IsDBNull(5) ? null : reader.GetString(5);
 			StrassenNummer = reader.IsDBNull(6) ? null : reader.GetString(6);
+			Anhaenger_Id = reader.IsDBNull(7) ? null : reader.GetInt32(7);
+			Kraftfahrzeug_Id = reader.IsDBNull(8) ? null : reader.GetInt32(8);
+			Ausgabenstelle_Id = reader.IsDBNull(9) ? null : reader.GetInt32(9);
+			Users_Id = reader.IsDBNull(10) ? null : reader.GetInt32(10);
 		}
 
 		#endregion
@@ -121,6 +125,20 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("strassennummer")]
 		public string? StrassenNummer { get; set; }
 
+		[JsonPropertyName("anhaenger_id")]
+		public int? Anhaenger_Id { get; set; }
+
+		[JsonPropertyName("kraftfahrzeug_id")]
+		public int? Kraftfahrzeug_Id { get; set; }
+
+		[JsonPropertyName("ausgabenstelle_id")]
+		public int? Ausgabenstelle_Id { get; set; }
+
+		[JsonPropertyName("users_id")]
+		public int? Users_Id { get; set; }
+
+
+
 		#endregion
 
 		//************************************************************************
@@ -138,13 +156,13 @@ namespace VRentalsClasses.Models
 
 			if (this.Adresse_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set bezeichnung = :bez, land = :lan, stadt_ort = :so, plz = :plz, strasse = :str, strassennummer = :stn where adresse_id = :aid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set bezeichnung = :bez, land = :lan, stadt_ort = :so, plz = :plz, strasse = :str, strassennummer = :stn, anhaenger_id = :ahid, kraftfahrzeug_id = :kid, ausgabenstelle_id = :asid, users_id = :uid where adresse_id = :aid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Adresse_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :bez, :lan, :so, :plz, :str, :stn)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :bez, :lan, :so, :plz, :str, :stn, :ahid, :kid, :asid, :uid)";
 			}
 
 			command.Parameters.AddWithValue("aid", this.Adresse_Id);
@@ -154,6 +172,10 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("plz", String.IsNullOrEmpty(this.PLZ) ? (object)DBNull.Value : (object)this.PLZ);
 			command.Parameters.AddWithValue("str", String.IsNullOrEmpty(this.Strasse) ? (object)DBNull.Value : (object)this.Strasse);
 			command.Parameters.AddWithValue("stn", String.IsNullOrEmpty(this.StrassenNummer) ? (object)DBNull.Value : (object)this.StrassenNummer);
+			command.Parameters.AddWithValue("ahid", this.Anhaenger_Id.HasValue ? (object)this.Anhaenger_Id.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("kid", this.Kraftfahrzeug_Id.HasValue ? (object)this.Kraftfahrzeug_Id.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (object)this.Ausgabenstelle_Id.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("uid", this.Users_Id.HasValue ? (object)this.Users_Id.Value : (object)DBNull.Value);
 			try
 			{
 				result = command.ExecuteNonQuery();

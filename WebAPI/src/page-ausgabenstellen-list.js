@@ -7,7 +7,8 @@ export default class PageAusgabenstellenList
         this.app = args.app;
 		args.app.LoadHTML('./page-ausgabenstellen-list.html', args.app.Main, () => 
 		{
-            const ulIssuingOfficeList = this.app.Main.querySelector('#ulIssuingOfficeList');
+            const tbodyAusgabenstellen = this.app.Main.querySelector('#tbodyAusgabenstellen');
+			const buttonAusgabenstelleNeu = this.app.Main.querySelector('#buttonAusgabenstelleNeu');
 
 			this.app.ApiAusgabenstellenGetList((response) => 
             {
@@ -16,25 +17,32 @@ export default class PageAusgabenstellenList
 				this.Helper = new Helper();
 				for (let ausgabenstelle of response) 
                 {
-					// WIP: putting kraftfahrzeug_id into html code potentially harmful?!
 					html += 
 					`
-                        <ul class="list-group list-group-horizontal-sm clickable" data-kraftfahrzeug-id="${ausgabenstelle.ausgabenstelle_id}">
-							<li class="list-group-item col-1" data-kraftfahrzeug-id="${ausgabenstelle.ausgabenstelle_id}>${iterator}</li>
-							<li class="list-group-item col-2">test</li>
-							<li class="list-group-item col-3">test</li>
-                        </ul>
+						<tr data-ausgabenstelle-id="${ausgabenstelle.ausgabenstelle_id}">
+							<th scope="row">${iterator}</th>
+							<td>${ausgabenstelle.ausgabenstelle_bezeichnung}</td>
+							<td>${ausgabenstelle.ausgabenstelle_adresse}</td>
+							<td>WIP</td>
+						</tr>
 					`;
                     iterator++;
 				}
 
-				ulIssuingOfficeList.innerHTML = html;
+				tbodyAusgabenstellen.innerHTML = html;
 
 				//--------------------------------------
 				// events
 				//--------------------------------------
+
+				// Button Neue Ausgabenstelle-click
+				buttonAusgabenstelleNeu.addEventListener('click', ()=>
+				{
+					window.open('#issuingofficedetails', '_self');
+				});
+
 				// ListElement-click
-				ulIssuingOfficeList.addEventListener('click', (pointerCoordinates) => 
+				tbodyAusgabenstellen.addEventListener('click', (pointerCoordinates) => 
                 {
 					let button = null;
 
@@ -55,10 +63,10 @@ export default class PageAusgabenstellenList
                     {
 
 					}
-					else if (pointerCoordinates.target.nodeName == 'LI') 
+					else if (pointerCoordinates.target.nodeName == 'TH') 
                     {
-						let kraftfahrzeug_id = pointerCoordinates.target.parentElement.dataset.kraftfahrzeugId;
-						window.open('#cardetails?kid=' + kraftfahrzeug_id, '_self');
+						let ausgabenstelle_id = pointerCoordinates.target.parentElement.dataset.ausgabenstelleId;
+						window.open('#issuingofficedetails?aid=' + ausgabenstelle_id, '_self');
 					}
 				});
 			}, (ex) => 

@@ -8,6 +8,7 @@ import PageCarsList from './page-cars-list.js';
 import PageCarsDetails from './page-cars-details.js';
 import LoginManager from './login-manager.js';
 import PageAusgabenstellenList from './page-ausgabenstellen-list.js';
+import PageAusgabenstellenDetails from './page-ausgabenstellen-details.js';
 
 
 
@@ -106,6 +107,9 @@ export default class Application
 				break;
 			case '#issuingofficelist':
 				new PageAusgabenstellenList(args);
+				break;
+			case '#issuingofficedetails':
+				new PageAusgabenstellenDetails(args);
 				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
@@ -561,6 +565,57 @@ export default class Application
 			{
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
+		})
+		.catch(errorCallback);
+	}
+
+	//==================================================================================
+	// Adresse
+
+	ApiAdresseGet(successCallback, errorCallback, ausgabenstelle_id)
+	{
+		fetch(this.apiBaseUrl + 'ausgabenstelle' + ausgabenstelle_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		}).then((response) => 
+		{
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiAdresseSet(successCallback, errorCallback, adresse)
+	{
+		fetch(this.apiBaseUrl + 'adresse', 
+		{
+			method: adresse.adresse_id ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(adresse)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				return successCallback();
+			}
+			else if (response.status == 204) 
+			{
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
 		})
 		.catch(errorCallback);
 	}

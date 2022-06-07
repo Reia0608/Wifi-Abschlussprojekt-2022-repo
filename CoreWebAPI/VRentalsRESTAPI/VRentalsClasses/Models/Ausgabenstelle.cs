@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_ausgabenstelle";
-		private const string COLUMNS = "ausgabenstelle_id, anhaenger_id";
+		private const string COLUMNS = "ausgabenstelle_id, adresse_id, ausgabenstelle_bezeichnung, ausgabenstelle_adresse";
 		#endregion
 
 		//************************************************************************
@@ -31,8 +31,8 @@ namespace VRentalsClasses.Models
 
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ausgabenstelle_id = :aid";
-			command.Parameters.AddWithValue("aid", ausgabenstelle_id);
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ausgabenstelle_id = :asid";
+			command.Parameters.AddWithValue("asid", ausgabenstelle_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 			try
 			{
@@ -90,6 +90,8 @@ namespace VRentalsClasses.Models
 		{
 			Ausgabenstelle_Id = reader.GetInt32(0);
 			Adresse_Id = reader.IsDBNull(1) ? null : reader.GetInt32(1);
+			AusgabenstelleBezeichnung = reader.IsDBNull(2) ? null : reader.GetString(2);
+			AusgabenstelleAdresse = reader.IsDBNull(3) ? null : reader.GetString(3);
 		}
 
 		#endregion
@@ -101,8 +103,13 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("adresse_id")]
 		public int? Adresse_Id { get; set; }
 
-		[JsonPropertyName("ausgabenstellen_adresse")]
-		public Adresse AusgabenstellenAdresse; 
+		[JsonPropertyName("ausgabenstelle_bezeichnung")]
+
+		public String? AusgabenstelleBezeichnung;
+
+		[JsonPropertyName("ausgabenstelle_adresse")]
+
+		public String? AusgabenstelleAdresse; 
 
 		[JsonPropertyName("anhaengerliste")]
 		public List<Anhaenger>? AnhaengerListe { get; set; } = null;
@@ -126,17 +133,19 @@ namespace VRentalsClasses.Models
 
 			if (this.Ausgabenstelle_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set adresse_id = :aid where ausgabenstelle_id = :asid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set adresse_id = :aid, ausgabenstelle_bezeichnung = :asb, ausgabenstelle_adresse = :asa where ausgabenstelle_id = :asid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Adresse_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:asid, :aid)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:asid, :aid, :asb, :asa)";
 			}
 
 			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id);
 			command.Parameters.AddWithValue("aid", this.Adresse_Id.HasValue ? (object)this.Adresse_Id.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("asb", String.IsNullOrEmpty(this.AusgabenstelleBezeichnung) ? (object)DBNull.Value : (object)this.AusgabenstelleBezeichnung);
+			command.Parameters.AddWithValue("asa", String.IsNullOrEmpty(this.AusgabenstelleAdresse) ? (object)DBNull.Value : (object)this.AusgabenstelleAdresse);
 			try
 			{
 				result = command.ExecuteNonQuery();
@@ -200,6 +209,8 @@ namespace VRentalsClasses.Models
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants
 			command.Parameters.AddWithValue("asid", id);
 			command.Parameters.AddWithValue("aid", this.Adresse_Id.HasValue ? (object)this.Adresse_Id.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("asb", String.IsNullOrEmpty(this.AusgabenstelleBezeichnung) ? (object)DBNull.Value : (object)this.AusgabenstelleBezeichnung);
+			command.Parameters.AddWithValue("asa", String.IsNullOrEmpty(this.AusgabenstelleAdresse) ? (object)DBNull.Value : (object)this.AusgabenstelleAdresse);
 			try
 			{
 				result = command.ExecuteNonQuery();
