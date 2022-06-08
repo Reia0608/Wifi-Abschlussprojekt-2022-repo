@@ -14,7 +14,6 @@ export default class PageAusgabenstellenList
             {
 				let html = '';
                 let iterator = 1;
-				this.Helper = new Helper();
 				for (let ausgabenstelle of response) 
                 {
 					html += 
@@ -23,6 +22,7 @@ export default class PageAusgabenstellenList
 							<th scope="row">${iterator}</th>
 							<td>${ausgabenstelle.ausgabenstelle_bezeichnung}</td>
 							<td>${ausgabenstelle.ausgabenstelle_adresse}</td>
+							<td>WIP</td>
 							<td>WIP</td>
 						</tr>
 					`;
@@ -63,10 +63,10 @@ export default class PageAusgabenstellenList
                     {
 
 					}
-					else if (pointerCoordinates.target.nodeName == 'TH') 
+					else if (pointerCoordinates.target.nodeName == 'TD') 
                     {
 						let ausgabenstelle_id = pointerCoordinates.target.parentElement.dataset.ausgabenstelleId;
-						window.open('#issuingofficedetails?aid=' + ausgabenstelle_id, '_self');
+						window.open('#issuingofficedetails?asid=' + ausgabenstelle_id, '_self');
 					}
 				});
 			}, (ex) => 

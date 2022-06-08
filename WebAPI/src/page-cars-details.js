@@ -23,6 +23,7 @@ export default class PageCarsDetails
 			const divDateSchaden = args.app.Main.querySelector('#divDateSchaden');
 			const imgBild = this.app.Main.querySelector('#imgBild');
 			
+			// Initialisierung
 			var kfzbild = {};
 
 			if(args.kid)

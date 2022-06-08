@@ -268,13 +268,17 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_anhaenger TO vrentalsuser;
 
 	CREATE TABLE rentals.tbl_adresse
 (
-    adresse_id numeric,
+    adresse_id NUMERIC,
     bezeichnung character varying,
     land character varying,
     stadt_ort character varying,
     plz character varying,
     strasse character varying,
-    strassennummer character varying
+    strassennummer character varying,
+	anhaenger_id NUMERIC,
+	kraftfahrzeug_id NUMERIC,
+	ausgabenstelle_id NUMERIC,
+	users_id NUMERIC
 );
 
 ALTER TABLE rentals.tbl_adresse

@@ -157,7 +157,8 @@ export default class Application
 			body: JSON.stringify(args),
 			cache: 'no-cache',
 			credentials: 'include'
-		}).then((response)=>
+		})
+		.then((response)=>
 		{
 			if (response.status == 200 || response.status == 401)
 			{
@@ -173,12 +174,14 @@ export default class Application
 
 	ApiBenutzerLogoff(successCallback, errorCallback) 
 	{
-		fetch(this.apiBaseUrl + 'benutzer/logoff', {
+		fetch(this.apiBaseUrl + 'benutzer/logoff', 
+		{
 			method: 'DELETE',
 			cache: 'no-cache',
 			credentials: 'include'
 		})
-		.then((response) => {
+		.then((response) => 
+		{
 			if (response.status == 200) 
 			{
 				return successCallback();
@@ -200,7 +203,8 @@ export default class Application
 			cache: 'no-cache',
 			headers: { 'content-Type': 'application/json'}, // 'Content-Type': 'application/x-www-form-urlencoded'
 			body: JSON.stringify(benutzer)
-		}).then((response)=>
+		})
+		.then((response)=>
 		{
 			if(response.status == 200) successCallback();
 			else if (response.status == 204) errorCallback('Daten sind unvollständig!');
@@ -259,7 +263,8 @@ export default class Application
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
 		{
 			if (response.status == 200)
 			{
@@ -280,7 +285,8 @@ export default class Application
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
 		{
 			if (response.status == 200)
 			{
@@ -359,7 +365,8 @@ export default class Application
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
 		{
 			if (response.status == 200) 
 			{
@@ -380,7 +387,8 @@ export default class Application
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
 		{
 			if (response.status == 200) 
 			{
@@ -401,7 +409,8 @@ export default class Application
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
 		{
 			if (response.status == 200)
 			{
@@ -476,7 +485,8 @@ export default class Application
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
 		{
 			if (response.status == 200)
 			{
@@ -490,6 +500,56 @@ export default class Application
 		.then(successCallback)
 		.catch(errorCallback);
 	}
+
+	ApiAusgabenstelleGet(successCallback, errorCallback, ausgabenstelle_id)
+	{
+		fetch(this.apiBaseUrl + 'ausgabenstelle' + ausgabenstelle_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiAusgabenstelleSet(successCallback, errorCallback, ausgabenstelle)
+	{
+		fetch(this.apiBaseUrl + 'ausgabenstelle', 
+		{
+			method: ausgabenstelle.ausgabenstelle_id ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(ausgabenstelle)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				return successCallback();
+			}
+			else if (response.status == 204) 
+			{
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.catch(errorCallback);
+	}
+
 	//==================================================================================
 	// Bilder
 
@@ -499,7 +559,8 @@ export default class Application
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
 		{
 			if (response.status == 200) 
 			{
@@ -572,13 +633,36 @@ export default class Application
 	//==================================================================================
 	// Adresse
 
-	ApiAdresseGet(successCallback, errorCallback, ausgabenstelle_id)
+	ApiAdresseGet(successCallback, errorCallback, adresse_id)
 	{
-		fetch(this.apiBaseUrl + 'ausgabenstelle' + ausgabenstelle_id, 
+		fetch(this.apiBaseUrl + 'adresse/' + adresse_id, 
 		{
 			method: 'GET',
 			credentials: 'include'
-		}).then((response) => 
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiAdresseGetOfAusgabenstelle(successCallback, errorCallback, ausgabenstelle_id)
+	{
+		fetch(this.apiBaseUrl + 'ausgabenstelle/adresse/' + ausgabenstelle_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
 		{
 			if (response.status == 200)
 			{

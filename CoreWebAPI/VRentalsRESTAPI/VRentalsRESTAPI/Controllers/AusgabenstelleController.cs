@@ -16,18 +16,25 @@ namespace VRentalsRESTAPI.Controllers
     [ApiController]
     public class AusgabenstelleController : ControllerBase
     {
-        // GET: api/<AnhaengerController>
+        // GET: api/<AusgabenstelleController>
         [HttpGet()]
         public IEnumerable<Ausgabenstelle> SelectAll()
         {
             return Ausgabenstelle.GetList();
         }
 
-        // GET: api/<AnhaengerController>/5
+        // GET: api/<AusgabenstelleController>/5
         [HttpGet("{id}")]
         public Ausgabenstelle Get(int id) => Ausgabenstelle.Get(id);
 
-        // POST: api/<AnhaengerController>
+        // GET: api/<AusgabenstelleController>/adresse/5
+        [HttpGet("adresse/{ausgabenstelle_id}")]
+        public Adresse GetAdresseOfAusgabenstelle(int? ausgabenstelle_id)
+        {
+            return Adresse.GetByAusgabenstelleId(ausgabenstelle_id);
+        }
+
+        // POST: api/<AusgabenstelleController>
         [HttpPost]
         public IActionResult Post([FromBody] Ausgabenstelle ausgabenstelle)
         {
@@ -50,21 +57,21 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-        // PUT: api/<AnhaengerController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Ausgabenstelle ausgabenstelle)
+        // PUT: api/<AusgabenstelleController>
+        [HttpPut]
+        public IActionResult Put([FromBody] Ausgabenstelle ausgabenstelle)
         {
             IActionResult result = null;
             try
             {
-                Ausgabenstelle dbAusgabenstelle = Ausgabenstelle.Get(id);
+                Ausgabenstelle dbAusgabenstelle = Ausgabenstelle.Get(ausgabenstelle.Ausgabenstelle_Id);
                 if (dbAusgabenstelle == null)
                 {
                     result = NotFound();
                 }
                 else
                 {
-                    if (ausgabenstelle.Save(id) == 1)
+                    if (ausgabenstelle.Save() == 1)
                     {
                         result = Ok(ausgabenstelle);
                     }
@@ -81,7 +88,7 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-        //DELETE: api/<AnhaengerController>/5
+        //DELETE: api/<AusgabenstelleController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

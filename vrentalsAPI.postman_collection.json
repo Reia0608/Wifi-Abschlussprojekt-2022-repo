@@ -212,7 +212,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:59968/api/kraftfahrzeug/5",
+							"raw": "http://localhost:59968/api/kraftfahrzeug/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -221,7 +221,7 @@
 							"path": [
 								"api",
 								"kraftfahrzeug",
-								"5"
+								"7"
 							]
 						}
 					},
@@ -234,7 +234,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"gegenstandzustand\": 1,\r\n    \"marke\": \"Volvo\",\r\n    \"modell\": \"abc\"\r\n}",
+							"raw": "{\r\n    \"gegenstandzustand\": 1,\r\n    \"marke\": \"Porsche\",\r\n    \"modell\": \"cde\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -263,7 +263,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:59968/api/kraftfahrzeug/10",
+							"raw": "http://localhost:59968/api/kraftfahrzeug/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -272,7 +272,7 @@
 							"path": [
 								"api",
 								"kraftfahrzeug",
-								"10"
+								"1"
 							]
 						}
 					},
@@ -290,7 +290,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"mietpreis\": 250,\r\n    \"gegenstandzustand\": 0,\r\n    \"kategorie\": \"Anhänger\",\r\n    \"marke\": \"cde\",\r\n    \"modell\": \"vwx\"\r\n}",
+							"raw": "{\r\n    \"mietpreis\": 200,\r\n    \"gegenstandzustand\": 0,\r\n    \"kategorie\": \"Anhänger\",\r\n    \"marke\": \"args2\",\r\n    \"modell\": \"bla2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -338,7 +338,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:59968/api/anhaenger/5",
+							"raw": "http://localhost:59968/api/anhaenger/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -347,7 +347,7 @@
 							"path": [
 								"api",
 								"anhaenger",
-								"5"
+								"4"
 							]
 						}
 					},
@@ -360,7 +360,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"gegenstandzustand\": 1,\r\n    \"marke\": \"Volvo\",\r\n    \"modell\": \"abc\"\r\n}",
+							"raw": "{\r\n    \"gegenstandzustand\": 1,\r\n    \"marke\": \"Volvo\",\r\n    \"modell\": \"abc\",\r\n    \"mietpreis\": 200\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -368,7 +368,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:59968/api/anhaenger/5",
+							"raw": "http://localhost:59968/api/anhaenger/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -377,7 +377,7 @@
 							"path": [
 								"api",
 								"anhaenger",
-								"5"
+								"1"
 							]
 						}
 					},
@@ -416,7 +416,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schadensart\": \"Blechschaden\",\r\n    \"anfallendekosten\": 400,\r\n    \"beschreibung\": \"blablabla\"\r\n}",
+							"raw": "{\r\n    \"schadensart\": \"Blechschaden\",\r\n    \"anfallendekosten\": 500,\r\n    \"beschreibung\": \"blablablahdfhthhg\",\r\n    \"schaden_datum\": null\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -486,7 +486,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schaden_id\": 5,\r\n    \"schadensart\": \"Total Schaden\",\r\n    \"anfallendekosten\": 400,\r\n    \"beschreibung\": \"blablabla\"\r\n}",
+							"raw": "{\r\n    \"schaden_id\": 6,\r\n    \"schadensart\": \"Total Schaden\",\r\n    \"anfallendekosten\": 400,\r\n    \"beschreibung\": \"blablabla\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -515,7 +515,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:59968/api/schaden/4",
+							"raw": "http://localhost:59968/api/schaden/51",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -524,7 +524,7 @@
 							"path": [
 								"api",
 								"schaden",
-								"4"
+								"51"
 							]
 						}
 					},
@@ -577,6 +577,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"adresse_id\": 1,\r\n    \"ausgabenstelle_bezeichnung\":\"Ausgabenstelle Linz\",\r\n    \"ausgabenstelle_adresse\":\"4010 Linz\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:59968/api/ausgabenstelle",
 							"protocol": "http",
@@ -587,6 +596,183 @@
 							"path": [
 								"api",
 								"ausgabenstelle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change existing Ausgabenstelle",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ausgabenstelle_id\": 4,\r\n    \"adresse_id\": 1,\r\n    \"ausgabenstelle_bezeichnung\": \"Ausgabenstelle Linz\",\r\n    \"ausgabenstelle_adresse\": \"4010 Linz\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete One Ausgabenstelle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adresse of Ausgabenstelle",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/adresse/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"adresse",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AdresseController",
+			"item": [
+				{
+					"name": "Select One Adresse",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new Adresse",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bezeichnung\":\"Ausgabestelle Salzburg\",\r\n    \"land\": \"Österreich\",\r\n    \"stadt_ort\": \"Salzburg\",\r\n    \"plz\": \"5020\",\r\n    \"strasse\": \"imaginärestrasse\",\r\n    \"strassennummer\": \"54\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/adresse",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"adresse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change existing Adresse",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"adresse_id\": 1,\r\n    \"bezeichnung\":\"Ausgabestelle Linz\",\r\n    \"land\": \"Österreich\",\r\n    \"stadt_ort\": \"Linz\",\r\n    \"plz\": \"4010\",\r\n    \"strasse\": \"imaginärestrasse\",\r\n    \"strassennummer\": \"54\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/adresse",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"adresse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete One Adresse",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/adresse/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"adresse",
+								"5"
 							]
 						}
 					},

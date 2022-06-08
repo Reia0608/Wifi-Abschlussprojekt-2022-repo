@@ -1,6 +1,6 @@
 <div class="container">
   <button type="button" class="btn btn-outline-dark btn-sm" color="#0d6efd" id="buttonAusgabenstelleNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neue Ausgabenstelle</button>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs  mt-5">
         <li class="nav-item">
         <a class="nav-link" aria-current="page" href="http://localhost:5500/src/index.html#carlist">KfZ Liste</a>
         </li>
@@ -14,7 +14,7 @@
         <a class="nav-link active" href="http://localhost:5500/src/index.html#issuingofficelist">Ausgabestellen</a>
         </li>
     </ul>
-    <table class="table">
+    <table class="table table-hover">
         <thead class="thead-dark">
           <tr>
             <th scope="col">#</th>
@@ -24,7 +24,7 @@
             <th scope="col">Anzahl der Anhänger</th>
           </tr>
         </thead>
-        <tbody id="tbodyAusgabenstellen">
+        <tbody class="clickable" id="tbodyAusgabenstellen">
          
         </tbody>
       </table>

@@ -104,9 +104,47 @@ https://mdbootstrap.com/docs/standard/plugins/drag-and-drop/
 
 https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canvas
 
-==========================================================
+========================================================
+====================== Media print =====================
+========================================================
+(in CSS)
+
+@media print {
+     @page {
+         margin-top: 0;
+         margin-bottom: 0;
+     }
+     @page :footer {
+             display: none
+     }
+
+     @page :header {
+             display: none
+     }
+     body {
+         padding-top: 0;
+         padding-bottom: 0;
+
+     }
+
+     .pagebreak { page-break-before: always; } /* page-break-after
+works, as well */
+
+===================================================================
+====================== Changing a foreign key =====================
+===================================================================
+
+How do I auto-increment a column as a foreign key in a child table by referencing the same field as a primary key to the parent table which is also auto-incremented?
+You don’t. The foreign key column in the dependent table should not be auto-incrementing but a normal integer of some appropriate range. 
+In operation, you would insert a new row into the parent table (the one with the auto-incrementing primary key column) then,
+using a copy of the value automatically assigned to that key,
+insert a row into the dependent table setting the foreign key column there to the value copied from the parent table’s primary key.
+Preferably you do all of this in a single discrete transaction.
+
+================================================
 ====================== TODO=====================
-==========================================================
+================================================
+
 https://stackoverflow.com/questions/236624/how-to-access-html-element-without-id
 
 https://jquery.com/

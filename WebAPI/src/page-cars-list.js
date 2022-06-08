@@ -8,7 +8,7 @@ export default class PageCarsList
 		args.app.LoadHTML('./page-cars-list.html', args.app.Main, () => 
 		{
 			const buttonKfzNeu = this.app.Main.querySelector('#buttonKfzNeu');
-            const ulCarList = this.app.Main.querySelector('#ulCarList');
+            const tbodyCarList = this.app.Main.querySelector('#tbodyCarList');
 
 			this.app.ApiKraftfahrzeugGetList((response) => 
             {
@@ -17,23 +17,22 @@ export default class PageCarsList
 				this.Helper = new Helper();
 				for (let kraftfahrzeug of response) 
                 {
-					// WIP: putting kraftfahrzeug_id into html code potentially harmful?!
 					html += 
 					`
-                        <ul class="list-group list-group-horizontal-sm clickable" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
-							<li class="list-group-item col-1" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}>${iterator}</li>
-							<li class="list-group-item col-2">${kraftfahrzeug.marke}</li>
-							<li class="list-group-item col-3">${kraftfahrzeug.modell}</li>
-							<li class="list-group-item col-4">${this.Helper.GegenstandZustandConverter(kraftfahrzeug.gegenstandzustand)}</li>
-							<li class="list-group-item col-5">${kraftfahrzeug.aktuellerstandort}</li>
-							<li class="list-group-item col-6">${kraftfahrzeug.mietpreis}</li>
-							<li class="list-group-item col-7">${kraftfahrzeug.kennzeichen}</li>
-                        </ul>
+					<tr data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
+						<th scope="row">${iterator}</th>
+						<td>${kraftfahrzeug.marke}</td>
+						<td>${kraftfahrzeug.modell}</td>
+						<td>${this.Helper.GegenstandZustandConverter(kraftfahrzeug.gegenstandzustand)}</td>
+						<td>${kraftfahrzeug.aktuellerstandort}</td>
+						<td>${kraftfahrzeug.mietpreis}</td>
+						<td>${kraftfahrzeug.kennzeichen}</td>
+					</tr>
 					`;
                     iterator++;
 				}
 
-				ulCarList.innerHTML = html;
+				tbodyCarList.innerHTML = html;
 
 				//--------------------------------------
 				// events
@@ -45,7 +44,7 @@ export default class PageCarsList
 				});
 
 				// ListGroupElement-click
-				ulCarList.addEventListener('click', (pointerCoordinates) => 
+				tbodyCarList.addEventListener('click', (pointerCoordinates) => 
                 {
 					let button = null;
 
@@ -66,7 +65,7 @@ export default class PageCarsList
                     {
 
 					}
-					else if (pointerCoordinates.target.nodeName == 'LI') 
+					else if (pointerCoordinates.target.nodeName == 'TD') 
                     {
 						let kraftfahrzeug_id = pointerCoordinates.target.parentElement.dataset.kraftfahrzeugId;
 						window.open('#cardetails?kid=' + kraftfahrzeug_id, '_self');

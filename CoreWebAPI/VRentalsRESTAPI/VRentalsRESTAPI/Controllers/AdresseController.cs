@@ -50,14 +50,14 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-        // PUT: api/<AdresseController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Adresse adresse)
+        // PUT: api/<AdresseController>
+        [HttpPut()]
+        public IActionResult Put([FromBody] Adresse adresse)
         {
             IActionResult result = null;
             try
             {
-                Adresse dbAdresse = Adresse.Get(id);
+                Adresse dbAdresse = Adresse.Get(adresse.Adresse_Id);
                 if (dbAdresse == null)
                 {
                     result = NotFound();

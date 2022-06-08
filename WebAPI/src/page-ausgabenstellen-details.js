@@ -29,6 +29,10 @@ export default class PageAusgabenstellenDetails
                 const inputStrasse = args.app.Main.querySelector('#inputStrasse');
                 const inputHausnummer = args.app.Main.querySelector('#inputHausnummer');
 
+				// Initialisierung 
+				this.adresse = {};
+				this.ausgabenstelle = {};
+
 				if (inputBezeichnung.value) 
 				{
 					if(args.asid)
@@ -39,14 +43,33 @@ export default class PageAusgabenstellenDetails
 					else
 					{
 						this.ausgabenstelle = {};
-                        this.adresse = {};
 					}
+					
+					this.ausgabenstelle.ausgabenstelle_bezeichnung = inputBezeichnung.value;
+					this.ausgabenstelle.ausgabenstelle_adresse = inputStrasse.value + ' ' + inputHausnummer.value + ', ' + inputPLZ.value + ' ' + inputStadt.value + ', ' + inputLand.value; 	
+
 					this.adresse.bezeichnung = inputBezeichnung.value;
 					this.adresse.land = inputLand.value;
 					this.adresse.stadt_ort = inputStadt.value;
 					this.adresse.plz = inputPLZ.value;
                     this.adresse.strasse = inputStrasse.value;
                     this.adresse.strassennummer = inputHausnummer.value;
+
+					this.app.ApiAusgabenstelleSet((response) => 
+					{
+						console.log(response);
+						console.log("Issuing office has been set!");
+						this.app.ApiAdresseSet(()=>
+						{
+							console.log("Address has been set!");
+						}, (ex) =>
+						{
+							alert(ex);
+						}, this.adresse);
+					}, (ex) =>
+					{
+						alert(ex);
+					}, this.ausgabenstelle);
 				}
 				else 
 				{
@@ -66,9 +89,9 @@ export default class PageAusgabenstellenDetails
 
     datenLaden(ausgabenstelle_id) 
 	{
-		this.app.ApiAdresseGet((response) => 
+		this.app.ApiAdresseGetOfAusgabenstelle((response) => 
 		{
-			this.ausgabenstelle = response;
+			this.adresse = response;
 
 			inputBezeichnung.value = this.adresse.bezeichnung;
 			inputLand.value = this.adresse.land;
@@ -86,7 +109,7 @@ export default class PageAusgabenstellenDetails
 	// Anzeige
 
 	// schaden anzeigen
-	schadenListAnzeigen() 
+	KfzListAnzeigen() 
 	{
 		const tableSchadenList = this.app.Main.querySelector('#tableSchadenList');
 		const trSchadenHeader = this.app.Main.querySelector('#trSchadenHeader');

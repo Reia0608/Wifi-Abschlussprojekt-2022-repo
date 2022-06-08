@@ -20,7 +20,7 @@ namespace VRentalsClasses.Models
 		//************************************************************************
 		#region static methods
 		// WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
-		public static Ausgabenstelle Get(int ausgabenstelle_id)
+		public static Ausgabenstelle Get(int? ausgabenstelle_id)
 		{
 			Ausgabenstelle ausgabenstelle = new Ausgabenstelle();
 
@@ -105,11 +105,11 @@ namespace VRentalsClasses.Models
 
 		[JsonPropertyName("ausgabenstelle_bezeichnung")]
 
-		public String? AusgabenstelleBezeichnung;
+		public string? AusgabenstelleBezeichnung { get; set; }
 
 		[JsonPropertyName("ausgabenstelle_adresse")]
 
-		public String? AusgabenstelleAdresse; 
+		public string? AusgabenstelleAdresse { get; set; }
 
 		[JsonPropertyName("anhaengerliste")]
 		public List<Anhaenger>? AnhaengerListe { get; set; } = null;
@@ -138,76 +138,11 @@ namespace VRentalsClasses.Models
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
-				this.Adresse_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:asid, :aid, :asb, :asa)";
+				this.Ausgabenstelle_Id = (int)((long)command.ExecuteScalar());
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:asid, :aid, :asb, :asa);";
 			}
 
 			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id);
-			command.Parameters.AddWithValue("aid", this.Adresse_Id.HasValue ? (object)this.Adresse_Id.Value : (object)DBNull.Value);
-			command.Parameters.AddWithValue("asb", String.IsNullOrEmpty(this.AusgabenstelleBezeichnung) ? (object)DBNull.Value : (object)this.AusgabenstelleBezeichnung);
-			command.Parameters.AddWithValue("asa", String.IsNullOrEmpty(this.AusgabenstelleAdresse) ? (object)DBNull.Value : (object)this.AusgabenstelleAdresse);
-			try
-			{
-				result = command.ExecuteNonQuery();
-				if (result == 1)
-				{
-					if (this.AnhaengerListe != null && this.AnhaengerListe.Count > 0)
-					{
-						int anhaengerListeIterator = 0;
-						foreach (Anhaenger anhaenger in this.AnhaengerListe)
-						{
-							anhaenger.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
-							anhaengerListeIterator += anhaenger.Save();
-						}
-
-						if (anhaengerListeIterator == this.AnhaengerListe.Count)
-						{
-							result = 1;
-						}
-						else
-						{
-							result = 0;
-						}
-					}
-
-					if (this.KraftfahrzeugListe != null && this.KraftfahrzeugListe.Count > 0)
-					{
-						int kfzListeIterator = 0;
-						//Kraftfahrzeug.Truncate();
-						foreach (Kraftfahrzeug kraftfahrzeug in this.KraftfahrzeugListe)
-						{
-							kraftfahrzeug.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
-							kfzListeIterator += kraftfahrzeug.Save();
-						}
-					}
-					command.Connection.Open();
-				}
-				return result;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-			}
-			finally
-			{
-				command.Connection.Close();
-			}
-			return result;
-		}
-
-		public int Save(int id)
-		{
-			int result = -1;
-			NpgsqlCommand command = new NpgsqlCommand();
-			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
-			{
-				command.Connection = DBConnection.GetConnection();
-				command.Connection.Open();
-			}
-
-			command.CommandText = $"update {SCHEMA}.{TABLE} set adresse_id = :aid where ausgabenstelle_id = :asid";
-			//WIP: WARNING! Potential security danger! User could change the id to what he wants
-			command.Parameters.AddWithValue("asid", id);
 			command.Parameters.AddWithValue("aid", this.Adresse_Id.HasValue ? (object)this.Adresse_Id.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("asb", String.IsNullOrEmpty(this.AusgabenstelleBezeichnung) ? (object)DBNull.Value : (object)this.AusgabenstelleBezeichnung);
 			command.Parameters.AddWithValue("asa", String.IsNullOrEmpty(this.AusgabenstelleAdresse) ? (object)DBNull.Value : (object)this.AusgabenstelleAdresse);

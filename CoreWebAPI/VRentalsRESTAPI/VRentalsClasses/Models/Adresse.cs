@@ -13,14 +13,14 @@ namespace VRentalsClasses.Models
 		//************************************************************************
 		#region constants
 		private const string SCHEMA = "rentals";
-		private const string TABLE = "tbl_adresse";
+		private const string TABLE_ADRESSE = "tbl_adresse";
 		private const string COLUMNS = "adresse_id, bezeichnung, land, stadt_ort, plz, strasse, strassennummer, anhaenger_id, kraftfahrzeug_id, ausgabenstelle_id, users_id";
 
 		#endregion
 		//************************************************************************
 		#region static methods
 		// WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
-		public static Adresse Get(int adresse_id)
+		public static Adresse Get(int? adresse_id)
 		{
 			Adresse adresse = new Adresse();
 
@@ -31,8 +31,44 @@ namespace VRentalsClasses.Models
 
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where adresse_id = :aid";
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE_ADRESSE} where adresse_id = :aid";
 			command.Parameters.AddWithValue("aid", adresse_id);
+			NpgsqlDataReader reader = command.ExecuteReader();
+			try
+			{
+				if (reader.Read())
+				{
+					adresse = new Adresse();
+					{
+						adresse = new Adresse(reader);
+					};
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
+			return adresse;
+		}
+
+		public static Adresse GetByAusgabenstelleId(int? ausgabenstelle_id)
+		{
+			Adresse adresse = new Adresse();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE_ADRESSE} where ausgabenstelle_id = :asid";
+			command.Parameters.AddWithValue("asid", ausgabenstelle_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 			try
 			{
@@ -67,7 +103,7 @@ namespace VRentalsClasses.Models
 			}
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE}"; // WIP: order by?
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE_ADRESSE}"; // WIP: order by?
 			NpgsqlDataReader reader = command.ExecuteReader();
 
 			while (reader.Read())
@@ -156,13 +192,13 @@ namespace VRentalsClasses.Models
 
 			if (this.Adresse_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set bezeichnung = :bez, land = :lan, stadt_ort = :so, plz = :plz, strasse = :str, strassennummer = :stn, anhaenger_id = :ahid, kraftfahrzeug_id = :kid, ausgabenstelle_id = :asid, users_id = :uid where adresse_id = :aid";
+				command.CommandText = $"update {SCHEMA}.{TABLE_ADRESSE} set bezeichnung = :bez, land = :lan, stadt_ort = :so, plz = :plz, strasse = :str, strassennummer = :stn, anhaenger_id = :ahid, kraftfahrzeug_id = :kid, ausgabenstelle_id = :asid, users_id = :uid where adresse_id = :aid";
 			}
 			else
 			{
-				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
+				command.CommandText = $"select nextval('{SCHEMA}.{TABLE_ADRESSE}_seq')";
 				this.Adresse_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :bez, :lan, :so, :plz, :str, :stn, :ahid, :kid, :asid, :uid)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE_ADRESSE} ({COLUMNS}) values (:aid, :bez, :lan, :so, :plz, :str, :stn, :ahid, :kid, :asid, :uid)";
 			}
 
 			command.Parameters.AddWithValue("aid", this.Adresse_Id);
@@ -200,7 +236,7 @@ namespace VRentalsClasses.Models
 				command.Connection = DBConnection.GetConnection();
 				command.Connection.Open();
 			}
-			command.CommandText = $"delete from {SCHEMA}.{TABLE} where adresse_id = :aid";
+			command.CommandText = $"delete from {SCHEMA}.{TABLE_ADRESSE} where adresse_id = :aid";
 			command.Parameters.AddWithValue("aid", this.Adresse_Id);
 			try
 			{
