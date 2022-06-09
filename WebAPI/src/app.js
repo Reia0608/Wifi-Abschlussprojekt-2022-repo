@@ -9,6 +9,8 @@ import PageCarsDetails from './page-cars-details.js';
 import LoginManager from './login-manager.js';
 import PageAusgabenstellenList from './page-ausgabenstellen-list.js';
 import PageAusgabenstellenDetails from './page-ausgabenstellen-details.js';
+import PageTrailerList from './page-trailer-list.js';
+import PageTrailerDetails from './page-trailer-details.js';
 
 
 
@@ -110,6 +112,12 @@ export default class Application
 				break;
 			case '#issuingofficedetails':
 				new PageAusgabenstellenDetails(args);
+				break;
+			case '#trailerlist':
+				new PageTrailerList(args);
+				break;
+			case '#trailerdetails':
+				new PageTrailerDetails(args);
 				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
@@ -332,9 +340,9 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiKraftfahrzeugDelete(successCallback, errorCallback, id) 
+	ApiKraftfahrzeugDelete(successCallback, errorCallback, kraftfahrzeug_id) 
 	{
-		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + id, 
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug_id, 
 		{
 			method: 'DELETE'
 		})
@@ -342,7 +350,7 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
-				return successCallback;
+				console.log("KfZ wurden gelöscht!");
 			}
 			else if (response.status == 204)
 			{
@@ -353,6 +361,110 @@ export default class Application
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	//==================================================================================
+	// Anhänger
+
+	ApiAnhaengerGetList(successCallback, errorCallback) 
+	{
+		fetch(this.apiBaseUrl + 'anhaenger', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiAnhaengerGet(successCallback, errorCallback, anhaenger_id) 
+	{
+		fetch(this.apiBaseUrl + 'anhaenger/' + anhaenger_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				return response.json();
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+
+	ApiAnhaengerSet(successCallback, errorCallback, anhaenger) 
+	{
+		fetch(this.apiBaseUrl + 'anhaenger' + (anhaenger.anhaenger_id ? '/' + anhaenger.anhaenger_id : ''), 
+		{
+			method: anhaenger.anhaenger_id ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(anhaenger)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				return successCallback('Daten wurden erfolgreich geschickt!');
+			}
+			else if (response.status == 204) 
+			{
+				errorCallback('Daten sind unvollständig!');
+			}
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.catch(errorCallback);
+	}
+
+	ApiAnhaengerDelete(successCallback, errorCallback, anhaenger_id) 
+	{
+		fetch(this.apiBaseUrl + 'anhaenger/' + anhaenger_id, 
+		{
+			method: 'DELETE'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				console.log("Anhänger wurden gelöscht!");
+			}
+			else if (response.status == 204)
+			{
+				errorCallback('Daten unvollständig!');
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
 		.catch(errorCallback);
 	}
 
@@ -503,7 +615,7 @@ export default class Application
 
 	ApiAusgabenstelleGet(successCallback, errorCallback, ausgabenstelle_id)
 	{
-		fetch(this.apiBaseUrl + 'ausgabenstelle' + ausgabenstelle_id, 
+		fetch(this.apiBaseUrl + 'ausgabenstelle/' + ausgabenstelle_id, 
 		{
 			method: 'GET',
 			credentials: 'include'
@@ -547,6 +659,31 @@ export default class Application
 			}
 			else throw new Error(response.status + ' ' + response.statusText);
 		})
+		.catch(errorCallback);
+	}
+
+	ApiAusgabenstelleDelete(successCallback, errorCallback, ausgabenstelle_id) 
+	{
+		fetch(this.apiBaseUrl + 'ausgabenstelle/' + ausgabenstelle_id, 
+		{
+			method: 'DELETE'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				console.log("Ausgabestelle(n) gelöscht!");
+			}
+			else if (response.status == 204)
+			{
+				errorCallback('Daten unvollständig!');
+			} 
+			else
+			{
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
 		.catch(errorCallback);
 	}
 

@@ -1,6 +1,8 @@
 ===== Priority 1=====
 
-1. //WIP: WARNING! Potential security danger! User could change the id to what he wants?!
+1. When 2 or more cars get deleted from the list, only the first car gets deleted. Same for trailer.
+
+2. //WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 -> Anhaenger.cs + Kraftfahrzeug.cs + Bild.cs
 
 ===== Priority 2=====
@@ -8,17 +10,28 @@
 1. // WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
 -> Anhaenger.cs + Kraftfahrzeug.cs
 
-2. Add a highlight and a "clickable-mouse-icon" on ul elements hover in page-cars-list.js
+2. Make a loading icon pointer for Api calls.
+
+3. Change the table on the details page to a bootstrap table.
+
+4. Make the accordion open and close on the details page.
+
+5. Move the speichern and abbrechen buttons to the sidenav.
 
 
 ===== Priority 3=====
 
-1. Create an image carousel/slider for multiple images.
+1. Load image browser on-click for images on the website.
 
-2. // WIP: order by?
+2. Make data entry more specific. (e.g. enum instead of string)
+
+3. Control if the data entry is correct.
+
+4. // WIP: order by?
 -> Bild.cs
 
 ===== Priority 4=====
 
-1. Archive all deleted entries in the db.
+1. Create an image carousel/slider for multiple images.
 2. Add fotos to Ausgabenstelle.
+3. Archive all deleted entries in the db.

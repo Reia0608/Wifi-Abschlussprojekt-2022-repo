@@ -46,7 +46,7 @@ export default class PageAusgabenstellenDetails
 					}
 					
 					this.ausgabenstelle.ausgabenstelle_bezeichnung = inputBezeichnung.value;
-					this.ausgabenstelle.ausgabenstelle_adresse = inputStrasse.value + ' ' + inputHausnummer.value + ', ' + inputPLZ.value + ' ' + inputStadt.value + ', ' + inputLand.value; 	
+					this.ausgabenstelle.ausgabenstelle_adresse = inputStrasse.value + 'QXZ ' + inputHausnummer.value + ',QXZ ' + inputPLZ.value + 'QXZ ' + inputStadt.value + ',QXZ ' + inputLand.value; 	
 
 					this.adresse.bezeichnung = inputBezeichnung.value;
 					this.adresse.land = inputLand.value;
@@ -59,13 +59,16 @@ export default class PageAusgabenstellenDetails
 					{
 						console.log(response);
 						console.log("Issuing office has been set!");
-						this.app.ApiAdresseSet(()=>
+						if(args.asid)
 						{
-							console.log("Address has been set!");
-						}, (ex) =>
-						{
-							alert(ex);
-						}, this.adresse);
+							this.app.ApiAdresseSet(()=>
+							{
+								console.log("Address has been set!");
+							}, (ex) =>
+							{
+								alert(ex);
+							}, this.adresse);
+						}
 					}, (ex) =>
 					{
 						alert(ex);
@@ -89,16 +92,24 @@ export default class PageAusgabenstellenDetails
 
     datenLaden(ausgabenstelle_id) 
 	{
-		this.app.ApiAdresseGetOfAusgabenstelle((response) => 
+		this.app.ApiAusgabenstelleGet((response) => 
 		{
-			this.adresse = response;
+			this.ausgabenstelle = response;
 
-			inputBezeichnung.value = this.adresse.bezeichnung;
-			inputLand.value = this.adresse.land;
-			inputStadt.value = this.adresse.stadt_ort;
-			inputPLZ.value = this.adresse.plz;
-            inputStrasse.value = this.adresse.strasse;
-            inputHausnummer.value = this.adresse.strassennummer;
+			let subString = this.ausgabenstelle.ausgabenstelle_adresse.split('QXZ');
+			try
+			{
+				inputBezeichnung.value = this.ausgabenstelle.ausgabenstelle_bezeichnung;
+				inputHausnummer.value = subString[1].replace(',','');
+				inputStrasse.value = subString[0];
+				inputPLZ.value = subString[2];
+				inputStadt.value = subString[3].replace(',','');
+				inputLand.value = subString[4];
+			}
+			catch(ex)
+			{
+				console.log("Can not display string of different system!");
+			}
 		}, (ex) => 
 		{
 			alert(ex);

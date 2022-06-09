@@ -1,17 +1,17 @@
 import Helper from "./helper.js";
 
-export default class PageCarsList 
+export default class PageTrailerList 
 {
-	constructor(args) 
+    constructor(args) 
 	{
         this.app = args.app;
-		args.app.LoadHTML('./page-cars-list.html', args.app.Main, () => 
+		args.app.LoadHTML('./page-trailer-list.html', args.app.Main, () => 
 		{
-			const buttonKfzNeu = this.app.Main.querySelector('#buttonKfzNeu');
-            const tbodyCarList = this.app.Main.querySelector('#tbodyCarList');
+			const buttonAnhaengerNeu = this.app.Main.querySelector('#buttonAnhaengerNeu');
+            const tbodyTrailerList = this.app.Main.querySelector('#tbodyTrailerList');
 
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
-			this.buttonKfzLoeschen = this.app.Main.querySelector('#buttonKfzLoeschen');
+			this.buttonAnhaengerLoeschen = this.app.Main.querySelector('#buttonAnhaengerLoeschen');
 
 			this.datenLaden();
 
@@ -19,13 +19,13 @@ export default class PageCarsList
 			// events
 			//--------------------------------------
 
-			buttonKfzNeu.addEventListener('click', ()=>
+			buttonAnhaengerNeu.addEventListener('click', ()=>
 			{
-				window.open('#cardetails', '_self');
+				window.open('#trailerdetails', '_self');
 			});
 
 			// ListGroupElement-click
-			tbodyCarList.addEventListener('click', (pointerCoordinates) => 
+			tbodyTrailerList.addEventListener('click', (pointerCoordinates) => 
 			{
 				let button = null;
 
@@ -48,8 +48,8 @@ export default class PageCarsList
 				}
 				else if (pointerCoordinates.target.nodeName == 'TD') 
 				{
-					let kraftfahrzeug_id = pointerCoordinates.target.parentElement.dataset.kraftfahrzeugId;
-					window.open('#cardetails?kid=' + kraftfahrzeug_id, '_self');
+					let anhaenger_id = pointerCoordinates.target.parentElement.dataset.anhaengerId;
+					window.open('#trailerdetails?aid=' + anhaenger_id, '_self');
 				}
 			});
 
@@ -65,36 +65,36 @@ export default class PageCarsList
 				}
 			});
 
-			// Button KfZ löschen-click
+			// Button Anhänger löschen-click
 
-			this.buttonKfzLoeschen.addEventListener('click', ()=>
+			this.buttonAnhaengerLoeschen.addEventListener('click', ()=>
 			{
-				let selectedKfzList = [];
+				let selectedAnhaengerList = [];
 				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
 				for(let checkbox of checkboxCollection) 
 				{    
 					if(checkbox.checked)
 					{
-						selectedKfzList.push(checkbox);
+						selectedAnhaengerList.push(checkbox);
 					} 
 				}
-				if(selectedKfzList.length == 0)
+				if(selectedAnhaengerList.length == 0)
 				{
-					alert("Bitte wählen Sie zunächst die zu löschenden KfZ aus!");
+					alert("Bitte wählen Sie zunächst die zu löschenden Anhänger aus!");
 				}
 				else
 				{
-					if(confirm("Sind Sie sicher, dass Sie die gewählten KfZ, deren Schäden und Bilder unwiederruflich löschen wollen?!"))
+					if(confirm("Sind Sie sicher, dass Sie die gewählten Anhänger, deren Schäden und Bilder unwiederruflich löschen wollen?!"))
 					{
-						for(let kraftfahrzeug of selectedKfzList)
+						for(let anhaenger of selectedAnhaengerList)
 						{
-							this.app.ApiKraftfahrzeugDelete(() =>
+							this.app.ApiAnhaengerDelete(() =>
 							{
 								this.datenLaden();
 							}, (ex) =>
 							{
 								alert(ex);
-							}, kraftfahrzeug.dataset.kraftfahrzeugId);
+							}, anhaenger.dataset.anhaengerId);
 						}
 					}
 				}
@@ -105,30 +105,30 @@ export default class PageCarsList
 
 	datenLaden()
 	{
-		this.app.ApiKraftfahrzeugGetList((response) => 
+		this.app.ApiAnhaengerGetList((response) => 
 		{
 			let html = '';
 			let iterator = 1;
 			this.Helper = new Helper();
-			for (let kraftfahrzeug of response) 
+			for (let anhaenger of response) 
 			{
 				html += 
 				`
-				<tr data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
+				<tr data-anhaenger-id="${anhaenger.anhaenger_id}">
 					<th scope="row">${iterator}</th>
-					<td>${kraftfahrzeug.marke}</td>
-					<td>${kraftfahrzeug.modell}</td>
-					<td>${this.Helper.GegenstandZustandConverter(kraftfahrzeug.gegenstandzustand)}</td>
-					<td>${kraftfahrzeug.aktuellerstandort}</td>
-					<td>${kraftfahrzeug.mietpreis}</td>
-					<td>${kraftfahrzeug.kennzeichen}</td>
-					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}"></th>
+					<td>${anhaenger.marke}</td>
+					<td>${anhaenger.modell}</td>
+					<td>${this.Helper.GegenstandZustandConverter(anhaenger.gegenstandzustand)}</td>
+					<td>${anhaenger.aktuellerstandort}</td>
+					<td>${anhaenger.mietpreis}</td>
+					<td>${anhaenger.kennzeichen}</td>
+					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-anhaenger-id="${anhaenger.anhaenger_id}"></th>
 				</tr>
 				`;
 				iterator++;
 			}
 
-			tbodyCarList.innerHTML = html;
+			tbodyTrailerList.innerHTML = html;
 		}, (ex) => 
 		{
 			alert(ex);

@@ -104,6 +104,14 @@ https://mdbootstrap.com/docs/standard/plugins/drag-and-drop/
 
 https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canvas
 
+========================================================================
+====================== Functions for String in JS ======================
+========================================================================
+
+https://www.javascripttutorial.net/javascript-string-replace/#:~:text=The%20JavaScript%20String%20replace()%20method%20returns%20a%20new%20string,It%20returns%20a%20new%20string.
+
+https://www.javascripttutorial.net/javascript-string-split/
+
 ========================================================
 ====================== Media print =====================
 ========================================================

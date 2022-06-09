@@ -204,6 +204,18 @@ namespace VRentalsClasses.Models
 				command.Connection = DBConnection.GetConnection();
 				command.Connection.Open();
 			}
+			// WIP: also deletes the address of the issuing office. Eventually bad solution?
+			command.CommandText = $"delete from {SCHEMA}.tbl_adresse where ausgabenstelle_id = :asid";
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id);
+			try
+			{
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+
 			command.CommandText = $"delete from {SCHEMA}.{TABLE} where ausgabenstelle_id = :asid";
 			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id);
 			try
