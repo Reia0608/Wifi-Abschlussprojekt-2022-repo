@@ -61,7 +61,7 @@ namespace VRentalsRESTAPI.Controllers
                 if (dbKraftfahrzeug == null)
                 {
                     result = NotFound();
-                } 
+                }
                 else
                 {
                     if (kraftfahrzeug.Save(id) == 1)
@@ -71,7 +71,7 @@ namespace VRentalsRESTAPI.Controllers
                     else
                     {
                         result = NoContent();
-                    } 
+                    }
                 }
             }
             catch (Exception ex)
@@ -88,7 +88,7 @@ namespace VRentalsRESTAPI.Controllers
             try
             {
                 Kraftfahrzeug kraftfahrzeug = Kraftfahrzeug.Get(id);
-                if(kraftfahrzeug == null) result = NotFound();
+                if (kraftfahrzeug == null) result = NotFound();
                 else
                 {
                     int iterator = 0;
@@ -100,31 +100,30 @@ namespace VRentalsRESTAPI.Controllers
                         iterator++;
                     }
                     if (kraftfahrzeug.Save() == 1) result = Ok(kraftfahrzeug);
-                    else result=NoContent();
+                    else result = NoContent();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result = StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
             return result;
         }
 
-        //DELETE: api/<KraftfahrzeugController>/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        //DELETE: api/<KraftfahrzeugController>/
+        [HttpDelete()]
+        public IActionResult Delete([FromBody] List<int> listToDelete)
         {
-            Kraftfahrzeug kraftfahrzeug = Kraftfahrzeug.Get(id);
             IActionResult result = null;
             try
             {
-                if(kraftfahrzeug.Delete() == 1)
+                if(Kraftfahrzeug.Delete(listToDelete) > 0)
                 {
-                    result = Ok("Car entry deleted!");
+                    result = Ok("Car entries deleted!");
                 }
                 else
                 {
-                    result = NotFound("car not found!");
+                    result = NotFound("cars not found!");
                 }
             }
             catch (Exception ex)

@@ -264,7 +264,7 @@ export default class PageCarsDetails
 				}
 				else if (e.target.nodeName == 'TD') 
 				{
-					let idx = parseInt(e.target.parentElement.dataset.idx);
+					let idx = parseInt(e.target.parentElement.dataset.schadenIdx);
 					this.schaden = this.kraftfahrzeug.schadenlist[idx];
 					labelAnfallendeKosten.value = this.schaden.anfallendekosten;
 					selectSchadenArt.value =  new Helper().SchadensArtConverter(this.schaden.schadensart);
@@ -353,14 +353,14 @@ export default class PageCarsDetails
 				{
 					html += 
 					`
-					<tr data-idx="${iterator}">
-						<td>
-							<button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenDel_${schadenitem.schaden_id}"><span class="iconify" data-icon="mdi-delete"></span></button>
-						</td>
-						<td class="element-clickable">${(schadenitem.schaden_datum ? dateFormatter.format(new Date(schadenitem.schaden_datum)) : '&nbsp;')}</td>
-						<td class="element-clickable">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
-						<td class="element-clickable">${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
-						<td class="element-clickable">${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
+					<tr data-schaden-idx="${iterator}">
+						<th scope="row">
+							<button type="button" class="btn btn-sm" id="buttonSchadenDel_${schadenitem.schaden_id}"><span class="iconify" data-icon="mdi-delete"></span></button>
+						</th>
+						<td scope="col">${(schadenitem.schaden_datum ? dateFormatter.format(new Date(schadenitem.schaden_datum)) : '&nbsp;')}</td>
+						<td scope="col">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
+						<td scope="col">${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
+						<td scope="col">${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
 					</tr>
 					`;
 					iterator++;

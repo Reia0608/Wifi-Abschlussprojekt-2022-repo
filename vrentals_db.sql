@@ -191,7 +191,8 @@ CREATE TABLE rentals.tbl_schaden
     beschreibung text,
     anfallendekosten double precision,
 	schaden_datum date,
-	kraftfahrzeug_id numeric
+	kraftfahrzeug_id numeric,
+	anhaenger_id numeric
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_schaden
@@ -431,6 +432,9 @@ ALTER TABLE rentals.tbl_users
 	
 ALTER TABLE rentals.tbl_schaden
 	ADD CONSTRAINT schaden_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+	
+ALTER TABLE rentals.tbl_schaden
+	ADD CONSTRAINT schaden_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
 	
 ALTER TABLE rentals.tbl_bilder
 	ADD CONSTRAINT bilder_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);

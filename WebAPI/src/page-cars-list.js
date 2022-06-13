@@ -86,16 +86,18 @@ export default class PageCarsList
 				{
 					if(confirm("Sind Sie sicher, dass Sie die gewählten KfZ, deren Schäden und Bilder unwiederruflich löschen wollen?!"))
 					{
-						for(let kraftfahrzeug of selectedKfzList)
+						let kfzList = [];
+						for(let kfz of selectedKfzList)
 						{
-							this.app.ApiKraftfahrzeugDelete(() =>
-							{
-								this.datenLaden();
-							}, (ex) =>
-							{
-								alert(ex);
-							}, kraftfahrzeug.dataset.kraftfahrzeugId);
+							kfzList.push(kfz.dataset.kraftfahrzeugId);
 						}
+						this.app.ApiKraftfahrzeugDelete(() =>
+						{
+							this.datenLaden();
+						}, (ex) =>
+						{
+							alert(ex);
+						}, kfzList);
 					}
 				}
 			});

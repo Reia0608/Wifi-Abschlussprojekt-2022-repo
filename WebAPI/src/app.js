@@ -134,6 +134,7 @@ export default class Application
 
 	ApiPageInit(successCallback, errorCallback, benutzerMerkmal) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'page/init' + (benutzerMerkmal ? '?bm=' + benutzerMerkmal : '') , 
 		{
 			method: 'GET'
@@ -142,10 +143,12 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			}
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -158,6 +161,7 @@ export default class Application
 
 	ApiBenutzerLogin(successCallback, errorCallback, args) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/login', 
 		{
 			method: 'POST',
@@ -170,10 +174,12 @@ export default class Application
 		{
 			if (response.status == 200 || response.status == 401)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		}).then(successCallback)
@@ -182,6 +188,7 @@ export default class Application
 
 	ApiBenutzerLogoff(successCallback, errorCallback) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/logoff', 
 		{
 			method: 'DELETE',
@@ -192,10 +199,12 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return successCallback();
 			}
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -205,6 +214,7 @@ export default class Application
 
 	ApiBenutzerSet(successCallback, errorCallback, benutzer)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer', 
 		{
 			method: 'POST',
@@ -222,6 +232,7 @@ export default class Application
 
 	ApiBenutzerGet(successCallback, errorCallback, id) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/' + id, 
 		{
 			method: 'GET'
@@ -230,10 +241,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -243,6 +256,7 @@ export default class Application
 
 	ApiSearchByTerm(successCallback, errorCallback, term) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/search' + (term ? '/' + term : '') , 
 		{
 			method: 'GET'
@@ -251,10 +265,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -267,6 +283,7 @@ export default class Application
 
 	ApiKraftfahrzeugGetList(successCallback, errorCallback) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'kraftfahrzeug', 
 		{
 			method: 'GET',
@@ -276,10 +293,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -289,6 +308,7 @@ export default class Application
 
 	ApiKraftfahrzeugGet(successCallback, errorCallback, kraftfahrzeug_id) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug_id, 
 		{
 			method: 'GET',
@@ -298,10 +318,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -312,6 +334,7 @@ export default class Application
 
 	ApiKraftfahrzeugSet(successCallback, errorCallback, kraftfahrzeug) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'kraftfahrzeug' + (kraftfahrzeug.kraftfahrzeug_id ? '/' + kraftfahrzeug.kraftfahrzeug_id : ''), 
 		{
 			method: kraftfahrzeug.kraftfahrzeug_id ? 'PUT' : 'POST',
@@ -326,38 +349,50 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return successCallback('Daten wurden erfolgreich geschickt!');
 			}
 			else if (response.status == 204) 
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten sind unvollständig!');
 			}
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
 		.catch(errorCallback);
 	}
 
-	ApiKraftfahrzeugDelete(successCallback, errorCallback, kraftfahrzeug_id) 
+	ApiKraftfahrzeugDelete(successCallback, errorCallback, kraftfahrzeugList) 
 	{
-		fetch(this.apiBaseUrl + 'kraftfahrzeug/' + kraftfahrzeug_id, 
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/', 
 		{
-			method: 'DELETE'
+			method: 'DELETE',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(kraftfahrzeugList)
 		})
 		.then((response) => 
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				console.log("KfZ wurden gelöscht!");
 			}
 			else if (response.status == 204)
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten unvollständig!');
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -370,6 +405,7 @@ export default class Application
 
 	ApiAnhaengerGetList(successCallback, errorCallback) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'anhaenger', 
 		{
 			method: 'GET',
@@ -379,10 +415,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -392,6 +430,7 @@ export default class Application
 
 	ApiAnhaengerGet(successCallback, errorCallback, anhaenger_id) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'anhaenger/' + anhaenger_id, 
 		{
 			method: 'GET',
@@ -401,10 +440,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -415,6 +456,7 @@ export default class Application
 
 	ApiAnhaengerSet(successCallback, errorCallback, anhaenger) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'anhaenger' + (anhaenger.anhaenger_id ? '/' + anhaenger.anhaenger_id : ''), 
 		{
 			method: anhaenger.anhaenger_id ? 'PUT' : 'POST',
@@ -429,38 +471,50 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return successCallback('Daten wurden erfolgreich geschickt!');
 			}
 			else if (response.status == 204) 
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten sind unvollständig!');
 			}
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
 		.catch(errorCallback);
 	}
 
-	ApiAnhaengerDelete(successCallback, errorCallback, anhaenger_id) 
+	ApiAnhaengerDelete(successCallback, errorCallback, anhaengerList) 
 	{
-		fetch(this.apiBaseUrl + 'anhaenger/' + anhaenger_id, 
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'anhaenger/', 
 		{
-			method: 'DELETE'
+			method: 'DELETE',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(anhaengerList)
 		})
 		.then((response) => 
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				console.log("Anhänger wurden gelöscht!");
 			}
 			else if (response.status == 204)
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten unvollständig!');
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -473,6 +527,7 @@ export default class Application
 
 	ApiSchadenGetList(successCallback, errorCallback)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'schaden', 
 		{
 			method: 'GET',
@@ -482,10 +537,12 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			}
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -495,6 +552,7 @@ export default class Application
 
 	ApiSchadenGetKfzList(successCallback, errorCallback, kraftfahrzeug_id)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'schaden/kfz/' + kraftfahrzeug_id, 
 		{
 			method: 'GET',
@@ -504,10 +562,37 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			}
 			else
 			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiSchadenGetAnhaengerList(successCallback, errorCallback, anhaenger_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'schaden/anhaenger/' + anhaenger_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -517,6 +602,7 @@ export default class Application
 
 	ApiSchadenGet(successCallback, errorCallback, schaden_id)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'schaden' + schaden_id, 
 		{
 			method: 'GET',
@@ -526,10 +612,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -539,6 +627,7 @@ export default class Application
 
 	ApiSchadenSet(successCallback, errorCallback, schaden)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'schaden', 
 		{
 			method: schaden.schaden_id ? 'PUT' : 'POST',
@@ -553,10 +642,12 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return successCallback();
 			}
 			else if (response.status == 204) 
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten sind unvollständig!');
 			}
 			else throw new Error(response.status + ' ' + response.statusText);
@@ -566,6 +657,7 @@ export default class Application
 
 	ApiSchadenDelete(successCallback, errorCallback, id) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'schaden/' + id, 
 		{
 			method: 'DELETE'
@@ -574,10 +666,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				successCallback();
 			} 
 			else if (response.status == 204)
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten unvollständig!');
 			} 
 			else
@@ -593,6 +687,7 @@ export default class Application
 
 	ApiAusgabenstellenGetList(successCallback, errorCallback)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'ausgabenstelle', 
 		{
 			method: 'GET',
@@ -602,10 +697,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -615,6 +712,7 @@ export default class Application
 
 	ApiAusgabenstelleGet(successCallback, errorCallback, ausgabenstelle_id)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'ausgabenstelle/' + ausgabenstelle_id, 
 		{
 			method: 'GET',
@@ -624,10 +722,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -637,6 +737,7 @@ export default class Application
 
 	ApiAusgabenstelleSet(successCallback, errorCallback, ausgabenstelle)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'ausgabenstelle', 
 		{
 			method: ausgabenstelle.ausgabenstelle_id ? 'PUT' : 'POST',
@@ -651,10 +752,12 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return successCallback();
 			}
 			else if (response.status == 204) 
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten sind unvollständig!');
 			}
 			else throw new Error(response.status + ' ' + response.statusText);
@@ -662,20 +765,28 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiAusgabenstelleDelete(successCallback, errorCallback, ausgabenstelle_id) 
+	ApiAusgabenstelleDelete(successCallback, errorCallback, ausgabenstelleList) 
 	{
-		fetch(this.apiBaseUrl + 'ausgabenstelle/' + ausgabenstelle_id, 
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'ausgabenstelle/', 
 		{
-			method: 'DELETE'
+			method: 'DELETE',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(ausgabenstelleList)
 		})
 		.then((response) => 
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				console.log("Ausgabestelle(n) gelöscht!");
 			}
 			else if (response.status == 204)
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten unvollständig!');
 			} 
 			else
@@ -692,6 +803,7 @@ export default class Application
 
 	ApiBilderGetKfzList(successCallback, errorCallback, kraftfahrzeug_id)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'bilder/kfz/' + kraftfahrzeug_id, 
 		{
 			method: 'GET',
@@ -701,10 +813,37 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			}
 			else
 			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBilderGetAnhaengerList(successCallback, errorCallback, anhaenger_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/anhaenger/' + anhaenger_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -714,6 +853,7 @@ export default class Application
 
 	ApiBilderSet(successCallback, errorCallback, bild)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'bilder', 
 		{
 			method: bild.bilder_id ? 'PUT' : 'POST',
@@ -728,14 +868,17 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			}
 			else if (response.status == 204) 
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten sind unvollständig!');
 			}
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -745,6 +888,7 @@ export default class Application
 
 	ApiBilderDelete(successCallback, errorCallback, bilder_id) 
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'bilder/' + bilder_id, 
 		{
 			method: 'DELETE'
@@ -753,14 +897,17 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return successCallback;
 			} 
 			else if (response.status == 204)
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten unvollständig!');
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -772,6 +919,7 @@ export default class Application
 
 	ApiAdresseGet(successCallback, errorCallback, adresse_id)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'adresse/' + adresse_id, 
 		{
 			method: 'GET',
@@ -781,10 +929,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -794,6 +944,7 @@ export default class Application
 
 	ApiAdresseGetOfAusgabenstelle(successCallback, errorCallback, ausgabenstelle_id)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'ausgabenstelle/adresse/' + ausgabenstelle_id, 
 		{
 			method: 'GET',
@@ -803,10 +954,12 @@ export default class Application
 		{
 			if (response.status == 200)
 			{
+				$('body').removeClass('waiting');
 				return response.json();
 			} 
 			else
 			{
+				$('body').removeClass('waiting');
 				throw new Error(response.status + ' ' + response.statusText);
 			} 
 		})
@@ -816,6 +969,7 @@ export default class Application
 
 	ApiAdresseSet(successCallback, errorCallback, adresse)
 	{
+		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'adresse', 
 		{
 			method: adresse.adresse_id ? 'PUT' : 'POST',
@@ -830,10 +984,12 @@ export default class Application
 		{
 			if (response.status == 200) 
 			{
+				$('body').removeClass('waiting');
 				return successCallback();
 			}
 			else if (response.status == 204) 
 			{
+				$('body').removeClass('waiting');
 				errorCallback('Daten sind unvollständig!');
 			}
 			else throw new Error(response.status + ' ' + response.statusText);

@@ -52,6 +52,10 @@ Feel free to add more transitions with unchecked state
     opacity: 1;
   }
 
+body.waiting * {
+    cursor: progress;
+}
+
 .banner-with-sidebar {
     padding: 60px;
     text-align: center;

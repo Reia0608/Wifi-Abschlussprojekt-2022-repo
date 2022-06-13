@@ -12,7 +12,7 @@ export default class PageTrailerDetails
 		{
 			const imgContainer = args.app.Main.querySelector('#imgContainer');
 			const buttonAnhaengerSpeichern = args.app.Main.querySelector('#buttonAnhaengerSpeichern');
-			const buttonAnhaegerAbbrechen = args.app.Main.querySelector('#buttonAnhaengerAbbrechen');
+			const buttonAnhaengerAbbrechen = args.app.Main.querySelector('#buttonAnhaengerAbbrechen');
 			const modalSchadenBody = args.app.Main.querySelector('#modalSchadenBody');
 			const buttonSchadenNeu = args.app.Main.querySelector('#buttonSchadenNeu');
 			const dialogSchaden = new bootstrap.Modal(modalSchadenBody);
@@ -26,9 +26,9 @@ export default class PageTrailerDetails
 			// Initialisierung
 			var anhaengerbild = {};
 
-			if(args.kid)
+			if(args.aid)
 			{
-				let anhaenger_id = parseInt(args.kid);
+				let anhaenger_id = parseInt(args.aid);
 				this.datenLaden(anhaenger_id);
 			}
 			else
@@ -70,7 +70,7 @@ export default class PageTrailerDetails
 			
 			//-------------------------------------------------------------
 			// speichern
-			buttonanhaengerSpeichern.addEventListener('click', (e) => 
+			buttonAnhaengerSpeichern.addEventListener('click', (e) => 
 			{
 				const inputMarke = this.app.Main.querySelector('#inputMarke');
 				const inputModell = this.app.Main.querySelector('#inputModell');
@@ -79,9 +79,9 @@ export default class PageTrailerDetails
 
 				if (inputMarke.value && inputModell.value) 
 				{
-					if(args.kid)
+					if(args.aid)
 					{
-						this.anhaenger.anhaenger_id = parseInt(args.kid);
+						this.anhaenger.anhaenger_id = parseInt(args.aid);
 					}
 					else
 					{
@@ -92,7 +92,7 @@ export default class PageTrailerDetails
 					this.anhaenger.kennzeichen = inputKennzeichen.value;
 					this.anhaenger.mietpreis = inputMietpreis.value && !isNaN(inputMietpreis.value) ? parseFloat(inputMietpreis.value) : null;
 
-					this.app.ApiAnhaengerSet((response) => 
+					this.app.ApiAnhaengerSet(() => 
 					{
 						if (anhaengerbild.bild_bytes) 
 						{
@@ -119,7 +119,7 @@ export default class PageTrailerDetails
 
 			//-------------------------------------------------------------
 			// Vorgang abbrechen
-			buttonanhaengerAbbrechen.addEventListener('click', (e) =>
+			buttonAnhaengerAbbrechen.addEventListener('click', (e) =>
 			{
 				location.hash = '#trailerlist';
 			});
@@ -174,7 +174,7 @@ export default class PageTrailerDetails
 						};
 					}
 					schadensArtText = selectSchadenArt.options[selectSchadenArt.selectedIndex].text;
-					this.schaden.anhaenger_id = parseInt(args.kid);
+					this.schaden.anhaenger_id = parseInt(args.aid);
 					this.schaden.anfallendekosten = (labelAnfallendeKosten.value && !isNaN(labelAnfallendeKosten.value) ? parseInt(labelAnfallendeKosten.value) : 0);
 					this.schaden.schadensart = schadensArtText;
 					this.schaden.beschreibung = labelBeschreibung.value;
@@ -334,13 +334,13 @@ export default class PageTrailerDetails
 					html += 
 					`
 					<tr data-idx="${iterator}">
-						<td>
-							<button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenDel_${schadenitem.schaden_id}"><span class="iconify" data-icon="mdi-delete"></span></button>
-						</td>
-						<td class="element-clickable">${(schadenitem.schaden_datum ? dateFormatter.format(new Date(schadenitem.schaden_datum)) : '&nbsp;')}</td>
-						<td class="element-clickable">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
-						<td class="element-clickable">${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
-						<td class="element-clickable">${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
+						<th scope="row">
+							<button type="button" class="btn btn-outline-dark btn-sm" id="buttonSchadenDel_${schadenitem.schaden_id}"><span class="iconify" data-icon="mdi-delete"></span></button>
+						</th>
+						<td>${(schadenitem.schaden_datum ? dateFormatter.format(new Date(schadenitem.schaden_datum)) : '&nbsp;')}</td>
+						<td>${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>
+						<td>${(schadenitem.beschreibung? schadenitem.beschreibung : '&nbsp;')}</td>
+						<td>${(schadenitem.anfallendekosten ? schadenitem.anfallendekosten : '&nbsp;')}</td>
 					</tr>
 					`;
 					iterator++;

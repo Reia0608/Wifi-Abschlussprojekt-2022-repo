@@ -277,6 +277,36 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete multiple Kraftfahrzeug",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[16, 17, 18]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -668,6 +698,57 @@
 								"ausgabenstelle",
 								"adresse",
 								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Ausgabenstelle",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete multiple Ausgabenstelle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    41,\r\n    42,\r\n    43\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								""
 							]
 						}
 					},

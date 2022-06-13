@@ -15,7 +15,7 @@ export default class PageAusgabenstellenList
 			// Initialisation
 			this.checkboxCollection = [];
 
-			this.datenladen();
+			this.datenLaden();
 
 			//--------------------------------------
 			// events
@@ -89,23 +89,25 @@ export default class PageAusgabenstellenList
 				{
 					if(confirm("Sind Sie sicher, dass Sie die gewählten Ausgabestellen und deren Adressen unwiederruflich löschen wollen?!"))
 					{
+						let ausgabenstelleList = [];
 						for(let ausgabenstelle of selectedAusgabenstelleList)
 						{
-							this.app.ApiAusgabenstelleDelete(() =>
-							{
-								this.datenladen();
-							}, (ex) =>
-							{
-								alert(ex);
-							}, ausgabenstelle.dataset.ausgabenstelleId);
+							ausgabenstelleList.push(ausgabenstelle.dataset.ausgabenstelleId);
 						}
+						this.app.ApiAusgabenstelleDelete(() =>
+						{
+							this.datenLaden();
+						}, (ex) =>
+						{
+							alert(ex);
+						}, ausgabenstelleList);
 					}
 				}
 			});
 		});
 	}
 
-	datenladen()
+	datenLaden()
 	{
 			this.app.ApiAusgabenstellenGetList((response) => 
             {

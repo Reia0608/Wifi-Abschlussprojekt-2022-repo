@@ -86,16 +86,18 @@ export default class PageTrailerList
 				{
 					if(confirm("Sind Sie sicher, dass Sie die gewählten Anhänger, deren Schäden und Bilder unwiederruflich löschen wollen?!"))
 					{
+						let anhaengerList = [];
 						for(let anhaenger of selectedAnhaengerList)
 						{
-							this.app.ApiAnhaengerDelete(() =>
-							{
-								this.datenLaden();
-							}, (ex) =>
-							{
-								alert(ex);
-							}, anhaenger.dataset.anhaengerId);
+							anhaengerList.push(anhaenger.dataset.anhaengerId);
 						}
+						this.app.ApiAnhaengerDelete(() =>
+						{
+							this.datenLaden();
+						}, (ex) =>
+						{
+							alert(ex);
+						}, anhaengerList);
 					}
 				}
 			});

@@ -29,6 +29,12 @@ namespace VRentalsRESTAPI.Controllers
             return Schaden.GetKfzSchaden(id);
         }
 
+        [HttpGet("anhaenger/{id}")]
+        public IEnumerable<Schaden> SelectAllFromAnhaenger(int id)
+        {
+            return Schaden.GetAnhaengerSchaden(id);
+        }
+
         // GET: api/<SchadenController>/5
         [HttpGet("{id}")]
         public Schaden Get(int id) => Schaden.Get(id);

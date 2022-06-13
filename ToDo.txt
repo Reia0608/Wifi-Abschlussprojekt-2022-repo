@@ -1,7 +1,5 @@
 ===== Priority 1=====
 
-1. When 2 or more cars get deleted from the list, only the first car gets deleted. Same for trailer.
-
 2. //WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 -> Anhaenger.cs + Kraftfahrzeug.cs + Bild.cs
 
@@ -10,13 +8,11 @@
 1. // WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
 -> Anhaenger.cs + Kraftfahrzeug.cs
 
-2. Make a loading icon pointer for Api calls.
+2. Schadenlist is garbled up on a small screen (e.g. smartphone).
 
-3. Change the table on the details page to a bootstrap table.
+3. Make the accordion open and close on the details page.
 
-4. Make the accordion open and close on the details page.
-
-5. Move the speichern and abbrechen buttons to the sidenav.
+4. Move the speichern and abbrechen buttons to the sidenav.
 
 
 ===== Priority 3=====

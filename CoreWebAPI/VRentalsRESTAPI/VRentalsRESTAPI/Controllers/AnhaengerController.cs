@@ -125,21 +125,20 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-        //DELETE: api/<AnhaengerController>/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        //DELETE: api/<AnhaengerController>/
+        [HttpDelete()]
+        public IActionResult Delete([FromBody] List<int> listToDelete)
         {
-            Anhaenger anhaenger = Anhaenger.Get(id);
             IActionResult result = null;
             try
             {
-                if (anhaenger.Delete() == 1)
+                if (Anhaenger.Delete(listToDelete) > 0)
                 {
-                    result = Ok("trailer entry deleted!");
+                    result = Ok("trailer entries deleted!");
                 }
                 else
                 {
-                    result = NotFound("trailer not found!");
+                    result = NotFound("trailer(s) not found!");
                 }
             }
             catch (Exception ex)

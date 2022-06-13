@@ -41,7 +41,6 @@
 	<div class="row mt-5">
 		<div class="col-12">
 			<div class="accordion" >
-				
 				<div class="accordion-item">
 					<h2 class="accordion-header" id="accordionHeaderSchaden">
 						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSchaden" aria-expanded="true" aria-controls="panelsStayOpen-collapseSchaden">
@@ -51,17 +50,18 @@
 					<div id="panelsStayOpen-collapseSchaden" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingSchaden"></div>
 						<div class="accordion-body">
 							<strong>
-								<table class="table table-dark table-striped" >
-									<thead>
-										<tr id="trSchadenHeader">
-											<th><button type="button" class="btn btn-outline-light btn-sm" id="buttonSchadenNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neu</button></th>
-											<th>Datum</th>
-											<th>Art des Schadens</th>
-											<th>Beschreibung</th>
-											<th>Anfallende Kosten</th>
-										</tr>
+								<table class="table table-hover">
+									<thead class="thead-dark">
+									  <tr id="trSchadenHeader">
+										<th scope="col"><button type="button" class="btn btn-sm" id="buttonSchadenNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neu</button></th>
+										<th scope="col">Datum</th>
+										<th scope="col">Art des Schadens</th>
+										<th scope="col">Beschreibung</th>
+										<th scope="col">Anfallende Kosten</th>
+										<!-- <th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th> -->
+									  </tr>
 									</thead>
-									<tbody id="tableSchadenList">
+									<tbody class="clickable" id="tableSchadenList">
 										<!-- inhalt des accordions-->
 									</tbody>
 								</table>

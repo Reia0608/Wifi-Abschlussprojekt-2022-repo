@@ -112,5 +112,29 @@ namespace VRentalsRESTAPI.Controllers
             }
             return result;
         }
+
+        //DELETE: api/<AusgabenstelleController>/5
+        [HttpDelete]
+        public IActionResult Delete([FromBody] List<int> listToDelete)
+        {
+            IActionResult result = null;
+            try
+            {
+                if (Ausgabenstelle.Delete(listToDelete)  > 0)
+                {
+                    result = Ok("issuing office entries and their addresses deleted!");
+                }
+                else
+                {
+                    result = NotFound("one or more issuing offices not found!");
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                Debug.WriteLine(ex.Message);
+            }
+            return result;
+        }
     }
 }

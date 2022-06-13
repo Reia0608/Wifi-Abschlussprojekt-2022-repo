@@ -80,6 +80,29 @@ namespace VRentalsClasses.Models
 			return bilderListe;
 		}
 
+		public static List<Bild> GetAnhaengerBildList(int? anhaenger_id)
+		{
+			List<Bild> bilderListe = new List<Bild>();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where anhaenger_id = :aid"; // WIP: order by?
+			command.Parameters.AddWithValue("aid", anhaenger_id);
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				bilderListe.Add(new Bild(reader));
+			}
+			reader.Close();
+			DBConnection.GetConnection().Close();
+			return bilderListe;
+		}
+
 		public static List<Bild> GetList()
 		{
 			List<Bild> bilderListe = new List<Bild>();

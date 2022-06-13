@@ -149,6 +149,18 @@ using a copy of the value automatically assigned to that key,
 insert a row into the dependent table setting the foreign key column there to the value copied from the parent table’s primary key.
 Preferably you do all of this in a single discrete transaction.
 
+===========================================================================
+====================== Changing the cursor to waiting =====================
+===========================================================================
+
+https://stackoverflow.com/questions/9681080/changing-cursor-to-waiting-in-javascript-jquery
+
+===========================================================================================
+====================== Delete multiple entries at once in RESTful way =====================
+===========================================================================================
+
+https://stackoverflow.com/questions/21863326/delete-multiple-records-using-rest
+
 ================================================
 ====================== TODO=====================
 ================================================
