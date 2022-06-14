@@ -106,6 +106,153 @@ namespace VRentalsClasses.Models
 
 			return kraftfahrzeugListe;
         }
+
+		public static List<Kraftfahrzeug> GetAllByAusgabenstelleId(int Ausgabenstelle_Id)
+		{
+			List<Kraftfahrzeug> kraftfahrzeugListe = new List<Kraftfahrzeug>();
+			Kraftfahrzeug kraftfahrzeug = new Kraftfahrzeug();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS_KFZ} from {SCHEMA}.{TABLE_KFZ} where ausgabenstelle_id = :asid order by marke";
+			command.Parameters.AddWithValue("asid", Ausgabenstelle_Id);
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				kraftfahrzeugListe.Add(kraftfahrzeug = new Kraftfahrzeug(reader));
+			}
+			reader.Close();
+			DBConnection.GetConnection().Close();
+
+			return kraftfahrzeugListe;
+		}
+
+		public static int Delete(List<int> listToDelete)
+		{
+			int result = 0;
+			NpgsqlCommand command = new NpgsqlCommand();
+
+			if (listToDelete != null)
+			{
+				try
+				{
+					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+					{
+						command.Connection = DBConnection.GetConnection();
+						command.Connection.Open();
+					}
+
+					foreach (int entry in listToDelete)
+					{
+						command.CommandText = $"delete from {SCHEMA}.{TABLE_KFZ} where kraftfahrzeug_id = :kid;";
+						command.Parameters.AddWithValue("kid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+				finally
+				{
+					command.Connection.Close();
+				}
+			}
+
+			return result;
+		}
+
+		public static int AddRemoveFromAusgabenstelle(List<int>? listToAdd, List<int>? listToRemove, int ausgabenstelle_id)
+		{
+			int result = 0;
+			NpgsqlCommand command = new NpgsqlCommand();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			if (listToAdd != null)
+			{
+				try
+				{
+					foreach (int entry in listToAdd)
+					{
+						command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set (ausgabenstelle_id = : asid) where kraftfahrzeug_id = :kid;";
+						command.Parameters.AddWithValue("asid", ausgabenstelle_id);
+						command.Parameters.AddWithValue("kid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+				finally
+				{
+					command.Connection.Close();
+				}
+			}
+
+			if (listToRemove != null)
+			{
+				try
+				{
+					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+					{
+						command.Connection = DBConnection.GetConnection();
+						command.Connection.Open();
+					}
+
+					foreach (int entry in listToRemove)
+					{
+						command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set (ausgabenstelle_id = NULL) where kraftfahrzeug_id = :kid;";
+						command.Parameters.AddWithValue("kid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+				finally
+				{
+					command.Connection.Close();
+				}
+			}
+
+			return result;
+		}
 		#endregion
 		//************************************************************************
 		#region constructors#
@@ -450,49 +597,6 @@ namespace VRentalsClasses.Models
 			{
 				command.Connection.Close();
 			}
-			return result;
-		}
-
-		public static int Delete(List<int> listToDelete)
-		{
-			int result = 0;
-			NpgsqlCommand command = new NpgsqlCommand();
-			
-			if(listToDelete != null)
-            {
-				try
-				{
-					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
-					{
-						command.Connection = DBConnection.GetConnection();
-						command.Connection.Open();
-					}
-
-					foreach (int entry in listToDelete)
-					{
-						command.CommandText = $"delete from {SCHEMA}.{TABLE_KFZ} where kraftfahrzeug_id = :kid;";
-						command.Parameters.AddWithValue("kid", entry);
-						try
-						{
-							result += command.ExecuteNonQuery();
-							command.Parameters.Clear();
-						}
-						catch (Exception ex)
-						{
-							Console.WriteLine(ex.Message);
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.Message);
-				}
-				finally
-				{
-					command.Connection.Close();
-				}
-			}
-			
 			return result;
 		}
 

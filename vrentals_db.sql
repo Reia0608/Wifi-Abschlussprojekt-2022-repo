@@ -249,7 +249,8 @@ CREATE TABLE rentals.tbl_anhaenger
     adresse_id numeric,
 	marke character varying,
 	modell character varying,
-	mietpreis DOUBLE PRECISION
+	mietpreis DOUBLE PRECISION,
+	ausgabenstelle_id numeric
 );
 
 ALTER TABLE rentals.tbl_anhaenger
@@ -405,6 +406,9 @@ ALTER TABLE rentals.tbl_kraftfahrzeug
 	
 ALTER TABLE rentals.tbl_kraftfahrzeug
 	ADD CONSTRAINT kraftfahrzeuge_ausgabenstelle_fk FOREIGN KEY (ausgabenstelle_id) REFERENCES rentals.tbl_ausgabenstelle (ausgabenstelle_id);
+	
+ALTER TABLE rentals.tbl_anhaenger
+	ADD CONSTRAINT anhaenger_ausgabenstelle_fk FOREIGN KEY (ausgabenstelle_id) REFERENCES rentals.tbl_ausgabenstelle (ausgabenstelle_id);
 	
 ALTER TABLE rentals.tbl_kraftfahrzeug
 	ADD CONSTRAINT aktueller_kfz_standort_fk FOREIGN KEY (aktueller_standort_id) REFERENCES rentals.tbl_adresse (adresse_id);

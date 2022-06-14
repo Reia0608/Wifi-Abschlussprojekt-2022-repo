@@ -37,27 +37,59 @@
 			<div class="accordion" >
 				
 				<div class="accordion-item">
-					<h2 class="accordion-header" id="accordionHeaderSchaden">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSchaden" aria-expanded="true" aria-controls="panelsStayOpen-collapseSchaden">
+					<h2 class="accordion-header" id="panelsStayOpen-headingKfz">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseKfz" aria-expanded="true" aria-controls="panelsStayOpen-collapseKfz">
 							KfZ Liste
 						</button>
 					</h2>
-					<div id="panelsStayOpen-collapseSchaden" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingSchaden"></div>
-						<div class="accordion-body">
-							<strong>KfZ Liste hier</strong>
+					<div id="panelsStayOpen-collapseKfz" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingKfz"></div>
+						<div class="accordion-body" id="accordionPanelKfzBody">
+							<strong>
+								<table class="table table-hover">
+									<thead class="thead-dark">
+									  <tr id="trKfzHeader">
+										<th scope="col"><button type="button" class="btn btn-outline-dark btn-sm" id="buttonKfzAdd"><span class="iconify me-2" data-icon="mdi-plus"></span>Hinzufügen</button></th>
+										<th scope="col">Marke</th>
+										<th scope="col">Modell</th>
+										<th scope="col">Zustand</th>
+										<th scope="col">Mietpreis</th>
+										<!-- <th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th> -->
+									  </tr>
+									</thead>
+									<tbody class="clickable" id="tbodyKfzList">
+										<!-- inhalt des accordions-->
+									</tbody>
+								</table>
+							</strong>
 						</div>
 					</div>
 				</div>
 
 				<div class="accordion-item">
-					<h2 class="accordion-header" id="panelsStayOpen-headingWert">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseWert" aria-expanded="false" aria-controls="panelsStayOpen-collapseWert">
+					<h2 class="accordion-header" id="panelsStayOpen-headingAnhaenger">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseAnhaenger" aria-expanded="false" aria-controls="panelsStayOpen-collapseAnhaenger">
 							Anhänger Liste
 						</button>
 					</h2>
-					<div id="panelsStayOpen-collapseWert" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingWert"></div>
-						<div class="accordion-body" id="accordionPanelWertBody">
-							<strong>Anhänger Liste hier</strong>
+					<div id="panelsStayOpen-collapseAnhaenger" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingAnhaenger"></div>
+						<div class="accordion-body" id="accordionPanelAnhaengerBody">
+							<strong>
+								<table class="table table-hover">
+									<thead class="thead-dark">
+									  <tr id="trAnhaengerHeader">
+										<th scope="col"><button type="button" class="btn btn-outline-dark btn-sm" id="buttonAnhaengerAdd"><span class="iconify me-2" data-icon="mdi-plus"></span>Hinzufügen</button></th>
+										<th scope="col">Marke</th>
+										<th scope="col">Modell</th>
+										<th scope="col">Zustand</th>
+										<th scope="col">Mietpreis</th>
+										<!-- <th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th> -->
+									  </tr>
+									</thead>
+									<tbody class="clickable" id="tbodyAnhaengerList">
+										<!-- inhalt des accordions-->
+									</tbody>
+								</table>
+							</strong>
 						</div>
 					</div>
 				</div>
@@ -70,15 +102,38 @@
 				<button type="button" class="btn btn-outline-light" bottom="5rem" id="buttonAusgabenstelleAbbrechen"><span class="iconify me-2" data-icon="ic:outline-cancel"></span>Abbrechen</button>
 			</div>
 		</nav>
-		<div class="modal fade" id="modalSchadenBody" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
-			<div class="modal-dialog">
+		<div class="modal modal-dialog-scrollable fade" id="modalKfzList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">KfZ Schaden</h5>
+						<h5 class="modal-title" id="exampleModalLabel">KfZ Liste</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table class="table table-hover">
+							<thead class="thead-dark">
+							  <tr>
+								<th scope="col">#</th>
+								<th scope="col">Marke</th>
+								<th scope="col">Modell</th>
+								<th scope="col">Zustand</th>
+								<th scope="col">Aktueller Standort</th>
+								<th scope="col">Mietpreis</th>
+								<th scope="col">Kennzeichen</th>
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+							  </tr>
+							</thead>
+							<tbody class="clickable" id="modalKfzListBody">
+							  <!-- List of KfZ goes here-->
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+						<button type="button" class="btn btn-primary" id="buttonModalKfzSpeichern">Speichern</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div><!-- modal KfZ List close -->
 	</div>
 </div>

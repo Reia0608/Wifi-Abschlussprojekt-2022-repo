@@ -307,6 +307,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update Ausgabestelle Entries",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug/ausgabenstelle/25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug",
+								"ausgabenstelle",
+								"25"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -666,7 +688,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:59968/api/ausgabenstelle/",
+							"raw": "http://localhost:59968/api/ausgabenstelle/17",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -675,7 +697,7 @@
 							"path": [
 								"api",
 								"ausgabenstelle",
-								""
+								"17"
 							]
 						}
 					},
@@ -753,6 +775,52 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Anhaenger by Ausgabenstelle ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/25/anhaenger/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"25",
+								"anhaenger",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Kraftfahrzeug by Ausgabenstelle ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/25/kraftfahrzeug/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"25",
+								"kraftfahrzeug",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -783,11 +851,11 @@
 				{
 					"name": "Create new Adresse",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"bezeichnung\":\"Ausgabestelle Salzburg\",\r\n    \"land\": \"Österreich\",\r\n    \"stadt_ort\": \"Salzburg\",\r\n    \"plz\": \"5020\",\r\n    \"strasse\": \"imaginärestrasse\",\r\n    \"strassennummer\": \"54\"\r\n}",
+							"raw": "{\r\n    \"bezeichnung\":\"Ausgabestelle Salzburg\",\r\n    \"land\": \"Österreich\",\r\n    \"stadt_ort\": \"Wien\",\r\n    \"plz\": \"1010\",\r\n    \"strasse\": \"imaginärestrasse\",\r\n    \"strassennummer\": \"100\",\r\n    \"kraftfahrzeug_id\": 5\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

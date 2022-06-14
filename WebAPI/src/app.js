@@ -331,6 +331,31 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiGetKraftfahrzeugListByAusgabenstelle(successCallback, errorCallback, ausgabenstelle_id) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'ausgabenstelle/' + ausgabenstelle_id + '/kraftfahrzeug', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
 
 	ApiKraftfahrzeugSet(successCallback, errorCallback, kraftfahrzeug) 
 	{
@@ -453,6 +478,30 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiGetAnhaengerListByAusgabenstelle(successCallback, errorCallback, ausgabenstelle_id) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'ausgabenstelle/' + ausgabenstelle_id + '/anhaenger', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
 
 	ApiAnhaengerSet(successCallback, errorCallback, anhaenger) 
 	{

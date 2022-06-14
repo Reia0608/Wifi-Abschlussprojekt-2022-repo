@@ -111,11 +111,11 @@ namespace VRentalsClasses.Models
 
 		public string? AusgabenstelleAdresse { get; set; }
 
-		[JsonPropertyName("anhaengerliste")]
-		public List<Anhaenger>? AnhaengerListe { get; set; } = null;
+		[JsonPropertyName("anhaengerlist")]
+		public List<Anhaenger>? AnhaengerList { get; set; } = null;
 
-		[JsonPropertyName("kraftfahrzeugliste")]
-		public List<Kraftfahrzeug>? KraftfahrzeugListe { get; set; } = null;
+		[JsonPropertyName("kraftfahrzeuglist")]
+		public List<Kraftfahrzeug>? KraftfahrzeugList { get; set; } = null;
 		#endregion
 
 		//************************************************************************
@@ -151,16 +151,16 @@ namespace VRentalsClasses.Models
 				result = command.ExecuteNonQuery();
 				if (result == 1)
 				{
-					if (this.AnhaengerListe != null && this.AnhaengerListe.Count > 0)
+					if (this.AnhaengerList != null && this.AnhaengerList.Count > 0)
 					{
 						int anhaengerListeIterator = 0;
-						foreach (Anhaenger anhaenger in this.AnhaengerListe)
+						foreach (Anhaenger anhaenger in this.AnhaengerList)
 						{
 							anhaenger.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
 							anhaengerListeIterator += anhaenger.Save();
 						}
 
-						if (anhaengerListeIterator == this.AnhaengerListe.Count)
+						if (anhaengerListeIterator == this.AnhaengerList.Count)
 						{
 							result = 1;
 						}
@@ -170,11 +170,11 @@ namespace VRentalsClasses.Models
 						}
 					}
 
-					if (this.KraftfahrzeugListe != null && this.KraftfahrzeugListe.Count > 0)
+					if (this.KraftfahrzeugList != null && this.KraftfahrzeugList.Count > 0)
 					{
 						int kfzListeIterator = 0;
 						//Kraftfahrzeug.Truncate();
-						foreach (Kraftfahrzeug kraftfahrzeug in this.KraftfahrzeugListe)
+						foreach (Kraftfahrzeug kraftfahrzeug in this.KraftfahrzeugList)
 						{
 							kraftfahrzeug.Ausgabenstelle_Id = this.Ausgabenstelle_Id;
 							kfzListeIterator += kraftfahrzeug.Save();

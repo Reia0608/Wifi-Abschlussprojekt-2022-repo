@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using VRentalsClasses.Interfaces;
-using Google.Cloud.Firestore;
 
 namespace VRentalsClasses.Models
 {

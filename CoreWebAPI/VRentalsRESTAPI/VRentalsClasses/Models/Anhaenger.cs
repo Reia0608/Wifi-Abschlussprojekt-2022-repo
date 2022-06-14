@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using VRentalsClasses.Interfaces;
-using Google.Cloud.Firestore;
 
 namespace VRentalsClasses.Models
 {
@@ -15,7 +14,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_anhaenger";
-		private const string COLUMNS = "anhaenger_id, art, gegenstandzustand, kategorie, marke, modell, mietpreis";
+		private const string COLUMNS = "anhaenger_id, art, gegenstandzustand, kategorie, marke, modell, mietpreis, ausgabenstelle_id";
 		#endregion
 
 		//************************************************************************
@@ -79,6 +78,30 @@ namespace VRentalsClasses.Models
 			DBConnection.GetConnection().Close();
 			return anhaengerListe;
 		}
+
+		public static List<Anhaenger> GetAllByAusgabenstelleId(int Ausgabenstelle_Id)
+		{
+			List<Anhaenger> anhaengerListe = new List<Anhaenger>();
+			Anhaenger anhaenger = new Anhaenger();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ausgabenstelle_id = :asid order by marke";
+			command.Parameters.AddWithValue("asid", Ausgabenstelle_Id);
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				anhaengerListe.Add(anhaenger = new Anhaenger(reader));
+			}
+			reader.Close();
+			DBConnection.GetConnection().Close();
+			return anhaengerListe;
+		}
 		#endregion
 		//************************************************************************
 		#region constructors#
@@ -96,6 +119,7 @@ namespace VRentalsClasses.Models
 			Marke = reader.IsDBNull(4) ? null : reader.GetString(4);
 			Modell = reader.IsDBNull(5) ? null : reader.GetString(5);
 			MietPreis = reader.IsDBNull(6) ? null : reader.GetDouble(6);
+			Ausgabenstelle_Id = reader.IsDBNull(7) ? null : reader.GetInt32(7);
 		}
 
 		#endregion
@@ -143,13 +167,13 @@ namespace VRentalsClasses.Models
 
 			if (this.Anhaenger_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set art = :art, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, mietpreis = :mp where anhaenger_id = :aid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set art = :art, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, mietpreis = :mp, ausgabenstelle_id = :asid where anhaenger_id = :aid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Anhaenger_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :art, :gz, :k, :ma, :mo, :mp)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :art, :gz, :k, :ma, :mo, :mp, :asid)";
 			}
 
 			command.Parameters.AddWithValue("aid", this.Anhaenger_Id);
@@ -159,6 +183,7 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
 			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
 			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (object)this.Ausgabenstelle_Id.Value : (object)DBNull.Value);
 
 			try
 			{
@@ -185,7 +210,7 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set art = :art, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, mietpreis = :mp where anhaenger_id = :aid";
+			command.CommandText = $"update {SCHEMA}.{TABLE} set art = :art, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, mietpreis = :mp, ausgabenstelle_id = :asid where anhaenger_id = :aid";
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("aid", id);
 			command.Parameters.AddWithValue("art", String.IsNullOrEmpty(this.Art) ? (object)DBNull.Value : (object)this.Art);
@@ -194,6 +219,7 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
 			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
 			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
+			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (object)this.Ausgabenstelle_Id.Value : (object)DBNull.Value);
 
 			try
 			{

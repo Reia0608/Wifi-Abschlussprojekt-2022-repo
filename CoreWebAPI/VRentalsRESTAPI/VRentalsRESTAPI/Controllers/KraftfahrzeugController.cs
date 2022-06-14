@@ -134,6 +134,28 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-            
+        //DELETE: api/<KraftfahrzeugController>/ausgabenstelle/5
+        [HttpPut("ausgabenstelle/{ausgabenstelle_id}")]
+        public IActionResult UpdateAusgabenstelleEntry([FromBody] ListToUpdate listToUpdate, int ausgabenstelle_id)
+        {
+            IActionResult result = null;
+            try
+            {
+                if (Kraftfahrzeug.AddRemoveFromAusgabenstelle(listToUpdate.ListToAdd, listToUpdate.ListToRemove, ausgabenstelle_id) > 0)
+                {
+                    result = Ok("Car entries updated!");
+                }
+                else
+                {
+                    result = NotFound("cars not found!");
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                Debug.WriteLine(ex.Message);
+            }
+            return result;
+        }
     }
 }
