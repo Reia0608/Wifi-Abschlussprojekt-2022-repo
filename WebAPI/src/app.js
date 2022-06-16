@@ -391,6 +391,40 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiKraftfahrzeugSetAusgabenstelle(successCallback, errorCallback, listToUpdate, ausgabenstelle_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/ausgabenstelle/' + ausgabenstelle_id, 
+		{
+			method: 'PUT',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(listToUpdate)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return successCallback('Daten wurden erfolgreich geschickt!');
+			}
+			else if (response.status == 204) 
+			{
+				$('body').removeClass('waiting');
+				errorCallback('Daten sind unvollständig!');
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.catch(errorCallback);
+	}
+
 	ApiKraftfahrzeugDelete(successCallback, errorCallback, kraftfahrzeugList) 
 	{
 		$('body').addClass('waiting');
@@ -515,6 +549,40 @@ export default class Application
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(anhaenger)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return successCallback('Daten wurden erfolgreich geschickt!');
+			}
+			else if (response.status == 204) 
+			{
+				$('body').removeClass('waiting');
+				errorCallback('Daten sind unvollständig!');
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.catch(errorCallback);
+	}
+
+	ApiAnhaengerSetAusgabenstelle(successCallback, errorCallback, listToUpdate, ausgabenstelle_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'anhaenger/ausgabenstelle/' + ausgabenstelle_id, 
+		{
+			method: 'PUT',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(listToUpdate)
 		})
 		.then((response) => 
 		{
@@ -734,7 +802,7 @@ export default class Application
 	//==================================================================================
 	// Ausgabenstellen
 
-	ApiAusgabenstellenGetList(successCallback, errorCallback)
+	ApiAusgabenstelleGetList(successCallback, errorCallback)
 	{
 		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'ausgabenstelle', 

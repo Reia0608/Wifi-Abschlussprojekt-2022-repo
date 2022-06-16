@@ -134,7 +134,7 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
-        //DELETE: api/<KraftfahrzeugController>/ausgabenstelle/5
+        //PUT: api/<KraftfahrzeugController>/ausgabenstelle/5
         [HttpPut("ausgabenstelle/{ausgabenstelle_id}")]
         public IActionResult UpdateAusgabenstelleEntry([FromBody] ListToUpdate listToUpdate, int ausgabenstelle_id)
         {
@@ -147,7 +147,7 @@ namespace VRentalsRESTAPI.Controllers
                 }
                 else
                 {
-                    result = NotFound("cars not found!");
+                    result = NotFound("An error has occured! Cars not found?");
                 }
             }
             catch (Exception ex)

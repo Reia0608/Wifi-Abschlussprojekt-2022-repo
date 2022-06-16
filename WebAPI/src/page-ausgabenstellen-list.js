@@ -109,7 +109,7 @@ export default class PageAusgabenstellenList
 
 	datenLaden()
 	{
-			this.app.ApiAusgabenstellenGetList((response) => 
+			this.app.ApiAusgabenstelleGetList((response) => 
             {
 				let html = '';
                 let iterator = 1;

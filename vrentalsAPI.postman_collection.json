@@ -313,6 +313,15 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"listtoadd\": [5,13],\r\n    \"listtoremove\": [9,15]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:59968/api/kraftfahrzeug/ausgabenstelle/25",
 							"protocol": "http",
@@ -451,6 +460,37 @@
 								"api",
 								"anhaenger",
 								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ausgabestelle Entries Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"listtoadd\": [1,5],\r\n    \"listtoremove\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger/ausgabenstelle/25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger",
+								"ausgabenstelle",
+								"25"
 							]
 						}
 					},

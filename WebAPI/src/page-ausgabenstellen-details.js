@@ -10,17 +10,21 @@ export default class PageAusgabenstellenDetails
 			const buttonAusgabenstelleSpeichern = args.app.Main.querySelector('#buttonAusgabenstelleSpeichern');
 			const buttonAusgabenstelleAbbrechen = args.app.Main.querySelector('#buttonAusgabenstelleAbbrechen');
 			const buttonKfzAdd = args.app.Main.querySelector('#buttonKfzAdd');
+			const buttonAnhaengerAdd = args.app.Main.querySelector('#buttonAnhaengerAdd');
 			const modalKfzList = args.app.Main.querySelector('#modalKfzList');
+			const modalAnhaengerList = args.app.Main.querySelector('#modalAnhaengerList');
 			const dialogKfzList = new bootstrap.Modal(modalKfzList);
+			const dialogAnhaengerList = new bootstrap.Modal(modalAnhaengerList);
 			const modalKfzListBody = args.app.Main.querySelector('#modalKfzListBody');
-			const buttonAnhaengerAdd = args.app.Main.querySelector('#buttonAnhaegerAdd');
+			const modalAnhaengerListBody = args.app.Main.querySelector('#modalAnhaengerListBody');
 			const buttonModalKfzSpeichern = args.app.Main.querySelector('#buttonModalKfzSpeichern');
-			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
-
+			const buttonModalAnhaengerSpeichern = args.app.Main.querySelector('#buttonModalAnhaengerSpeichern');
+			this.checkboxAllKfz = this.app.Main.querySelector('#checkboxAllKfz');
+			this.checkboxAllAnhaenger = this.app.Main.querySelector('#checkboxAllAnhaenger');
 
 			if(args.asid)
 			{
-				let ausgabenstelle_id = parseInt(args.asid);
+				var ausgabenstelle_id = parseInt(args.asid);
 				this.datenLaden(ausgabenstelle_id);
 			}
 			else
@@ -103,12 +107,12 @@ export default class PageAusgabenstellenDetails
 
 			buttonKfzAdd.addEventListener('click', (e) =>
 			{
+				this.Helper = new Helper();
 				this.kraftfahrzeuglist = null;
 				this.app.ApiKraftfahrzeugGetList((response) => 
 				{
 					let html = '';
 					let iterator = 1;
-					this.Helper = new Helper();
 					for (let kraftfahrzeug of response) 
 					{
 						html += 
@@ -125,14 +129,14 @@ export default class PageAusgabenstellenDetails
 						if(this.ausgabenstelle.ausgabenstelle_id == kraftfahrzeug.ausgabenstelle_id)
 						{
 							html += `
-									<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" checked></th>
+									<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelectKfz" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" checked></th>
 									</tr>
 									`;
 						}
 						else
 						{
 							html += `
-									<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}"></th>
+									<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelectKfz" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}"></th>
 									</tr>
 									`;
 						}
@@ -147,23 +151,145 @@ export default class PageAusgabenstellenDetails
 				dialogKfzList.show();
 			});
 
-			// Modal Button checkboxAll-click
+			//-------------------------------------------------------------
+			// Anhaenger zur Ausgabenstelle hinzufügen
 
-			this.checkboxAll.addEventListener('click', ()=>
+			buttonAnhaengerAdd.addEventListener('click', (e) =>
 			{
-				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
-				let selected = this.checkboxAll.checked;
+				this.Helper = new Helper();
+				this.anhaengerlist = null;
+				this.app.ApiAnhaengerGetList((response) => 
+				{
+					let html = '';
+					let iterator = 1;
+					for (let anhaenger of response) 
+					{
+						html += 
+						`
+						<tr data-anhaenger-id="${anhaenger.anhaenger_id}">
+							<th scope="row">${iterator}</th>
+							<td>${anhaenger.marke}</td>
+							<td>${anhaenger.modell}</td>
+							<td>${this.Helper.GegenstandZustandConverter(anhaenger.gegenstandzustand)}</td>
+							<td>${anhaenger.aktuellerstandort}</td>
+							<td>${anhaenger.mietpreis}</td>
+							<td>${anhaenger.kennzeichen}</td>
+						`;
+						if(this.ausgabenstelle.ausgabenstelle_id == anhaenger.ausgabenstelle_id)
+						{
+							html += `
+									<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelectAnhaenger" data-anhaenger-id="${anhaenger.anhaenger_id}" checked></th>
+									</tr>
+									`;
+						}
+						else
+						{
+							html += `
+									<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelectAnhaenger" data-anhaenger-id="${anhaenger.anhaenger_id}"></th>
+									</tr>
+									`;
+						}
+						iterator++;
+					}
+		
+					modalAnhaengerListBody.innerHTML = html;
+				}, (ex) => 
+				{
+					alert(ex);
+				});
+				dialogAnhaengerList.show();
+			});
+
+			// Modal Button checkboxAll-KfZ-click
+
+			this.checkboxAllKfz.addEventListener('click', ()=>
+			{
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelectKfz');
+				let selected = this.checkboxAllKfz.checked;
 				for(let checkbox of checkboxCollection) 
 				{    
 					checkbox.checked = selected; 
 				}
 			});
 
-			// Modal Speichern Button-click
+			// Modal Button checkboxAll-Anhaenger-click
+
+			this.checkboxAllAnhaenger.addEventListener('click', ()=>
+			{
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelectAnhaenger');
+				let selected = this.checkboxAllAnhaenger.checked;
+				for(let checkbox of checkboxCollection) 
+				{    
+					checkbox.checked = selected; 
+				}
+			});
+
+			// Modal KfZ Speichern Button-click
 
 			buttonModalKfzSpeichern.addEventListener('click', ()=>
 			{
-				
+				// initialisierung
+				let listToUpdate =
+				{
+					listtoadd: [],
+					listtoremove: []
+				};
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelectKfz');
+				for(let item of checkboxCollection) 
+				{
+					if(item.checked)
+					{
+						listToUpdate.listtoadd.push(item.dataset.kraftfahrzeugId);
+					}
+					else
+					{
+						listToUpdate.listtoremove.push(item.dataset.kraftfahrzeugId);
+					}
+				}
+
+				this.app.ApiKraftfahrzeugSetAusgabenstelle(() =>
+				{
+					this.KfzUndAnhaengerListAnzeigen();
+				}, (ex) =>
+				{
+					alert(ex);
+				}, listToUpdate, ausgabenstelle_id);
+
+				dialogKfzList.hide();
+			});
+
+			// Modal Anhaenger Speichern Button-click
+
+			buttonModalAnhaengerSpeichern.addEventListener('click', ()=>
+			{
+				// initialisierung
+				let listToUpdate =
+				{
+					listtoadd: [],
+					listtoremove: []
+				};
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelectAnhaenger');
+				for(let item of checkboxCollection) 
+				{
+					if(item.checked)
+					{
+						listToUpdate.listtoadd.push(item.dataset.anhaengerId);
+					}
+					else
+					{
+						listToUpdate.listtoremove.push(item.dataset.anhaengerId);
+					}
+				}
+
+				this.app.ApiAnhaengerSetAusgabenstelle(() =>
+				{
+					this.KfzUndAnhaengerListAnzeigen();
+				}, (ex) =>
+				{
+					alert(ex);
+				}, listToUpdate, ausgabenstelle_id);
+
+				dialogAnhaengerList.hide();
 			});
         });
     }
@@ -207,6 +333,7 @@ export default class PageAusgabenstellenDetails
 		const accordionPanelKfzBody = this.app.Main.querySelector('#accordionPanelKfzBody');
 		const tbodyKfzList = this.app.Main.querySelector('#tbodyKfzList');
 
+		this.Helper = new Helper();
 		let html = '';
 
 		if(typeof this.ausgabenstelle != "undefined")

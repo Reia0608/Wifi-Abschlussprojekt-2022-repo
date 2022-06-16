@@ -23,6 +23,9 @@
 
 3. Control if the data entry is correct.
 
+4. In page-ausgabenstelle-details.html: when adding modifying Anhaenger in the hinzufügen section, the checkboxAllAnhaenger does not
+show the appropriate behaviour like checkboxAllKfz.
+
 4. // WIP: order by?
 -> Bild.cs
 

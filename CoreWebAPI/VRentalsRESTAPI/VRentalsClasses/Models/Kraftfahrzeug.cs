@@ -192,7 +192,7 @@ namespace VRentalsClasses.Models
 				{
 					foreach (int entry in listToAdd)
 					{
-						command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set (ausgabenstelle_id = : asid) where kraftfahrzeug_id = :kid;";
+						command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set ausgabenstelle_id = :asid where kraftfahrzeug_id = :kid;";
 						command.Parameters.AddWithValue("asid", ausgabenstelle_id);
 						command.Parameters.AddWithValue("kid", entry);
 						try
@@ -228,7 +228,7 @@ namespace VRentalsClasses.Models
 
 					foreach (int entry in listToRemove)
 					{
-						command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set (ausgabenstelle_id = NULL) where kraftfahrzeug_id = :kid;";
+						command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set ausgabenstelle_id = NULL where kraftfahrzeug_id = :kid;";
 						command.Parameters.AddWithValue("kid", entry);
 						try
 						{

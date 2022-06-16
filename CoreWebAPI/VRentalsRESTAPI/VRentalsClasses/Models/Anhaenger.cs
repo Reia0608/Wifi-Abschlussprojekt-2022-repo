@@ -102,6 +102,84 @@ namespace VRentalsClasses.Models
 			DBConnection.GetConnection().Close();
 			return anhaengerListe;
 		}
+
+		public static int AddRemoveFromAusgabenstelle(List<int>? listToAdd, List<int>? listToRemove, int ausgabenstelle_id)
+		{
+			int result = 0;
+			NpgsqlCommand command = new NpgsqlCommand();
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			if (listToAdd != null)
+			{
+				try
+				{
+					foreach (int entry in listToAdd)
+					{
+						command.CommandText = $"update {SCHEMA}.{TABLE} set ausgabenstelle_id = :asid where anhaenger_id = :aid;";
+						command.Parameters.AddWithValue("asid", ausgabenstelle_id);
+						command.Parameters.AddWithValue("aid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+				finally
+				{
+					command.Connection.Close();
+				}
+			}
+
+			if (listToRemove != null)
+			{
+				try
+				{
+					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+					{
+						command.Connection = DBConnection.GetConnection();
+						command.Connection.Open();
+					}
+
+					foreach (int entry in listToRemove)
+					{
+						command.CommandText = $"update {SCHEMA}.{TABLE} set ausgabenstelle_id = NULL where anhaenger_id = :aid;";
+						command.Parameters.AddWithValue("aid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+				finally
+				{
+					command.Connection.Close();
+				}
+			}
+			return result;
+		}
 		#endregion
 		//************************************************************************
 		#region constructors#

@@ -96,6 +96,30 @@ namespace VRentalsRESTAPI.Controllers
             return result;
         }
 
+        //PUT: api/<AnhaengerController>/ausgabenstelle/5
+        [HttpPut("ausgabenstelle/{ausgabenstelle_id}")]
+        public IActionResult UpdateAusgabenstelleEntry([FromBody] ListToUpdate listToUpdate, int ausgabenstelle_id)
+        {
+            IActionResult result = null;
+            try
+            {
+                if (Anhaenger.AddRemoveFromAusgabenstelle(listToUpdate.ListToAdd, listToUpdate.ListToRemove, ausgabenstelle_id) > 0)
+                {
+                    result = Ok("Trailer entries updated!");
+                }
+                else
+                {
+                    result = NotFound("An error has occured! Cars not found?");
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                Debug.WriteLine(ex.Message);
+            }
+            return result;
+        }
+
         [HttpPut("{id}/bild")]
         public IActionResult PutBild(int id, IFormFile file)
         {
