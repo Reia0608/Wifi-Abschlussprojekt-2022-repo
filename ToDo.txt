@@ -26,7 +26,11 @@
 4. In page-ausgabenstelle-details.html: when adding modifying Anhaenger in the hinzufügen section, the checkboxAllAnhaenger does not
 show the appropriate behaviour like checkboxAllKfz.
 
-4. // WIP: order by?
+5. In page-ausgabenstelle-details.html: Add an alert for the modal when adding/ removing trailers and cars from the issuing office.
+
+6. Show the number of cars/ trailers in each issuing office in page-ausgabenstelle-list.html.
+
+7. // WIP: order by?
 -> Bild.cs
 
 ===== Priority 4=====

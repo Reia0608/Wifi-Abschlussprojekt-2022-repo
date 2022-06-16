@@ -291,6 +291,58 @@ export default class PageAusgabenstellenDetails
 
 				dialogAnhaengerList.hide();
 			});
+
+			//---------------------------
+			// KfZ items entfernen
+
+			tbodyKfzList.addEventListener('click', (e) => 
+			{
+				let btn = null;
+				if (e.target.nodeName.toUpperCase() == 'PATH' && e.target.parentElement.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.parentElement.nodeName == 'BUTTON')
+				{
+					btn = e.target.parentElement.parentElement;
+				} 
+				else if (e.target.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.nodeName == 'BUTTON')
+				{
+					btn = e.target.parentElement;
+				} 
+				else if (e.target.nodeName == 'BUTTON') 
+				{
+					btn = e.target;
+				}
+
+				if (e.target.nodeName == 'TD') 
+				{
+					let kraftfahrzeug_id = parseInt(e.target.parentElement.dataset.kraftfahrzeugId);
+					window.open('#cardetails?kid=' + kraftfahrzeug_id, '_self');
+				}
+			});
+
+			//---------------------------
+			// Anhänger items entfernen
+
+			tbodyAnhaengerList.addEventListener('click', (e) => 
+			{
+				let btn = null;
+				if (e.target.nodeName.toUpperCase() == 'PATH' && e.target.parentElement.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.parentElement.nodeName == 'BUTTON')
+				{
+					btn = e.target.parentElement.parentElement;
+				} 
+				else if (e.target.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.nodeName == 'BUTTON')
+				{
+					btn = e.target.parentElement;
+				} 
+				else if (e.target.nodeName == 'BUTTON') 
+				{
+					btn = e.target;
+				}
+
+				if (e.target.nodeName == 'TD') 
+				{
+					let anhaenger_id = parseInt(e.target.parentElement.dataset.anhaengerId);
+					window.open('#trailerdetails?aid=' + anhaenger_id, '_self');
+				}
+			});
         });
     }
 
@@ -346,9 +398,8 @@ export default class PageAusgabenstellenDetails
 				{
 					html += 
 					`
-					<tr data-kraftfahrzeug-idx="${iterator}">
+					<tr data-kraftfahrzeug-id="${kfzitem.kraftfahrzeug_id}">
 						<th scope="row">
-						<button type="button" class="btn btn-outline-dark btn-sm" id="buttonKraftfahrzeugRemove_${kfzitem.kraftfahrzeug_id}"><span class="iconify me-2" data-icon="mdi-delete"></span>Entfernen</button>
 						</th>
 						<td scope="col">${(kfzitem.marke ? kfzitem.marke : '&nbsp;')}</td>
 						<td scope="col">${(kfzitem.modell ? kfzitem.modell : '&nbsp;')}</td>
@@ -370,9 +421,9 @@ export default class PageAusgabenstellenDetails
 		{
 			html = 
 			`
-			<td>Erzeugen Sie bitte ein Fahrzeug um den Schaden eintragen zu können!</td>
+			<td>Erzeugen Sie bitte eine Ausgabenstelle um ein Fahrzeug hinzufügen zu können!</td>
 			`
-			trSchadenHeader.innerHTML = html;
+			trKfzHeader.innerHTML = html;
 		}		
 	}
 
@@ -396,9 +447,8 @@ export default class PageAusgabenstellenDetails
 				{
 					html += 
 					`
-					<tr data-anhaenger-idx="${iterator}">
+					<tr data-anhaenger-id="${anhaengeritem.anhaenger_id}">
 						<th scope="row">
-							<button type="button" class="btn btn-outline-dark btn-sm" id="buttonAnhaengerRemove_${anhaengeritem.anhaenger_id}"><span class="iconify me-2" data-icon="mdi-delete"></span>Entfernen</button>
 						</th>
 						<td scope="col">${(anhaengeritem.marke ? anhaengeritem.marke : '&nbsp;')}</td>
 						<td scope="col">${(anhaengeritem.modell ? anhaengeritem.modell : '&nbsp;')}</td>
