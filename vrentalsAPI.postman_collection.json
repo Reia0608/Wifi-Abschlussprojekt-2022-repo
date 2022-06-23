@@ -151,6 +151,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Select All Users by Role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/allebenutzer/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"allebenutzer",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

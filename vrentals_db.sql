@@ -49,6 +49,7 @@ CREATE TABLE rentals.tbl_users
     registrierungstag date,
     letzteanmeldung date,
 	kontakt_id numeric,
+	kundennummer numeric,
     PRIMARY KEY (users_id)
 );
 

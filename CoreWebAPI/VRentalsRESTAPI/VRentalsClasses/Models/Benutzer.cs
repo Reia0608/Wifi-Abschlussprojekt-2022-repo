@@ -18,7 +18,7 @@ namespace VRentalsClasses.Models
         private const string TABLE = "tbl_users";
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
         private const string COLUMNS = "users_id, vorname, nachname, geschlecht, username, passwort, rolle, geburtsdatum, geburtsort," +
-			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis";
+			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer";
 		private const string KONTAKT = "tbl_kontakt";
 		#endregion
 		
@@ -261,6 +261,39 @@ namespace VRentalsClasses.Models
 			}
 			return benutzerList;
 		}
+
+		public static List<Benutzer> GetList(int rolle)
+		{
+			List<Benutzer> benutzerList = new List<Benutzer>();
+			Benutzer? benutzer = new Benutzer();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where rolle = :rl order by vorname, vorname";
+			command.Parameters.AddWithValue("rl", rolle);
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			try
+			{
+				while (reader.Read())
+				{
+					benutzerList.Add(benutzer = new Benutzer(reader));
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
+			return benutzerList;
+		}
 		#endregion
 
 		//************************************************************************
@@ -286,6 +319,7 @@ namespace VRentalsClasses.Models
 			LetzteAnmeldung = reader.IsDBNull(10) ? null : (DateTime?)reader.GetDateTime(10);
 			BenutzerMerkmal = reader.IsDBNull(11) ? null : reader.GetString(11);
 			MerkmalGiltBis = reader.IsDBNull(12) ? null : reader.GetDateTime(12);
+			KundenNummer = reader.IsDBNull(13) ? null : reader.GetInt32(13);
 		}
 
 		#endregion
@@ -341,6 +375,9 @@ namespace VRentalsClasses.Models
 
 		public byte[]? ProfilBild { get; set; }
 
+		[JsonPropertyName("kundennummer")]
+		public int? KundenNummer { get; set; }
+
 		#endregion
 
 		//************************************************************************
@@ -368,14 +405,14 @@ namespace VRentalsClasses.Models
             {
                 command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
                     $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
-                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb where users_id = :pid";
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn where users_id = :pid";
 
             }
             else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.UserId = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn)";
 			}
 
 			command.Parameters.AddWithValue("pid", this.UserId);
@@ -392,7 +429,8 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("lanm", this.LetzteAnmeldung.HasValue ? (object)this.LetzteAnmeldung.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("bmerk", String.IsNullOrEmpty(this.BenutzerMerkmal) ? (object)DBNull.Value : (object)this.BenutzerMerkmal);
 			command.Parameters.AddWithValue("merkgb", this.MerkmalGiltBis.HasValue ? (object)this.MerkmalGiltBis.Value : (object)DBNull.Value);
-			
+			command.Parameters.AddWithValue("kn", this.KundenNummer.HasValue ? (int)this.KundenNummer : (object)DBNull.Value);
+
 			try
 			{
 				result = command.ExecuteNonQuery();
@@ -431,6 +469,49 @@ namespace VRentalsClasses.Models
 			{
 				command.Connection.Close();
 			}
+			return result;
+		}
+
+		public static int Delete(List<int> listToDelete)
+		{
+			int result = 0;
+			NpgsqlCommand command = new NpgsqlCommand();
+
+			if (listToDelete != null)
+			{
+				try
+				{
+					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+					{
+						command.Connection = DBConnection.GetConnection();
+						command.Connection.Open();
+					}
+
+					foreach (int entry in listToDelete)
+					{
+						command.CommandText = $"delete from {SCHEMA}.{TABLE} where users_id = :uid;";
+						command.Parameters.AddWithValue("uid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+				finally
+				{
+					command.Connection.Close();
+				}
+			}
+
 			return result;
 		}
 

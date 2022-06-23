@@ -74,6 +74,19 @@ namespace VRentalsRESTAPI.Controllers
 			return null;
 		}
 
+		[HttpGet("allebenutzer/{role}")]
+		public IEnumerable<Benutzer> GetUsersByRole(int role)
+		{
+            Benutzer benutzer = Benutzer.Get(this);
+            if (benutzer?.Rolle == RollenTyp.Admin)
+            {
+                return Benutzer.GetList(role);
+			} 
+			else
+            {
+				return null;
+			}
+		}
 
 		[HttpDelete("logoff")]
 		public IActionResult LogoffPerson()
@@ -143,6 +156,30 @@ namespace VRentalsRESTAPI.Controllers
 				if (benutzer.Save() == 1) result = Ok();
 				else result = new StatusCodeResult(StatusCodes.Status204NoContent);
 
+			}
+			catch (Exception ex)
+			{
+				result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+				Debug.WriteLine(ex.Message);
+			}
+			return result;
+		}
+
+		//DELETE: api/<BenutzerController>/
+		[HttpDelete()]
+		public IActionResult Delete([FromBody] List<int> listToDelete)
+		{
+			IActionResult result = null;
+			try
+			{
+				if (Benutzer.Delete(listToDelete) > 0)
+				{
+					result = Ok("user entries deleted!");
+				}
+				else
+				{
+					result = NotFound("user(s) not found!");
+				}
 			}
 			catch (Exception ex)
 			{

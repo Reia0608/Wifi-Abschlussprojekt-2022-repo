@@ -393,13 +393,13 @@ export default class PageAusgabenstellenDetails
 			this.app.ApiGetKraftfahrzeugListByAusgabenstelle((response) => 
 			{
 				this.ausgabenstelle.kraftfahrzeuglist = response;
-				let iterator = 0;
+				let iterator = 1;
 				for (let kfzitem of this.ausgabenstelle.kraftfahrzeuglist) 
 				{
 					html += 
 					`
 					<tr data-kraftfahrzeug-id="${kfzitem.kraftfahrzeug_id}">
-						<th scope="row">
+						<th scope="row">${iterator}
 						</th>
 						<td scope="col">${(kfzitem.marke ? kfzitem.marke : '&nbsp;')}</td>
 						<td scope="col">${(kfzitem.modell ? kfzitem.modell : '&nbsp;')}</td>
@@ -442,13 +442,13 @@ export default class PageAusgabenstellenDetails
 			this.app.ApiGetAnhaengerListByAusgabenstelle((response) => 
 			{
 				this.ausgabenstelle.anhaengerlist = response;
-				let iterator = 0;
+				let iterator = 1;
 				for (let anhaengeritem of this.ausgabenstelle.anhaengerlist) 
 				{
 					html += 
 					`
 					<tr data-anhaenger-id="${anhaengeritem.anhaenger_id}">
-						<th scope="row">
+						<th scope="row">${iterator}
 						</th>
 						<td scope="col">${(anhaengeritem.marke ? anhaengeritem.marke : '&nbsp;')}</td>
 						<td scope="col">${(anhaengeritem.modell ? anhaengeritem.modell : '&nbsp;')}</td>

@@ -9,13 +9,13 @@ export default class PageProfile
 
         appArgs.app.LoadHTML('./page-profile.html', appArgs.app.Main, () => 
 		{
-            const labelRolle = document.getElementById('labelRolle');
-            const labelBenutzername = document.getElementById('labelBenutzername');
-            const labelVorname = document.getElementById('labelVorname');
-            const labelNachname = document.getElementById('labelNachname');
-            const labelGeburtsdatum = document.getElementById('labelGeburtsdatum');
-            const labelGeburtsort = document.getElementById('labelGeburtsort');
-            const labelPasswortAendern = document.getElementById('labelPasswortAendern');
+            const inputRolle = document.getElementById('inputRolle');
+            const inputBenutzername = document.getElementById('inputBenutzername');
+            const inputVorname = document.getElementById('inputVorname');
+            const inputNachname = document.getElementById('inputNachname');
+            const inputGeburtsdatum = document.getElementById('inputGeburtsdatum');
+            const inputGeburtsort = document.getElementById('inputGeburtsort');
+            const inputPasswortAendern = document.getElementById('inputPasswortAendern');
             const divProfile = document.getElementById('divProfile');
 
             if(benutzerMerkmal)
@@ -24,45 +24,49 @@ export default class PageProfile
                 {
                     if(response.success)
                     {
-                        labelRolle.Value = response.benutzer.rolle;
-                        labelBenutzername.Value = response.benutzer.username;
-                        labelVorname.Value = response.benutzer.vorname;
-                        labelNachname.Value = response.benutzer.nachname;
-                        labelGeburtsdatum.Value = response.benutzer.geburtsdatum;
-                        labelGeburtsort.Value = response.benutzer.geburtsort;
-                        labelPasswortAendern.Value = response.benutzer.passwort;
+                        this.benutzer = response.benutzer;
 
-                        let html = 
-                        `<div class="input-group mb-3">
-                            <span class="input-group-text" >Rolle</span>
-                            <label type="text" id="labelRolle">${labelRolle.Value}</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" >Benutzername</span>
-                            <label type="text" id="labelBenutzername">${labelBenutzername.Value}</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" >Vorname</span>
-                            <label type="text" id="labelVorname">${labelVorname.Value}</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" >Nachname</span>
-                            <label type="text" id="labelNachname">${labelNachname.Value}</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" >Geburtsdatum</span>
-                            <label type="text" id="labelGeburtsdatum">${labelGeburtsdatum.Value}</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" >Geburtsort</span>
-                            <label type="text" id="labelGeburtsort">${labelGeburtsort.Value}</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" >Passwort ändern</span>
-                            <label type="password" id="labelPasswortAendern">${labelPasswortAendern.Value}</label>
-                        </div>`;
+                        inputRolle.Value = this.benutzer.rolle;
+                        inputBenutzername.Value = this.benutzer.username;
+                        inputVorname.Value = this.benutzer.vorname;
+                        inputNachname.Value = this.benutzer.nachname;
+                        inputGeburtsdatum.Value = this.benutzer.geburtsdatum;
+                        inputGeburtsort.Value = this.benutzer.geburtsort;
+                        inputPasswortAendern.Value = this.benutzer.passwort;
+
+                        // let html = 
+                        // `
+                        //     <div class="row">
+                        //         <div class="col-4 text-end">Rolle</div>
+                        //         <div class="col-6"><input type="text" class="form-control form-control-sm" id="inputRolle" />${inputRolle.Value}</div>
+                        //     </div>
+                        //     <div class="row mt-3">
+                        //         <div class="col-4 text-end">Benutzername</div>
+                        //         <div class="col-6"><input type="text" class="form-control form-control-sm" id="inputBenutzername" />${inputBenutzername.Value}</div>
+                        //     </div>
+                        //     <div class="row mt-3">
+                        //         <div class="col-4 text-end">Vorname</div>
+                        //         <div class="col-8"><input type="text" class="form-control form-control-sm" id="inputVorname" />${inputVorname.Value}</div>
+                        //     </div>
+                        //     <div class="row mt-3">
+                        //         <div class="col-4 text-end">Nachname</div>
+                        //         <div class="col-8"><input type="text" class="form-control form-control-sm" id="inputNachname" />${inputNachname.Value}</div>
+                        //     </div>
+                        //     <div class="row mt-3">
+                        //         <div class="col-4 text-end">Geburtsdatum</div>
+                        //         <div class="col-8"><input type="text" class="form-control form-control-sm" id="inputGeburtsdatum" />${inputGeburtsdatum.Value}</div>
+                        //     </div>
+                        //     <div class="row mt-3">
+                        //         <div class="col-4 text-end">Geburtsort</div>
+                        //         <div class="col-8"><input type="text" class="form-control form-control-sm" id="inputGeburtsort" />${inputGeburtsort.Value}</div>
+                        //     </div>
+                        //     <div class="row mt-3">
+                        //         <div class="col-4 text-end">Passwort ändern</div>
+                        //         <div class="col-8"><input type="text" class="form-control form-control-sm" id="inputPasswortAendern" />${inputPasswortAendern.Value}</div>
+                        //     </div>
+                        // `;
                         
-                        divProfile.innerHTML = html;
+                        // divProfile.innerHTML = html;
 
                     }
                     else

@@ -11,6 +11,8 @@ import PageAusgabenstellenList from './page-ausgabenstellen-list.js';
 import PageAusgabenstellenDetails from './page-ausgabenstellen-details.js';
 import PageTrailerList from './page-trailer-list.js';
 import PageTrailerDetails from './page-trailer-details.js';
+import PageClientList from './page-client-list.js';
+import PageStaffList from './page-staff-list.js';
 
 
 
@@ -118,6 +120,12 @@ export default class Application
 				break;
 			case '#trailerdetails':
 				new PageTrailerDetails(args);
+				break;
+			case '#clientlist':
+				new PageClientList(args);
+				break;
+			case '#stafflist':
+				new PageStaffList(args);
 				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
@@ -267,6 +275,66 @@ export default class Application
 			{
 				$('body').removeClass('waiting');
 				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBenutzerGetList(successCallback, errorCallback, role) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/allebenutzer/' + role, 
+		{
+			method: 'GET',
+			cache: 'no-cache',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBenutzerDelete(successCallback, errorCallback, benutzerList) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/', 
+		{
+			method: 'DELETE',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(benutzerList)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				console.log("Benutzer wurden gelöscht!");
+			}
+			else if (response.status == 204)
+			{
+				$('body').removeClass('waiting');
+				errorCallback('Daten unvollständig!');
 			} 
 			else
 			{

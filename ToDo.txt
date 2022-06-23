@@ -1,7 +1,14 @@
 ===== Priority 1=====
 
-2. //WIP: WARNING! Potential security danger! User could change the id to what he wants?!
+1. Make the user roles actually do something!
+
+2. Normal user can get user list. 
+-> check why the if condition in BenutzerController.cs doesnt work!
+
+3. //WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 -> Anhaenger.cs + Kraftfahrzeug.cs + Bild.cs
+
+4. WORK ON PAGE PROFILE!
 
 ===== Priority 2=====
 
@@ -13,6 +20,8 @@
 3. Make the accordion open and close on the details page.
 
 4. Move the speichern and abbrechen buttons to the sidenav.
+
+5. Change +Hinzufügen button to Hinzufügen/ Entfernen in page-ausgabenstelle-details.js.
 
 
 ===== Priority 3=====
@@ -30,11 +39,18 @@ show the appropriate behaviour like checkboxAllKfz.
 
 6. Show the number of cars/ trailers in each issuing office in page-ausgabenstelle-list.html.
 
-7. // WIP: order by?
+7. Make the buttons on Verwaltung page a fixed width. So when changing pages, they dont move around.
+
+8. On login, add a method to helper that converts the role number into its text equivalent to show on the banner.
+
+9. // WIP: order by?
 -> Bild.cs
+
+10. Change image on the tab to the newer one.
 
 ===== Priority 4=====
 
 1. Create an image carousel/slider for multiple images.
 2. Add fotos to Ausgabenstelle.
 3. Archive all deleted entries in the db.
+4. Make it so that images can be added by drag and drop, as well as on click.
