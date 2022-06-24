@@ -48,6 +48,8 @@ show the appropriate behaviour like checkboxAllKfz.
 
 10. Change image on the tab to the newer one.
 
+11. When saving on the website, the blue highlight in the sidebar is on the wrong element.
+
 ===== Priority 4=====
 
 1. Create an image carousel/slider for multiple images.

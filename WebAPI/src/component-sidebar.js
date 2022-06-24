@@ -57,7 +57,7 @@ export default class Sidebar
 
 			this.sideNavButtonProfile.addEventListener('click', (e)=>
 			{
-				location.hash = '#profile';
+				location.hash = '#personaldetails';
 				if(activeSideNavButton != this.sideNavButtonProfile)
 				{
 					this.sideNavButtonProfile.classList.add("active");

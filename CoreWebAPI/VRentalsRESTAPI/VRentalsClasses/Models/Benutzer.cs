@@ -60,6 +60,38 @@ namespace VRentalsClasses.Models
 			return benutzer;
 		}
 
+		public static Benutzer Get(int id)
+		{
+			Benutzer benutzer = new Benutzer();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where users_id = :uid";
+			command.Parameters.AddWithValue("uid", id);
+
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			try
+			{
+				reader.Read();
+				benutzer = new Benutzer(reader);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
+			return benutzer;
+		}
+
 		public static Benutzer Get(string benutzermerkmal)
 		{
 			Benutzer benutzer = new Benutzer();
@@ -406,7 +438,6 @@ namespace VRentalsClasses.Models
                 command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
                     $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
                     $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn where users_id = :pid";
-
             }
             else
 			{
@@ -443,6 +474,56 @@ namespace VRentalsClasses.Models
 			{
 				command.Connection.Close();
 			}		
+			return result;
+		}
+
+		public int Save(int user_id)
+		{
+			int result = -1;
+			NpgsqlCommand command = new NpgsqlCommand();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			if (!String.IsNullOrEmpty(this.Passwort))
+			{
+				this.PasswortHash = GetPasswordHash(this.Passwort);
+			}
+
+			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
+					$" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
+					$" where users_id = :pid";
+
+			command.Parameters.AddWithValue("pid", user_id);
+			command.Parameters.AddWithValue("vn", String.IsNullOrEmpty(this.Vorname) ? (object)DBNull.Value : (object)this.Vorname);
+			command.Parameters.AddWithValue("nn", String.IsNullOrEmpty(this.Nachname) ? (object)DBNull.Value : (object)this.Nachname);
+			command.Parameters.AddWithValue("ges", (int)this.Geschlecht);
+			command.Parameters.AddWithValue("un", String.IsNullOrEmpty(this.UserName) ? (object)DBNull.Value : (object)this.UserName);
+			//command.Parameters.AddWithValue("pwd", String.IsNullOrEmpty(this.PasswortHash) ? (object)DBNull.Value : (object)this.PasswortHash);
+			//KontaktListe
+			command.Parameters.AddWithValue("rl", (int)this.Rolle);
+			command.Parameters.AddWithValue("gebd", this.Geburtsdatum.HasValue ? (object)this.Geburtsdatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("gebo", String.IsNullOrEmpty(this.GeburtsOrt) ? (object)DBNull.Value : (object)this.GeburtsOrt);
+			//command.Parameters.AddWithValue("regt", this.RegistrierungsTag.HasValue ? (object)this.RegistrierungsTag.Value : (object)DBNull.Value);
+			//command.Parameters.AddWithValue("lanm", this.LetzteAnmeldung.HasValue ? (object)this.LetzteAnmeldung.Value : (object)DBNull.Value);
+			//command.Parameters.AddWithValue("bmerk", String.IsNullOrEmpty(this.BenutzerMerkmal) ? (object)DBNull.Value : (object)this.BenutzerMerkmal);
+			//command.Parameters.AddWithValue("merkgb", this.MerkmalGiltBis.HasValue ? (object)this.MerkmalGiltBis.Value : (object)DBNull.Value);
+			//command.Parameters.AddWithValue("kn", this.KundenNummer.HasValue ? (int)this.KundenNummer : (object)DBNull.Value);
+
+			try
+			{
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				command.Connection.Close();
+			}
 			return result;
 		}
 

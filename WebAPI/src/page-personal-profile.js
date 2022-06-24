@@ -1,7 +1,7 @@
 import  "./../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
 import "./app.js";
 
-export default class PageProfile
+export default class PagePersonalProfile
 {
     constructor(appArgs)
     {
@@ -18,13 +18,13 @@ export default class PageProfile
             // Initialisierung
 			var benutzerBild = {};
 
-            if(appArgs.klid)
+            if(benutzerMerkmal)
             {
-                this.datenLaden(appArgs.klid);
+                this.datenLaden(benutzerMerkmal);
             }
             else
             {
-                alert('Benutzer existiert nicht!');
+                alert('Kein Benutzer angemeldet!');
             }
 
             //-------------------------------------------------------------
@@ -99,7 +99,7 @@ export default class PageProfile
 						{
 							alert(ex);
 						}, this.benutzer);
-						location.hash = '#clientlist';
+						location.hash = '#main';
 					}
 				}
 				else 
@@ -112,14 +112,14 @@ export default class PageProfile
 			// Vorgang abbrechen
 			buttonBenutzerAbbrechen.addEventListener('click', (e) =>
 			{
-				location.hash = '#clientlist';
+				location.hash = '#main';
 			});
 		});
     }
 
-    datenLaden(klient_id)
+    datenLaden(benutzerMerkmal)
     {
-        this.app.ApiBenutzerGetById((response) =>
+        this.app.ApiBenutzerGet((response) =>
         {
             if(response.success)
             {
@@ -153,6 +153,6 @@ export default class PageProfile
         }, (ex) => 
         {
             alert(ex);
-        },  klient_id);
+        },  benutzerMerkmal);
     }
 }

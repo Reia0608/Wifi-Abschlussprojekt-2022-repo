@@ -21,7 +21,7 @@ export default class PageClientList
 
 			buttonKundeNeu.addEventListener('click', ()=>
 			{
-				window.open('#cardetails', '_self');
+				window.open('#clientdetails', '_self');
 			});
 
 			// ListGroupElement-click
@@ -48,8 +48,8 @@ export default class PageClientList
 				}
 				else if (pointerCoordinates.target.nodeName == 'TD') 
 				{
-					let benutzer_id = pointerCoordinates.target.parentElement.dataset.benutzerId;
-					window.open('#clientdetails?klid=' + benutzer_id, '_self');
+					let kunde_id = pointerCoordinates.target.parentElement.dataset.kundeId;
+					window.open('#clientdetails?klid=' + kunde_id, '_self');
 				}
 			});
 

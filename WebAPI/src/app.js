@@ -13,6 +13,7 @@ import PageTrailerList from './page-trailer-list.js';
 import PageTrailerDetails from './page-trailer-details.js';
 import PageClientList from './page-client-list.js';
 import PageStaffList from './page-staff-list.js';
+import PagePersonalProfile from './page-personal-profile.js';
 
 
 
@@ -127,6 +128,14 @@ export default class Application
 			case '#stafflist':
 				new PageStaffList(args);
 				break;
+			case '#personaldetails':
+				new PagePersonalProfile(args);
+				break;
+			case '#clientdetails':
+				new PageProfile(args);
+				break;
+			case '#staffdetails':
+				new PageProfile(args);
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;
@@ -219,23 +228,62 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-
-	ApiBenutzerSet(successCallback, errorCallback, benutzer)
+	ApiBenutzerSet(successCallback, errorCallback, benutzer) 
 	{
 		$('body').addClass('waiting');
-		fetch(this.apiBaseUrl + 'benutzer', 
+		fetch(this.apiBaseUrl + 'benutzer' + (benutzer.userid ? '/' + benutzer.userid : ''), 
 		{
-			method: 'POST',
+			method: benutzer.userid ? 'PUT' : 'POST',
 			cache: 'no-cache',
-			headers: { 'content-Type': 'application/json'}, // 'Content-Type': 'application/x-www-form-urlencoded'
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
 			body: JSON.stringify(benutzer)
 		})
-		.then((response)=>
+		.then((response) => 
 		{
-			if(response.status == 200) successCallback();
-			else if (response.status == 204) errorCallback('Daten sind unvollständig!');
-			else throw new Error(response.status + ' ' + response.statusText);
-		}).catch(errorCallback);
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return successCallback('Daten wurden erfolgreich geschickt!');
+			}
+			else if (response.status == 204) 
+			{
+				$('body').removeClass('waiting');
+				errorCallback('Daten sind unvollständig!');
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.catch(errorCallback);
+	}
+
+	ApiBenutzerGetById(successCallback, errorCallback, pid) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/pid/' + pid, 
+		{
+			method: 'GET'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
 	}
 
 	ApiBenutzerGet(successCallback, errorCallback, id) 
@@ -985,6 +1033,31 @@ export default class Application
 
 	//==================================================================================
 	// Bilder
+
+	ApiBilderGetBenutzerList(successCallback, errorCallback, users_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/benutzer/' + users_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
 
 	ApiBilderGetKfzList(successCallback, errorCallback, kraftfahrzeug_id)
 	{

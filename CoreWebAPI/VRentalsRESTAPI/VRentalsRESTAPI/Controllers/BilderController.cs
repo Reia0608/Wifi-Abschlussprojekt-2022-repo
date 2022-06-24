@@ -23,16 +23,25 @@ namespace VRentalsRESTAPI.Controllers
             return Bild.GetList();
         }
 
+        // GET: api/<BilderController>/benutzer/5
+        [HttpGet("benutzer/{id}")]
+        public IEnumerable<Bild> SelectAllFromBenutzer(int id)
+        {
+            return Bild.GetBenutzerBildList(id);
+        }
+
+        // GET: api/<BilderController>/kfz/5
         [HttpGet("kfz/{id}")]
         public IEnumerable<Bild> SelectAllFromKfz(int id)
         {
             return Bild.GetKfzBildList(id);
         }
 
+        // GET: api/<BilderController>/anhaenger/5
         [HttpGet("anhaenger/{id}")]
         public IEnumerable<Bild> SelectAllFromAnhaenger(int id)
         {
-            return Bild.GetAnhaengerBildList(id);
+            return Bild.GetBenutzerBildList(id);
         }
 
         // GET: api/<BilderController>/5

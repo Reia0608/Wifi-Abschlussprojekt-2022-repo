@@ -8,6 +8,7 @@ using System.IO;
 using VRentalsClasses.Models;
 using VRentalsClasses.Interfaces;
 using Google.Cloud.Firestore;
+using System.Net;
 
 namespace VRentalsRESTAPI.Controllers
 {
@@ -40,6 +41,26 @@ namespace VRentalsRESTAPI.Controllers
             //    return null;
             //}
         }
+
+		[HttpGet("pid/{pid}")]
+		public IActionResult GetBenutzerById(int pid)
+		{
+			IActionResult result = null;
+			try
+			{
+				result = Ok(new
+				{
+					success = true,
+					message = "ok",
+					benutzer = Benutzer.Get(pid),
+				});
+				return result;
+			}
+			catch (Exception ex)
+			{
+				return NotFound(ex);
+			}
+		}
 
 		[HttpGet("{id}")]
 		public IActionResult GetBenutzer(string id)
@@ -146,6 +167,36 @@ namespace VRentalsRESTAPI.Controllers
 			return result;
 		}
 
+		// PUT: api/<BenutzerController>/5
+		[HttpPut("{userid}")]
+		public IActionResult Put(int userid, [FromBody] Benutzer benutzer)
+		{
+			IActionResult result = null;
+			try
+			{
+				Benutzer dbBenutzer = Benutzer.Get(userid);
+				if (dbBenutzer == null)
+				{
+					result = NotFound();
+				}
+				else
+				{
+					if (benutzer.Save(userid) == 1)
+					{
+						result = Ok(benutzer);
+					}
+					else
+					{
+						result = NoContent();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				result = StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+			}
+			return result;
+		}
 
 		[HttpPost()]
 		public IActionResult InsertBenutzer([FromBody] Benutzer benutzer)

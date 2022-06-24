@@ -188,7 +188,6 @@ export default class PageCarsDetails
 						this.schaden.schaden_datum = divDateSchaden.value;
 					}
 					
-					// WIP causes error when schaden is made without an existing car.
 					if(!this.kraftfahrzeug)
 					{
 						this.kraftfahrzeug = null;
