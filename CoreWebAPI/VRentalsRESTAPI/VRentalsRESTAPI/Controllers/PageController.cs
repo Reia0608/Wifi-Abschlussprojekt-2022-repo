@@ -14,7 +14,6 @@ namespace VRentalsRESTAPI.Controllers
 		{
 			return new
 			{
-				//gruppelist = Gruppe.GetList(), WIP Was ist die gruppe?
 				benutzer = Benutzer.Get(bm)
 			};
 		}

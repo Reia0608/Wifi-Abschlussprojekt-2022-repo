@@ -48,8 +48,8 @@ export default class PageClientList
 				}
 				else if (pointerCoordinates.target.nodeName == 'TD') 
 				{
-					let kunde_id = pointerCoordinates.target.parentElement.dataset.kundeId;
-					window.open('#clientdetails?klid=' + kunde_id, '_self');
+					let benutzer_id = pointerCoordinates.target.parentElement.dataset.benutzerId;
+					window.open('#clientdetails?pid=' + benutzer_id, '_self');
 				}
 			});
 
@@ -89,7 +89,7 @@ export default class PageClientList
 						let kundeList = [];
 						for(let kunde of selectedKundeList)
 						{
-							kundeList.push(kunde.dataset.kundeId);
+							kundeList.push(kunde.dataset.benutzerId);
 						}
 						this.app.ApiBenutzerDelete(() =>
 						{
@@ -116,13 +116,13 @@ export default class PageClientList
 			{
 				html += 
 				`
-				<tr data-kunde-id="${kunde.userid}">
+				<tr data-benutzer-id="${kunde.userid}">
 					<th scope="row">${iterator}</th>
 					<td>${kunde.vorname}</td>
 					<td>${kunde.nachname}</td>
 					<td>${kunde.username}</td>
 					<td>${kunde.kundennummer}</td>
-					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-kunde-id="${kunde.userid}"></th>
+					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-benutzer-id="${kunde.userid}"></th>
 				</tr>
 				`;
 				iterator++;

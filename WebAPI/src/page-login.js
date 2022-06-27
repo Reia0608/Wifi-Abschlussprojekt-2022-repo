@@ -43,6 +43,7 @@ export default class PageLogin
 						{
 							console.log('login fetch successful!');
 							new LoginManager(this.app);
+							window.open('#main', '_self');
 						}
 						else 
 						{

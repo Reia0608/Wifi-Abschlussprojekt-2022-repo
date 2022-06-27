@@ -31,15 +31,204 @@
 				<div class="col-8"><input type="text" class="form-control form-control-sm" id="inputGeburtsort" /></div>
 			</div>
             <div class="row mt-3">
-				<div class="col-4 text-end">Passwort ändern</div>
-				<div class="col-8"><input type="button" class="form-control form-control-sm" id="inputPasswortAendern" /></div>
+				<div class="col-4 text-end"></div>
+				<div class="col-8"><button type="button" class="form-control form-control-sm" id="buttonPasswortAendern">Passwort ändern</button></div>
 			</div>
         </div>
     </div>
+	<div class="row mt-5">
+		<div class="col-12">
+			<div class="accordion" >
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="accordionHeaderFSK">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFSK" aria-expanded="true" aria-controls="panelsStayOpen-collapseFSK">
+							Führerscheinklassen-Verwaltung
+						</button>
+					</h2>
+					<div id="panelsStayOpen-collapseFSK" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingFSK"></div>
+						<div class="accordion-body">
+							<strong>
+								<table class="table table-hover">
+									<thead class="thead-dark">
+									  <tr id="trFSKHeader">
+										<th scope="col"><button type="button" class="btn btn-sm" id="buttonFSKNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Hinzufügen / Enfernen</button></th>
+										<th scope="col">Führerscheinklasse</th>
+										<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+									  </tr>
+									</thead>
+									<tbody class="clickable" id="tableFSKList">
+										<!-- inhalt des accordions-->
+									</tbody>
+								</table>
+							</strong>
+						</div>
+					</div>
+				</div>
+
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="panelsStayOpen-headingWert">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseWert" aria-expanded="false" aria-controls="panelsStayOpen-collapseWert">
+							Wert(e)
+						</button>
+					</h2>
+					<div id="panelsStayOpen-collapseWert" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingWert"></div>
+						<div class="accordion-body" id="accordionPanelWertBody">
+							<strong>This is the third item's accordion body.</strong>
+						</div>
+					</div>
+				</div>
+
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="panelsStayOpen-headingKalender">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseKalender" aria-expanded="false" aria-controls="panelsStayOpen-collapseKalender">
+							Kalender
+						</button>
+					</h2>
+					<div id="panelsStayOpen-collapseKalender" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingKalender">
+						<div class="accordion-body" id="accordionPanelKalenderBody">
+							<strong>This is the third item's accordion body.</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	<nav class="navbar fixed-bottom navbar-light bg-dark bottom-nav">
 		<div class="container">
 			<button type="button" class="btn btn-outline-light" bottom="5rem" id="buttonBenutzerSpeichern"><span class="iconify me-2" data-icon="mdi-content-save"></span>Speichern</button>
 			<button type="button" class="btn btn-outline-light" bottom="5rem" id="buttonBenutzerAbbrechen"><span class="iconify me-2" data-icon="ic:outline-cancel"></span>Abbrechen</button>
 		</div>
 	</nav>
+	<!-- Modal Password-->
+	<div class="modal fade" id="modalPasswortBody" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Passwort ändern</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row mb-3">
+						<div class="col-6">
+							<label for="labelAltesPasswort">Altes Passwort</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>					
+						</div>
+						<div class="col-6">
+							<input type="password" class="form-control" id="labelAltesPasswort" />
+							<div class="invalid-feedback">Altes Passwort eingeben!</div>	
+						</div>														
+					</div>
+					<div class="row mb-3">
+						<div class="col-6">
+							<label for="labelNeuesPasswort1">Neues Passwort</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>					
+						</div>
+						<div class="col-6">
+							<input type="password" class="form-control" id="labelNeuesPasswort1" />	
+							<div class="valid-feedback">Ok!</div>
+							<div class="invalid-feedback">Bitte ein neues Passwort eintippen!</div>
+						</div>														
+					</div>
+					<div class="row mb-3">
+						<div class="col-6">
+							<label for="labelNeuesPasswort2">Neues Passwort wiederholen</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>					
+						</div>
+						<div class="col-6">
+							<input type="password" class="form-control" id="labelNeuesPasswort2" />
+							<div class="valid-feedback">Ok!</div>
+							<div class="invalid-feedback">Das neue Passwort muss 2 Mal gleich eingetippt werden!</div>	
+						</div>														
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+					<button type="button" class="btn btn-primary" id="buttonModalPasswortSpeichern">Speichern</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal Führerscheinklassen-->
+	<div class="modal fade" id="modalFSKBody" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Führerscheinklassen verwalten</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-hover">
+						<thead class="thead-dark">
+							<tr id="trFSKHeader">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th scope="col">Führerscheinklassen</th>
+							</tr>
+						</thead>
+						<tbody id="tableFSKList">
+							<tr data-fsk-idx="0">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">AM</th>
+							</tr>
+							<tr data-fsk-idx="1">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">A1</th>
+							</tr>
+							<tr data-fsk-idx="2"> 
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">A2</th>
+							</tr>
+							<tr data-fsk-idx="3">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">A</th>
+							</tr>
+							<tr data-fsk-idx="4">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">B1</th>
+							</tr>
+							<tr data-fsk-idx="5">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">B</th>
+							</tr>
+							<tr data-fsk-idx="6">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">C1</th>
+							</tr>
+							<tr data-fsk-idx="7">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">C</th>
+							</tr>
+							<tr data-fsk-idx="8">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">D1</th>
+							</tr>
+							<tr data-fsk-idx="9">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">D</th>
+							</tr>
+							<tr data-fsk-idx="10">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">BE</th>
+							</tr>
+							<tr data-fsk-idx="11">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">C1E</th>
+							</tr>
+							<tr data-fsk-idx="12">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">D1E</th>
+							</tr>
+							<tr data-fsk-idx="13">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">DE</th>
+							</tr>
+							<tr data-fsk-idx="14">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+								<th cope="col">F</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+					<button type="button" class="btn btn-primary" id="buttonModalFSKSpeichern">Speichern</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

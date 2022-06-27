@@ -139,6 +139,34 @@ namespace VRentalsClasses.Models
 
 			if (listToDelete != null)
 			{
+                try
+                {
+					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+					{
+						command.Connection = DBConnection.GetConnection();
+						command.Connection.Open();
+					}
+
+					foreach (int entry in listToDelete)
+					{
+						command.CommandText = $"delete from {SCHEMA}.{TABLE_BILDER} where kraftfahrzeug_id = :kid;";
+						command.Parameters.AddWithValue("kid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+                {
+					Console.WriteLine(ex.Message);
+				}
+
 				try
 				{
 					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)

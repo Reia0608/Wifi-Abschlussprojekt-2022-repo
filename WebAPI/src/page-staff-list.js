@@ -8,7 +8,7 @@ export default class PageStaffList
 		args.app.LoadHTML('./page-staff-list.html', args.app.Main, () => 
 		{
 			const buttonPersonalNeu = this.app.Main.querySelector('#buttonPersonalNeu');
-            const tbodyClientList = this.app.Main.querySelector('#tbodyClientList');
+            const tbodyStaffList = this.app.Main.querySelector('#tbodyStaffList');
 
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			this.buttonPersonalLoeschen = this.app.Main.querySelector('#buttonPersonalLoeschen');
@@ -21,11 +21,11 @@ export default class PageStaffList
 
 			buttonPersonalNeu.addEventListener('click', ()=>
 			{
-				window.open('#cardetails', '_self');
+				window.open('#staffdetails', '_self');
 			});
 
 			// ListGroupElement-click
-			tbodyClientList.addEventListener('click', (pointerCoordinates) => 
+			tbodyStaffList.addEventListener('click', (pointerCoordinates) => 
 			{
 				let button = null;
 
@@ -49,7 +49,7 @@ export default class PageStaffList
 				else if (pointerCoordinates.target.nodeName == 'TD') 
 				{
 					let benutzer_id = pointerCoordinates.target.parentElement.dataset.benutzerId;
-					window.open('#clientdetails?klid=' + benutzer_id, '_self');
+					window.open('#clientdetails?pid=' + benutzer_id, '_self');
 				}
 			});
 
@@ -89,7 +89,7 @@ export default class PageStaffList
 						let personalList = [];
 						for(let personal of selectedPersonalList)
 						{
-							personalList.push(personal.dataset.personalId);
+							personalList.push(personal.dataset.benutzerId);
 						}
 						this.app.ApiBenutzerDelete(() =>
 						{
@@ -116,13 +116,13 @@ export default class PageStaffList
 			{
 				html += 
 				`
-				<tr data-personal-id="${personal.userid}">
+				<tr data-benutzer-id="${personal.userid}">
 					<th scope="row">${iterator}</th>
 					<td>${personal.vorname}</td>
 					<td>${personal.nachname}</td>
 					<td>${personal.username}</td>
 					<td>${personal.kundennummer}</td>
-					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-personal-id="${personal.userid}"></th>
+					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-benutzer-id="${personal.userid}"></th>
 				</tr>
 				`;
 				iterator++;

@@ -14,6 +14,9 @@ export default class PagePersonalProfile
             const imgBild = this.app.Main.querySelector('#imgBild');
             const buttonBenutzerSpeichern = this.app.Main.querySelector('#buttonBenutzerSpeichern');
             const buttonBenutzerAbbrechen = this.app.Main.querySelector('#buttonBenutzerAbbrechen');
+			const buttonPasswortAendern = this.app.Main.querySelector('#buttonPasswortAendern');
+			const dialogPasswort = new bootstrap.Modal(modalPasswortBody);
+			const buttonModalPasswortSpeichern = this.app.Main.querySelector('#buttonModalPasswortSpeichern');
 
             // Initialisierung
 			var benutzerBild = {};
@@ -54,6 +57,89 @@ export default class PagePersonalProfile
 				reader.readAsDataURL(fileList[0]);
 			});
 
+			//-------------------------------------------------------------
+			// Passwort ändern-click
+			buttonPasswortAendern.addEventListener('click', (e) => 
+			{
+				labelAltesPasswort.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort1.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort2.classList.remove('is-invalid', 'is-valid');
+				labelAltesPasswort.value = "";
+				labelNeuesPasswort1.value = "";
+				labelNeuesPasswort2.value = "";
+
+				dialogPasswort.show();
+			});
+
+			//---------------------------
+			buttonModalPasswortSpeichern.addEventListener('click', (e) => 
+			{
+				let saveOk = true;
+				labelAltesPasswort.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort1.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort2.classList.remove('is-invalid', 'is-valid');
+
+				if (!labelAltesPasswort.value) 
+					{
+						saveOk = false;
+						labelAltesPasswort.classList.add('is-invalid');
+					}
+					else
+					{
+						labelAltesPasswort.classList.add('is-valid');
+					} 
+
+					if(!labelNeuesPasswort1.value || labelAltesPasswort.value == labelNeuesPasswort1.value)
+					{
+						saveOk = false;
+						labelNeuesPasswort1.classList.add('is-invalid');
+					}
+					else
+					{
+						labelNeuesPasswort1.classList.add('is-valid');
+					} 
+
+					if (labelNeuesPasswort1.value != labelNeuesPasswort2.value) 
+					{
+						saveOk = false;
+						labelNeuesPasswort2.classList.add('is-invalid');
+					}
+					else
+					{
+						labelNeuesPasswort2.classList.add('is-valid');
+					} 
+
+					this.app.ApiBenutzerCheck((response) => 
+					{
+						if(response.success == false)
+						{
+							saveOk = false;
+							alert("falsches Passwort!");
+						}
+						else
+						{
+							if (saveOk) 
+							{
+								this.benutzer.passwort = labelNeuesPasswort1.value;
+
+								// Update the database.
+								this.app.ApiBenutzerSet(() => 
+								{
+									console.log("database was updated!");
+								}, (ex) => 
+								{
+									alert(ex);
+								}, this.benutzer);
+
+								dialogPasswort.hide();
+							}
+						}
+					}, (ex) => 
+					{
+						alert(ex);
+					}, benutzerMerkmal);
+			});
+
             //-------------------------------------------------------------
 			// speichern
 			buttonBenutzerSpeichern.addEventListener('click', (e) => 
@@ -64,7 +150,6 @@ export default class PagePersonalProfile
                 const inputNachname = this.app.Main.querySelector('#inputNachname');
                 const inputDateGeburtsdatum = this.app.Main.querySelector('#inputDateGeburtsdatum');
                 const inputGeburtsort = this.app.Main.querySelector('#inputGeburtsort');
-                const inputPasswortAendern = this.app.Main.querySelector('#inputPasswortAendern');
                 const divProfile = this.app.Main.querySelector('#divProfile');
 
 				if (inputBenutzername.value && inputVorname.value && inputNachname.value) 

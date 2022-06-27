@@ -291,7 +291,8 @@ export default class Application
 		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/' + id, 
 		{
-			method: 'GET'
+			method: 'GET',
+			credentials: 'include'
 		})
 		.then((response) => 
 		{
@@ -383,6 +384,30 @@ export default class Application
 			{
 				$('body').removeClass('waiting');
 				errorCallback('Daten unvollständig!');
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBenutzerCheck(successCallback, errorCallback, check) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/check/' + check, 
+		{
+			method: 'GET'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
 			} 
 			else
 			{

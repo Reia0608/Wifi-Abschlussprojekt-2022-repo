@@ -14,18 +14,25 @@ export default class PageProfile
             const imgBild = this.app.Main.querySelector('#imgBild');
             const buttonBenutzerSpeichern = this.app.Main.querySelector('#buttonBenutzerSpeichern');
             const buttonBenutzerAbbrechen = this.app.Main.querySelector('#buttonBenutzerAbbrechen');
+			const buttonPasswortAendern = this.app.Main.querySelector('#buttonPasswortAendern');
+			const buttonModalPasswortSpeichern = this.app.Main.querySelector('#buttonModalPasswortSpeichern');
+			const dialogPasswort = new bootstrap.Modal(modalPasswortBody);
+			const buttonFSKNeu = this.app.Main.querySelector('#buttonFSKNeu');
+			const dialogFuehrerschein = new bootstrap.Modal(modalFSKBody);
+			 
 
             // Initialisierung
 			var benutzerBild = {};
 
-            if(appArgs.klid)
+            if(appArgs.pid)
             {
-                this.datenLaden(appArgs.klid);
+                this.datenLaden(appArgs.pid);
             }
             else
             {
-                alert('Benutzer existiert nicht!');
-            }
+				this.benutzer = {};
+                //alert('Benutzer existiert nicht!'); 
+			}
 
             //-------------------------------------------------------------
 			// drag & drop Bild
@@ -54,6 +61,166 @@ export default class PageProfile
 				reader.readAsDataURL(fileList[0]);
 			});
 
+			//-------------------------------------------------------------
+			// Passwort ändern-click
+			buttonPasswortAendern.addEventListener('click', (e) => 
+			{
+				labelAltesPasswort.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort1.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort2.classList.remove('is-invalid', 'is-valid');
+				labelAltesPasswort.value = "";
+				labelNeuesPasswort1.value = "";
+				labelNeuesPasswort2.value = "";
+
+				dialogPasswort.show();
+			});
+
+			//---------------------------
+			buttonModalPasswortSpeichern.addEventListener('click', (e) => 
+			{
+				let saveOk = true;
+				labelAltesPasswort.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort1.classList.remove('is-invalid', 'is-valid');
+				labelNeuesPasswort2.classList.remove('is-invalid', 'is-valid');
+
+				if (!labelAltesPasswort.value) 
+					{
+						saveOk = false;
+						labelAltesPasswort.classList.add('is-invalid');
+					}
+					else
+					{
+						labelAltesPasswort.classList.add('is-valid');
+					} 
+
+					if(!labelNeuesPasswort1.value || labelAltesPasswort.value == labelNeuesPasswort1.value)
+					{
+						saveOk = false;
+						labelNeuesPasswort1.classList.add('is-invalid');
+					}
+					else
+					{
+						labelNeuesPasswort1.classList.add('is-valid');
+					} 
+
+					if (labelNeuesPasswort1.value != labelNeuesPasswort2.value) 
+					{
+						saveOk = false;
+						labelNeuesPasswort2.classList.add('is-invalid');
+					}
+					else
+					{
+						labelNeuesPasswort2.classList.add('is-valid');
+					} 
+
+					this.app.ApiBenutzerCheck((response) => 
+					{
+						if(response.success == false)
+						{
+							saveOk = false;
+							alert("falsches Passwort!");
+						}
+						else
+						{
+							if (saveOk) 
+							{
+								this.benutzer.passwort = labelNeuesPasswort1.value;
+
+								// Update the database.
+								this.app.ApiBenutzerSet(() => 
+								{
+									console.log("database was updated!");
+								}, (ex) => 
+								{
+									alert(ex);
+								}, this.benutzer);
+
+								dialogPasswort.hide();
+							}
+						}
+					}, (ex) => 
+					{
+						alert(ex);
+					}, benutzerMerkmal);
+			});
+
+			//-------------------------------------------------------------
+			// Button-Führerscheinklassen-Neu-click
+
+			buttonFSKNeu.addEventListener( 'click', (e) => 
+			{
+				dialogFuehrerschein.show();
+			});
+
+			//---------------------------
+			// buttonModalFSKSpeichern.addEventListener('click', (e) => 
+			// {
+			// 	let saveOk = true;
+			// 	// labelAltesPasswort.classList.remove('is-invalid', 'is-valid');
+			// 	// labelNeuesPasswort1.classList.remove('is-invalid', 'is-valid');
+			// 	// labelNeuesPasswort2.classList.remove('is-invalid', 'is-valid');
+
+			// 	if (!labelAltesPasswort.value) 
+			// 		{
+			// 			saveOk = false;
+			// 			labelAltesPasswort.classList.add('is-invalid');
+			// 		}
+			// 		else
+			// 		{
+			// 			labelAltesPasswort.classList.add('is-valid');
+			// 		} 
+
+			// 		if(!labelNeuesPasswort1.value || labelAltesPasswort.value == labelNeuesPasswort1.value)
+			// 		{
+			// 			saveOk = false;
+			// 			labelNeuesPasswort1.classList.add('is-invalid');
+			// 		}
+			// 		else
+			// 		{
+			// 			labelNeuesPasswort1.classList.add('is-valid');
+			// 		} 
+
+			// 		if (labelNeuesPasswort1.value != labelNeuesPasswort2.value) 
+			// 		{
+			// 			saveOk = false;
+			// 			labelNeuesPasswort2.classList.add('is-invalid');
+			// 		}
+			// 		else
+			// 		{
+			// 			labelNeuesPasswort2.classList.add('is-valid');
+			// 		} 
+
+			// 		this.app.ApiBenutzerCheck((response) => 
+			// 		{
+			// 			if(response.success == false)
+			// 			{
+			// 				saveOk = false;
+			// 				alert("falsches Passwort!");
+			// 			}
+			// 			else
+			// 			{
+			// 				if (saveOk) 
+			// 				{
+			// 					this.benutzer.passwort = labelNeuesPasswort1.value;
+
+			// 					// Update the database.
+			// 					this.app.ApiBenutzerSet(() => 
+			// 					{
+			// 						console.log("database was updated!");
+			// 					}, (ex) => 
+			// 					{
+			// 						alert(ex);
+			// 					}, this.benutzer);
+
+			// 					dialogPasswort.hide();
+			// 				}
+			// 			}
+			// 		}, (ex) => 
+			// 		{
+			// 			alert(ex);
+			// 		}, benutzerMerkmal);
+			// });
+
             //-------------------------------------------------------------
 			// speichern
 			buttonBenutzerSpeichern.addEventListener('click', (e) => 
@@ -64,7 +231,6 @@ export default class PageProfile
                 const inputNachname = this.app.Main.querySelector('#inputNachname');
                 const inputDateGeburtsdatum = this.app.Main.querySelector('#inputDateGeburtsdatum');
                 const inputGeburtsort = this.app.Main.querySelector('#inputGeburtsort');
-                const inputPasswortAendern = this.app.Main.querySelector('#inputPasswortAendern');
                 const divProfile = this.app.Main.querySelector('#divProfile');
 
 				if (inputBenutzername.value && inputVorname.value && inputNachname.value) 
@@ -99,7 +265,18 @@ export default class PageProfile
 						{
 							alert(ex);
 						}, this.benutzer);
-						location.hash = '#clientlist';
+						
+						switch (this.benutzer.rolle)
+						{
+							case 0: location.hash = '#clientlist';
+									break;
+							case 1: location.hash = '#stafflist';
+									break;
+							case 2: location.hash = '#stafflist';
+									break;
+							default: location.hash = '#clientlist';
+									break;
+						}
 					}
 				}
 				else 
@@ -112,12 +289,22 @@ export default class PageProfile
 			// Vorgang abbrechen
 			buttonBenutzerAbbrechen.addEventListener('click', (e) =>
 			{
-				location.hash = '#clientlist';
+				switch (this.benutzer.rolle)
+				{
+					case 0: location.hash = '#clientlist';
+							break;
+					case 1: location.hash = '#stafflist';
+							break;
+					case 2: location.hash = '#stafflist';
+							break;
+					default: location.hash = '#clientlist';
+							break;
+				}
 			});
 		});
     }
 
-    datenLaden(klient_id)
+    datenLaden(benutzer_id)
     {
         this.app.ApiBenutzerGetById((response) =>
         {
@@ -153,6 +340,49 @@ export default class PageProfile
         }, (ex) => 
         {
             alert(ex);
-        },  klient_id);
+        },  benutzer_id);
     }
+
+	// Führerscheinklassen anzeigen
+	FSKListAnzeigen() 
+	{
+		const tableFSKList = this.app.Main.querySelector('#tableFSKList');
+		const trFSKHeader = this.app.Main.querySelector('#trFSKHeader');
+
+		let html = '';
+
+		if(typeof this.kraftfahrzeug != "undefined")
+		{
+			this.app.ApiFSKGetKfzList((response) => 
+			{
+				this.kraftfahrzeug.fuehrerscheinklassenlist = response;
+				let iterator = 0;
+				for (let fskitem of this.kraftfahrzeug.fuehrerscheinklassenlist) 
+				{
+					html += 
+					`
+					<tr data-schaden-idx="${iterator}">
+						<th scope="row">
+							<button type="button" class="btn btn-sm" id="buttonFSKDel_${fskitem}"><span class="iconify" data-icon="mdi-delete"></span></button>
+						</th>
+						<td scope="col">${(fskitem ? fskitem : '&nbsp;')}</td>
+					</tr>
+					`;
+					iterator++;
+				}
+				tableFSKList.innerHTML = html;
+			}, (ex) => 
+			{
+				alert(ex);
+			}, this.kraftfahrzeug.kraftfahrzeug_id);
+		}
+		else
+		{
+			html = 
+			`
+			<td>Erzeugen Sie bitte einen Benutzer um die FSK eintragen zu können!</td>
+			`
+			trFSKHeader.innerHTML = html;
+		}		
+	}
 }

@@ -82,8 +82,39 @@ namespace VRentalsRESTAPI.Controllers
 			}
 		}
 
+        [HttpGet("check/{tocheck}")]
+        public IActionResult CheckIfValidUserOrAdmin(string tocheck)
+        {
+            IActionResult result = null;
 
-		[HttpGet("{id}/bild")]
+            try
+            {
+                if (Benutzer.CheckBenutzer(tocheck))
+                {
+                    result = Ok(new
+                    {
+                        success = true,
+                        message = "ok"
+                    });
+                }
+                else
+                {
+                    result = Unauthorized(new
+                    {
+                        success = false,
+                        message = "Unauthorized!"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            return result;
+        }
+
+
+        [HttpGet("{id}/bild")]
 		public FileStreamResult GetBild(string benutzermerkmal)
 		{
 			Benutzer benutzer = Benutzer.Get(benutzermerkmal);
@@ -135,25 +166,35 @@ namespace VRentalsRESTAPI.Controllers
 			try
 			{
 				Benutzer benutzer = Benutzer.Get(loginData["benutzer"], loginData["pwd"]);
-				result = Ok(new
-				{
-					success = true,
-					message = "ok",
-					benutzer = benutzer
-				});
+				if(benutzer != null)
+                {
+					result = Ok(new
+					{
+						success = true,
+						message = "ok",
+						benutzer = benutzer
+					});
 
-				benutzer.BenutzerMerkmal = Guid.NewGuid().ToString("N");
-				benutzer.MerkmalGiltBis = DateTime.Now.AddHours(24);
-				benutzer.Save();
+					benutzer.BenutzerMerkmal = Guid.NewGuid().ToString("N");
+					benutzer.MerkmalGiltBis = DateTime.Now.AddHours(24);
+					benutzer.LetzteAnmeldung = DateTime.Now;
+					benutzer.Save();
 
-				this.Response.Cookies.Append("benutzermerkmal", benutzer.BenutzerMerkmal, new CookieOptions()
-				{
-					Expires = benutzer.MerkmalGiltBis.Value,
-					SameSite = SameSiteMode.Unspecified,
-					Secure = true
-				});
-
-
+					this.Response.Cookies.Append("benutzermerkmal", benutzer.BenutzerMerkmal, new CookieOptions()
+					{
+						Expires = benutzer.MerkmalGiltBis.Value,
+						SameSite = SameSiteMode.Unspecified,
+						Secure = true
+					});
+				}
+				else
+                {
+					result = Unauthorized(new
+					{
+						success = false,
+						message = "Anmeldung fehlgeschlagen!"
+					});
+				}
 			}
 			catch (System.Exception ex)
 			{

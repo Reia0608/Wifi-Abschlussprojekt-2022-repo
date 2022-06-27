@@ -8,9 +8,11 @@
 3. //WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 -> Anhaenger.cs + Kraftfahrzeug.cs + Bild.cs
 
-4. WORK ON PAGE PROFILE!
+4. Security on the passwort aendern function.
 
 ===== Priority 2=====
+
+0. Create a personal/kundennummer on staff/ client creation.
 
 1. // WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
 -> Anhaenger.cs + Kraftfahrzeug.cs
@@ -22,6 +24,8 @@
 4. Move the speichern and abbrechen buttons to the sidenav.
 
 5. Change +Hinzufügen button to Hinzufügen/ Entfernen in page-ausgabenstelle-details.js.
+
+6. When saving staff personel that has become an admin log off and log in as that admin instead, then remove the admin role from the previous admin account.
 
 
 ===== Priority 3=====
@@ -56,3 +60,4 @@ show the appropriate behaviour like checkboxAllKfz.
 2. Add fotos to Ausgabenstelle.
 3. Archive all deleted entries in the db.
 4. Make it so that images can be added by drag and drop, as well as on click.
+5. Generate a unique ID for the clients on registering.

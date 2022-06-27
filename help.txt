@@ -161,6 +161,13 @@ https://stackoverflow.com/questions/9681080/changing-cursor-to-waiting-in-javasc
 
 https://stackoverflow.com/questions/21863326/delete-multiple-records-using-rest
 
+=================================================================================
+====================== SQL executenonquery vs executereader =====================
+=================================================================================
+
+http://csharp.net-informations.com/data-providers/csharp-executereader-executenonquery.htm#:~:text=ExecuteNonQuery%20%3A%20ExecuteNonQuery%20used%20for%20executing,the%20number%20of%20rows%20affected.
+
+http://csharp.net-informations.com/data-providers/csharp-sqlcommand-executescalar.htm#:~:text=The%20ExecuteScalar()%20in%20C%23,in%20the%20returned%20Result%20Set.
 ================================================
 ====================== TODO=====================
 ================================================

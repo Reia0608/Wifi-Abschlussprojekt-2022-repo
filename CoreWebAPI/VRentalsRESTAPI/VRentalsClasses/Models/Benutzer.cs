@@ -16,6 +16,7 @@ namespace VRentalsClasses.Models
         #region constants
         private const string SCHEMA = "rentals";
         private const string TABLE = "tbl_users";
+		private const string TABLE_BILDER = "tbl_bilder";
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
         private const string COLUMNS = "users_id, vorname, nachname, geschlecht, username, passwort, rolle, geburtsdatum, geburtsort," +
 			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer";
@@ -178,50 +179,6 @@ namespace VRentalsClasses.Models
 			return benutzerList;
         }
 
-		// WIP
-		//public static Benutzer Get(int id)
-		//{
-		//	DBConnection.GetConnection().Open();
-		//	NpgsqlCommand command = new NpgsqlCommand();
-		//	command.Connection = DBConnection.GetConnection();
-		//	int tmpId = 0;
-		//	command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ";
-		//	if (int.TryParse(id, out tmpId))
-		//	{
-		//		command.CommandText += "users_id = :pid";
-		//		command.Parameters.AddWithValue("pid", tmpId);
-		//	}
-		//	else
-		//	{
-		//		command.CommandText += "benutzermerkmal = :bm";
-		//		command.Parameters.AddWithValue("bm", id);
-		//	}
-
-		//	NpgsqlDataReader reader = command.ExecuteReader();
-		//	reader.Read();
-
-		//	Benutzer benutzer = new Benutzer()
-		//	{
-		//		UserId = reader.GetInt32(0),
-		//		Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
-		//		Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
-		//		Geburtsdatum = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3),
-		//		GeburtsOrt = reader.IsDBNull(4) ? null : reader.GetString(4),
-		//		UserName = reader.IsDBNull(5) ? null : reader.GetString(5),
-		//		PasswortHash = reader.IsDBNull(6) ? null : reader.GetString(6),
-		//		//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),
-		//		RegistrierungsTag = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7),
-		//		LetzteAnmeldung = reader.IsDBNull(8) ? null : (DateTime?)reader.GetDateTime(8),
-		//		BenutzerMerkmal = reader.IsDBNull(9) ? null : reader.GetString(9),
-		//		MerkmalGiltBis = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
-		//		Geschlecht = reader.IsDBNull(11) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(11),
-		//		Rolle = reader.IsDBNull(12) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(12)
-		//	};
-		//	reader.Close();
-		//	DBConnection.GetConnection().Close();
-		//	return benutzer;
-		//}
-
 		public static Benutzer Get(string userName, string pwd)
 		{
 			Benutzer benutzer = new Benutzer();
@@ -237,7 +194,11 @@ namespace VRentalsClasses.Models
 				command.CommandText = $"select count(*) from {SCHEMA}.{TABLE} where lower(username) = :username";
 				command.Parameters.AddWithValue("username", userName.ToLower());
 				long result = (long)command.ExecuteScalar();
-				if (result == 0) throw new Exception($"Benutzer <{userName}> unbekannt!");
+				if (result == 0)
+				{
+					benutzer = null;
+					throw new Exception($"Benutzer <{userName}> unbekannt!");
+				} 
 				else
 				{
 					command.Parameters.Clear();
@@ -246,8 +207,13 @@ namespace VRentalsClasses.Models
 					NpgsqlDataReader reader = command.ExecuteReader();
 					reader.Read();
 					benutzer = new Benutzer(reader);
+					if (benutzer.PasswortHash != benutzer.GetPasswordHash(pwd))
+					{
+						benutzer = null;
+						throw new Exception("Passwort stimmt nicht überein!");
+					}
+					
 					reader.Close();
-					if (benutzer.PasswortHash != benutzer.GetPasswordHash(pwd)) throw new Exception("Passwort stimmt nicht überein!");
 				}
 			}
 			catch (Exception ex)
@@ -260,7 +226,6 @@ namespace VRentalsClasses.Models
 			}
 			return benutzer;
 		}
-
 
 		public static List<Benutzer> GetList()
 		{
@@ -325,6 +290,43 @@ namespace VRentalsClasses.Models
 				DBConnection.GetConnection().Close();
 			}
 			return benutzerList;
+		}
+
+		public static bool CheckBenutzer(string toCheck)
+        {
+			bool result = false;
+			decimal? test = -1;
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where benutzermerkmal = :bm";
+            command.Parameters.AddWithValue("bm", toCheck);
+
+			Benutzer benutzer = new Benutzer();
+
+			try
+            {
+				test = (decimal)command.ExecuteScalar();
+
+				if ( test >= 0)
+                {
+                    result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                DBConnection.GetConnection().Close();
+            }
+            return result;
 		}
 		#endregion
 
@@ -410,6 +412,9 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("kundennummer")]
 		public int? KundenNummer { get; set; }
 
+		[JsonPropertyName("fuehrerscheinklassenlist")]
+		public List<string> FuehrerscheinklassenList { get; set; }
+
 		#endregion
 
 		//************************************************************************
@@ -441,6 +446,7 @@ namespace VRentalsClasses.Models
             }
             else
 			{
+				this.RegistrierungsTag = DateTime.Now;
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.UserId = (int)((long)command.ExecuteScalar());
 				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn)";
@@ -493,7 +499,7 @@ namespace VRentalsClasses.Models
 			}
 
 			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
-					$" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
+					$" passwort = :pwd, rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
 					$" where users_id = :pid";
 
 			command.Parameters.AddWithValue("pid", user_id);
@@ -501,9 +507,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("nn", String.IsNullOrEmpty(this.Nachname) ? (object)DBNull.Value : (object)this.Nachname);
 			command.Parameters.AddWithValue("ges", (int)this.Geschlecht);
 			command.Parameters.AddWithValue("un", String.IsNullOrEmpty(this.UserName) ? (object)DBNull.Value : (object)this.UserName);
-			//command.Parameters.AddWithValue("pwd", String.IsNullOrEmpty(this.PasswortHash) ? (object)DBNull.Value : (object)this.PasswortHash);
-			//KontaktListe
-			command.Parameters.AddWithValue("rl", (int)this.Rolle);
+            command.Parameters.AddWithValue("pwd", String.IsNullOrEmpty(this.PasswortHash) ? (object)DBNull.Value : (object)this.PasswortHash);
+            //KontaktListe
+            command.Parameters.AddWithValue("rl", (int)this.Rolle);
 			command.Parameters.AddWithValue("gebd", this.Geburtsdatum.HasValue ? (object)this.Geburtsdatum.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("gebo", String.IsNullOrEmpty(this.GeburtsOrt) ? (object)DBNull.Value : (object)this.GeburtsOrt);
 			//command.Parameters.AddWithValue("regt", this.RegistrierungsTag.HasValue ? (object)this.RegistrierungsTag.Value : (object)DBNull.Value);
@@ -560,6 +566,34 @@ namespace VRentalsClasses.Models
 
 			if (listToDelete != null)
 			{
+				try
+				{
+					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+					{
+						command.Connection = DBConnection.GetConnection();
+						command.Connection.Open();
+					}
+
+					foreach (int entry in listToDelete)
+					{
+						command.CommandText = $"delete from {SCHEMA}.{TABLE_BILDER} where users_id = :uid;";
+						command.Parameters.AddWithValue("uid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 				try
 				{
 					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
