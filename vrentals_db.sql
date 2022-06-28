@@ -50,6 +50,7 @@ CREATE TABLE rentals.tbl_users
     letzteanmeldung date,
 	kontakt_id numeric,
 	kundennummer numeric,
+	fuehrerscheinklassen character varying[],
     PRIMARY KEY (users_id)
 );
 
@@ -370,6 +371,72 @@ GRANT USAGE ON rentals.tbl_mietgegenstand_seq TO vrentalsuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_mietgegenstand TO vrentalsuser;
 
+-- ######################################################################################
+-- ############################# TABLE fuehrerscheinklasse ##############################
+-- ######################################################################################
+
+CREATE TABLE rentals.tbl_fuehrerscheinklasse
+(
+    fuehrerscheinklasse_id numeric NOT NULL,
+    fuehrerscheinklasse character varying,
+    beschreibung text,
+    gewicht numeric,
+    raederanzahl numeric,
+    sitzplaetze numeric,
+    gesamtmasse numeric,
+    geschwindigkeit numeric,
+    motorleistung numeric,
+    users_id numeric
+);
+
+ALTER TABLE IF EXISTS rentals.tbl_fuehrerscheinklasse
+    OWNER TO postgres;
+
+ALTER TABLE rentals.tbl_fuehrerscheinklasse
+	ADD CONSTRAINT fuehrerscheinklasse_pk PRIMARY KEY (fuehrerscheinklasse_id);
+	
+CREATE SEQUENCE rentals.tbl_fuehrerscheinklasse_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_fuehrerscheinklasse_seq TO vrentalsuser;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_mietgegenstand TO vrentalsuser;
+
+-- ######################################################################
+-- ############################# TABLE fsk ##############################
+-- ######################################################################
+
+CREATE TABLE rentals.tbl_fsk
+(
+    fsk_id numeric NOT NULL,
+    users_id numeric,
+    am boolean,
+    a1 boolean,
+    a2 boolean,
+    a boolean,
+    b1 boolean,
+    b boolean,
+    c1 boolean,
+    c boolean,
+    d1 boolean,
+    d boolean,
+    be boolean,
+    c1e boolean,
+    ce boolean,
+    d1e boolean,
+    de boolean,
+    f boolean
+);
+
+ALTER TABLE IF EXISTS rentals.tbl_fsk
+    OWNER to postgres;
+
+ALTER TABLE rentals.tbl_fsk
+	ADD CONSTRAINT fsk_pk PRIMARY KEY (fsk_id);
+	
+CREATE SEQUENCE rentals.tbl_fsk_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_fsk_seq TO vrentalsuser;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_fsk TO vrentalsuser;
+
 -- #########################################################################
 -- ############################# FOREIGN KEYS ##############################
 -- #########################################################################
@@ -386,7 +453,6 @@ ALTER TABLE rentals.tbl_anhaenger
 -- Note: habe aus Versehen einen foreign key namens anhaenger_adresse_fk in der Tabelle tbl_ausgabenstelle angelegt. Habe es mit forlgender Command wieder gelöscht:
 --ALTER TABLE rentals.tbl_ausgabenstelle
 --DROP CONSTRAINT anhaenger_adresse_fk;
-
 
 -- VORSICHT! Schlechter Name aktueller_standort_fk sollte anhaenger_adresse_fk heissen!
 
@@ -464,5 +530,11 @@ ALTER TABLE rentals.tbl_adresse
 	
 ALTER TABLE rentals.tbl_adresse
 	ADD CONSTRAINT adresse_ausgabenstelle_fk FOREIGN KEY (ausgabenstelle_id) REFERENCES rentals.tbl_ausgabenstelle (ausgabenstelle_id);
+	
+ALTER TABLE rentals.tbl_fuehrerscheinklasse
+	ADD CONSTRAINT users_fuehrerscheinklasse_fk FOREIGN KEY (users_id) REFERENCES rentals.tbl_users (users_id);
+	
+ALTER TABLE rentals.tbl_fsk
+	ADD CONSTRAINT users_fsk_fk FOREIGN KEY (users_id) REFERENCES rentals.tbl_users (users_id);
 	
 

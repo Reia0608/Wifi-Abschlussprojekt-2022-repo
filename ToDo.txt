@@ -61,3 +61,4 @@ show the appropriate behaviour like checkboxAllKfz.
 3. Archive all deleted entries in the db.
 4. Make it so that images can be added by drag and drop, as well as on click.
 5. Generate a unique ID for the clients on registering.
+6. Put the images into a canvas on the website

@@ -419,6 +419,40 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiBenutzerFSKAdd(successCallback, errorCallback, pid ,fskList)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/fsk/' + pid,
+		{
+			method: pid ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(fskList)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return successCallback('Daten wurden erfolgreich geschickt!');
+			}
+			else if (response.status == 204) 
+			{
+				$('body').removeClass('waiting');
+				errorCallback('Daten sind unvollständig!');
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.catch(errorCallback);
+	}
+
 	//==================================================================================
 	// Kraftfahrzeug
 

@@ -257,6 +257,30 @@ namespace VRentalsRESTAPI.Controllers
 			return result;
 		}
 
+		//PUT: api/<BenutzerController>/fsk/5
+		[HttpPut("fsk/{userid}")]
+		public IActionResult UpdateFSK(int userid, [FromBody] List<bool?> listToUpdate)
+		{
+			IActionResult result = null;
+			try
+			{
+				if (Benutzer.UpdateFSK(userid, listToUpdate) > 0)
+				{
+					result = Ok("Driver's licence updated!");
+				}
+				else
+				{
+					result = NotFound("user(s) not found!");
+				}
+			}
+			catch (Exception ex)
+			{
+				result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+				Debug.WriteLine(ex.Message);
+			}
+			return result;
+		}
+
 		//DELETE: api/<BenutzerController>/
 		[HttpDelete()]
 		public IActionResult Delete([FromBody] List<int> listToDelete)

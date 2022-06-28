@@ -173,6 +173,105 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Select User by ID",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Change existing User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fahrerliste\": null,\r\n    \"geburtsdatum\": \"2022-06-28\",\r\n    \"geburtsort\": \"\",\r\n    \"geschlecht\": 1,\r\n    \"kontaktliste\": null,\r\n    \"kundennummer\": null,\r\n    \"letzteanmeldung\": null,\r\n    \"nachname\": \"Duck\",\r\n    \"passwort\": null,\r\n    \"profilBild\": null,\r\n    \"registrierungstag\": null,\r\n    \"rolle\": 0,\r\n    \"userid\": 2,\r\n    \"username\": \"dasi\",\r\n    \"vorname\": \"Daisy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete One Benutzer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[10]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert Fuehrerscheinklassen",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/fsk/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"fsk",
+								"2"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using VRentalsClasses.Interfaces;
-using Google.Cloud.Firestore;
+using System.Diagnostics;
 
 namespace VRentalsClasses.Models
 {
@@ -17,6 +17,8 @@ namespace VRentalsClasses.Models
         private const string SCHEMA = "rentals";
         private const string TABLE = "tbl_users";
 		private const string TABLE_BILDER = "tbl_bilder";
+		private const string TABLE_FUEHRERSCHEINKLASSE = "tbl_fsk";
+		private const string COLUMNS_FUEHRERSCHEINKLASSE = "fsk_id, users_id, am, a1, a2, a, b1, b, c1, c, d1, d, be, c1e, ce, d1e, de, f";
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
         private const string COLUMNS = "users_id, vorname, nachname, geschlecht, username, passwort, rolle, geburtsdatum, geburtsort," +
 			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer";
@@ -328,10 +330,85 @@ namespace VRentalsClasses.Models
             }
             return result;
 		}
+
+		public static int UpdateFSK(int? UserId, List<bool?> ListToUpdate)
+		{
+			int result = -1;
+			int? Fsk_Id = null;
+
+			BenutzerFuehrerschein benutzerFuehrerschein = new BenutzerFuehrerschein();
+			NpgsqlCommand command = new NpgsqlCommand();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			command.CommandText = $"select * from {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} where users_id = :pid";
+			command.Parameters.AddWithValue("pid", UserId);
+			NpgsqlDataReader reader = command.ExecuteReader();
+			try
+			{
+				reader.Read();
+
+				if(reader.Rows == 0)
+                {
+					reader.Close();
+					command.Parameters.Clear();
+					command.CommandText = $"select nextval('{SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE}_seq')";
+					Fsk_Id = (int?)((long)command.ExecuteScalar());
+					command.CommandText = $"insert into {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} ({COLUMNS_FUEHRERSCHEINKLASSE}) values ( :fid, :uid, :am, :a1, :a2, :a, :b1, :b, :c1, :c, :d1, :d, :be, :c1e, :ce, :d1e, :de, :f)"; ;
+				}
+				else
+                {
+					reader.Close();
+					command.Parameters.Clear();
+					command.CommandText = $"update {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} set am = :am, a1 = :a1, a2 = :a2, b1 = :b1, b = :b, c1 = :c1, c = :c, d1 = :d1, d = :d, be = :be, c1e = :c1e, ce = :ce, d1e = :d1e, de = :de, f = :f where users_id = :uid";
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+
+			command.Parameters.AddWithValue("fid", Fsk_Id.HasValue ? Fsk_Id : (object)DBNull.Value);
+			command.Parameters.AddWithValue("uid", UserId);
+			command.Parameters.AddWithValue("am", !ListToUpdate[0].HasValue ? false : ListToUpdate[0]);
+			command.Parameters.AddWithValue("a1", !ListToUpdate[1].HasValue ? false : ListToUpdate[1]);
+			command.Parameters.AddWithValue("a2", !ListToUpdate[2].HasValue ? false : ListToUpdate[2]);
+			command.Parameters.AddWithValue("a", !ListToUpdate[3].HasValue ? false : ListToUpdate[3]);
+			command.Parameters.AddWithValue("b1", !ListToUpdate[4].HasValue ? false : ListToUpdate[4]);
+			command.Parameters.AddWithValue("b", !ListToUpdate[5].HasValue ? false : ListToUpdate[5]);
+			command.Parameters.AddWithValue("c1", !ListToUpdate[6].HasValue ? false : ListToUpdate[6]);
+			command.Parameters.AddWithValue("c", !ListToUpdate[7].HasValue ? false : ListToUpdate[7]);
+			command.Parameters.AddWithValue("d1", !ListToUpdate[8].HasValue ? false : ListToUpdate[8]);
+			command.Parameters.AddWithValue("d", !ListToUpdate[9].HasValue ? false : ListToUpdate[9]);
+			command.Parameters.AddWithValue("be", !ListToUpdate[10].HasValue ? false : ListToUpdate[10]);
+			command.Parameters.AddWithValue("c1e", !ListToUpdate[11].HasValue ? false : ListToUpdate[11]);
+			command.Parameters.AddWithValue("ce", !ListToUpdate[12].HasValue ? false : ListToUpdate[12]);
+			command.Parameters.AddWithValue("d1e", !ListToUpdate[13].HasValue ? false : ListToUpdate[13]);
+			command.Parameters.AddWithValue("de", !ListToUpdate[14].HasValue ? false : ListToUpdate[14]);
+			command.Parameters.AddWithValue("f", !ListToUpdate[15].HasValue ? false : ListToUpdate[15]);
+
+			try
+			{
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				command.Connection.Close();
+			}
+
+			return result;
+        }
 		#endregion
 
 		//************************************************************************
-		#region constructors#
+		#region constructors
 		public Benutzer()
 		{
 
@@ -355,7 +432,7 @@ namespace VRentalsClasses.Models
 			MerkmalGiltBis = reader.IsDBNull(12) ? null : reader.GetDateTime(12);
 			KundenNummer = reader.IsDBNull(13) ? null : reader.GetInt32(13);
 		}
-
+		 
 		#endregion
 		//************************************************************************
 		#region properties
@@ -413,7 +490,7 @@ namespace VRentalsClasses.Models
 		public int? KundenNummer { get; set; }
 
 		[JsonPropertyName("fuehrerscheinklassenlist")]
-		public List<string> FuehrerscheinklassenList { get; set; }
+		public List<string>? FuehrerscheinklassenList { get; set; }
 
 		#endregion
 

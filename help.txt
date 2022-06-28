@@ -168,6 +168,21 @@ https://stackoverflow.com/questions/21863326/delete-multiple-records-using-rest
 http://csharp.net-informations.com/data-providers/csharp-executereader-executenonquery.htm#:~:text=ExecuteNonQuery%20%3A%20ExecuteNonQuery%20used%20for%20executing,the%20number%20of%20rows%20affected.
 
 http://csharp.net-informations.com/data-providers/csharp-sqlcommand-executescalar.htm#:~:text=The%20ExecuteScalar()%20in%20C%23,in%20the%20returned%20Result%20Set.
+
+=======================================================================
+====================== Update array in PostgreSQL =====================
+=======================================================================
+
+https://ubiq.co/database-blog/how-to-update-array-in-postgresql/
+
+==============================================================================
+====================== Reading Array from Database in C# =====================
+==============================================================================
+
+https://stackoverflow.com/questions/39329681/how-to-read-array-field-from-database-using-c
+
+https://stackoverflow.com/questions/18654994/reading-an-array-column-in-c-sharp
+
 ================================================
 ====================== TODO=====================
 ================================================

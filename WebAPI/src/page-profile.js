@@ -19,6 +19,9 @@ export default class PageProfile
 			const dialogPasswort = new bootstrap.Modal(modalPasswortBody);
 			const buttonFSKNeu = this.app.Main.querySelector('#buttonFSKNeu');
 			const dialogFuehrerschein = new bootstrap.Modal(modalFSKBody);
+			const buttonModalFSKSpeichern = this.app.Main.querySelector('#buttonModalFSKSpeichern');
+			
+			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			 
 
             // Initialisierung
@@ -150,6 +153,61 @@ export default class PageProfile
 			buttonFSKNeu.addEventListener( 'click', (e) => 
 			{
 				dialogFuehrerschein.show();
+			});
+
+			// Button checkboxAll-click
+
+			this.checkboxAll.addEventListener('click', ()=>
+			{
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
+				let selected = this.checkboxAll.checked;
+				for(let checkbox of checkboxCollection) 
+				{    
+					checkbox.checked = selected; 
+				}
+			});
+
+			// Button Modal Führerscheinklassen checkboxAll-click
+
+			this.checkboxAll.addEventListener('click', ()=>
+			{
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
+				let selected = this.checkboxAll.checked;
+				for(let checkbox of checkboxCollection) 
+				{    
+					checkbox.checked = selected; 
+				}
+			});
+
+			
+			//-------------------------------------------------------------
+			// Button-Modal-Führerscheinklassen-speichern-click
+
+			buttonModalFSKSpeichern.addEventListener( 'click', (e) => 
+			{
+				let selectedFSKList = [];
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
+				for(let checkbox of checkboxCollection) 
+				{    
+					if(checkbox.checked)
+					{
+						selectedFSKList.push(true);
+					} 
+					else
+					{
+						selectedFSKList.push(false);
+					}
+				}
+
+				this.app.ApiBenutzerDelete(() =>
+				{
+					this.datenLaden();
+				}, (ex) =>
+				{
+					alert(ex);
+				}, FSKList);
+			
+				dialogFuehrerschein.hide();
 			});
 
 			//---------------------------
