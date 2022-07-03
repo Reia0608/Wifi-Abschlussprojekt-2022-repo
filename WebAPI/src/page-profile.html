@@ -35,62 +35,48 @@
 				<div class="col-8"><button type="button" class="form-control form-control-sm" id="buttonPasswortAendern">Passwort ändern</button></div>
 			</div>
         </div>
-    </div>
-	<div class="row mt-5">
-		<div class="col-12">
-			<div class="accordion" >
-				<div class="accordion-item">
-					<h2 class="accordion-header" id="accordionHeaderFSK">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFSK" aria-expanded="true" aria-controls="panelsStayOpen-collapseFSK">
-							Führerscheinklassen-Verwaltung
-						</button>
-					</h2>
-					<div id="panelsStayOpen-collapseFSK" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingFSK"></div>
-						<div class="accordion-body">
-							<strong>
-								<table class="table table-hover">
-									<thead class="thead-dark">
-									  <tr id="trFSKHeader">
-										<th scope="col"><button type="button" class="btn btn-sm" id="buttonFSKNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Hinzufügen / Enfernen</button></th>
-										<th scope="col">Führerscheinklasse</th>
-									  </tr>
-									</thead>
-									<tbody class="clickable" id="tableFSKList">
-										<!-- inhalt des accordions-->
-									</tbody>
-								</table>
-							</strong>
+		<div class="col-12 mt-3">
+			<div class="row mb-5">
+				<div class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" data-bs-toggle="collapse"  aria-expanded="false" aria-controls="collapseFuehrerschein" id="checkboxSwitchIstFahrer">
+					<label class="form-check-label" for="checkboxSwitchIstFahrer">Haben Sie einen Führerschein?</label>
+				</div>
+				<div class="collapse" id="collapseFuehrerschein">
+					<div class="card card-body">
+						<div class="col-12 col-md-6" id="divFuehrerschein">
+							<div class="row">
+								<div class="col-4 text-end">Status</div>
+								<div class="col-6"><input type="text" class="form-control form-control-sm" id="inputStatus" /></div>
+							</div>
+							<div class="row mt-3">
+								<div class="col-4 text-end">Ausstellungsdatum</div>
+								<div class="col-3"><input type="date" class="form-control form-control-sm" id="inputDateAusstellung" /></div>
+							</div>
+							<div class="row mt-3">
+								<div class="col-4 text-end">Ablaufdatum</div>
+								<div class="col-3"><input type="date" class="form-control form-control-sm" id="inputDateAblauf" /></div>
+							</div>
+							<div class="row mt-3">
+								<div class="col-4 text-end">Führerscheinnummer</div>
+								<div class="col-8"><input type="text" class="form-control form-control-sm" id="inputFuehrerscheinnummer" /></div>
+							</div>
+							<table class="table table-hover">
+								<thead class="thead-dark">
+								  <tr id="trFSKHeader">
+									<th scope="col"><button type="button" class="form-control form-control-sm" id="buttonFSKNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Hinzufügen / Enfernen</button></th>
+									<th scope="col">Führerscheinklasse</th>
+								  </tr>
+								</thead>
+								<tbody id="tableFSKList">
+									<!-- inhalt des accordions-->
+								</tbody>
+							</table>
 						</div>
 					</div>
-				</div>
-
-				<div class="accordion-item">
-					<h2 class="accordion-header" id="panelsStayOpen-headingWert">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseWert" aria-expanded="false" aria-controls="panelsStayOpen-collapseWert">
-							Wert(e)
-						</button>
-					</h2>
-					<div id="panelsStayOpen-collapseWert" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingWert"></div>
-						<div class="accordion-body" id="accordionPanelWertBody">
-							<strong>This is the third item's accordion body.</strong>
-						</div>
-					</div>
-				</div>
-
-				<div class="accordion-item">
-					<h2 class="accordion-header" id="panelsStayOpen-headingKalender">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseKalender" aria-expanded="false" aria-controls="panelsStayOpen-collapseKalender">
-							Kalender
-						</button>
-					</h2>
-					<div id="panelsStayOpen-collapseKalender" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingKalender">
-						<div class="accordion-body" id="accordionPanelKalenderBody">
-							<strong>This is the third item's accordion body.</strong>
-						</div>
-					</div>
-				</div>
+				  </div>
 			</div>
 		</div>
+    </div>
 	<nav class="navbar fixed-bottom navbar-light bg-dark bottom-nav">
 		<div class="container">
 			<button type="button" class="btn btn-outline-light" bottom="5rem" id="buttonBenutzerSpeichern"><span class="iconify me-2" data-icon="mdi-content-save"></span>Speichern</button>
@@ -207,6 +193,10 @@
 							<tr data-fsk-idx="C1E">
 								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect"></th>
 								<th cope="col">C1E</th>
+							</tr>
+							<tr data-fsk-idx="CE">
+								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect"></th>
+								<th cope="col">CE</th>
 							</tr>
 							<tr data-fsk-idx="D1E">
 								<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect"></th>

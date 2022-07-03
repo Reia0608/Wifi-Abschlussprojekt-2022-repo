@@ -50,7 +50,12 @@ CREATE TABLE rentals.tbl_users
     letzteanmeldung date,
 	kontakt_id numeric,
 	kundennummer numeric,
-	fuehrerscheinklassen character varying[],
+	istfahrer boolean,
+	status integer,
+	fuehrerscheinausstellungsdatum date,
+	fuehrerscheinablaufdatum date,
+	fuehrerscheinnummer character varying,
+	
     PRIMARY KEY (users_id)
 );
 
@@ -62,6 +67,9 @@ ALTER TABLE IF EXISTS rentals.tbl_users
 	
 ALTER TABLE IF EXISTS rentals.tbl_users
     ADD COLUMN bilder_id NUMERIC;
+
+ALTER TABLE IF EXISTS rentals.tbl_users
+    ALTER COLUMN istfahrer SET DEFAULT false;
 	
 ALTER TABLE IF EXISTS rentals.tbl_users
 OWNER TO postgres;
@@ -406,7 +414,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_mietgegenstand TO vrentalsus
 
 CREATE TABLE rentals.tbl_fsk
 (
-    fsk_id numeric NOT NULL,
+    fsk_id serial NOT NULL,
     users_id numeric,
     am boolean,
     a1 boolean,
@@ -432,7 +440,7 @@ ALTER TABLE IF EXISTS rentals.tbl_fsk
 ALTER TABLE rentals.tbl_fsk
 	ADD CONSTRAINT fsk_pk PRIMARY KEY (fsk_id);
 	
-CREATE SEQUENCE rentals.tbl_fsk_seq START WITH 1 INCREMENT BY 1;
+-- CREATE SEQUENCE rentals.tbl_fsk_seq START WITH 1 INCREMENT BY 1;
 GRANT USAGE ON rentals.tbl_fsk_seq TO vrentalsuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_fsk TO vrentalsuser;

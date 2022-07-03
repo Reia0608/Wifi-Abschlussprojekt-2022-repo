@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace VRentalsClasses.Models
 {
-    public class Benutzer: IPerson, ILoginData
+    public class Benutzer: IPerson, ILoginData, IFahrer
     {
         //************************************************************************
         #region constants
@@ -18,10 +18,10 @@ namespace VRentalsClasses.Models
         private const string TABLE = "tbl_users";
 		private const string TABLE_BILDER = "tbl_bilder";
 		private const string TABLE_FUEHRERSCHEINKLASSE = "tbl_fsk";
-		private const string COLUMNS_FUEHRERSCHEINKLASSE = "fsk_id, users_id, am, a1, a2, a, b1, b, c1, c, d1, d, be, c1e, ce, d1e, de, f";
+		private const string COLUMNS_FUEHRERSCHEINKLASSE = "users_id, am, a1, a2, a, b1, b, c1, c, d1, d, be, c1e, ce, d1e, de, f";
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
         private const string COLUMNS = "users_id, vorname, nachname, geschlecht, username, passwort, rolle, geburtsdatum, geburtsort," +
-			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer";
+			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer, istfahrer, status, fuehrerscheinausstellungsdatum, fuehrerscheinablaufdatum, fuehrerscheinnummer";
 		private const string KONTAKT = "tbl_kontakt";
 		#endregion
 		
@@ -351,27 +351,25 @@ namespace VRentalsClasses.Models
 			{
 				reader.Read();
 
-				if(reader.Rows == 0)
+				if(reader.HasRows)
                 {
 					reader.Close();
 					command.Parameters.Clear();
-					command.CommandText = $"select nextval('{SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE}_seq')";
-					Fsk_Id = (int?)((long)command.ExecuteScalar());
-					command.CommandText = $"insert into {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} ({COLUMNS_FUEHRERSCHEINKLASSE}) values ( :fid, :uid, :am, :a1, :a2, :a, :b1, :b, :c1, :c, :d1, :d, :be, :c1e, :ce, :d1e, :de, :f)"; ;
+					command.CommandText = $"update {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} set am = :am, a1 = :a1, a2 = :a2, a = :a, b1 = :b1, b = :b, c1 = :c1, c = :c, d1 = :d1, d = :d, be = :be, c1e = :c1e, ce = :ce, d1e = :d1e, de = :de, f = :f where users_id = :uid";
 				}
 				else
                 {
 					reader.Close();
 					command.Parameters.Clear();
-					command.CommandText = $"update {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} set am = :am, a1 = :a1, a2 = :a2, b1 = :b1, b = :b, c1 = :c1, c = :c, d1 = :d1, d = :d, be = :be, c1e = :c1e, ce = :ce, d1e = :d1e, de = :de, f = :f where users_id = :uid";
+					command.CommandText = $"insert into {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} ({COLUMNS_FUEHRERSCHEINKLASSE}) values (:uid, :am, :a1, :a2, :a, :b1, :b, :c1, :c, :d1, :d, :be, :c1e, :ce, :d1e, :de, :f)";
 				}
 			}
 			catch (Exception ex)
 			{
+				command.Connection.Close();
 				Console.WriteLine(ex.Message);
 			}
 
-			command.Parameters.AddWithValue("fid", Fsk_Id.HasValue ? Fsk_Id : (object)DBNull.Value);
 			command.Parameters.AddWithValue("uid", UserId);
 			command.Parameters.AddWithValue("am", !ListToUpdate[0].HasValue ? false : ListToUpdate[0]);
 			command.Parameters.AddWithValue("a1", !ListToUpdate[1].HasValue ? false : ListToUpdate[1]);
@@ -431,6 +429,11 @@ namespace VRentalsClasses.Models
 			BenutzerMerkmal = reader.IsDBNull(11) ? null : reader.GetString(11);
 			MerkmalGiltBis = reader.IsDBNull(12) ? null : reader.GetDateTime(12);
 			KundenNummer = reader.IsDBNull(13) ? null : reader.GetInt32(13);
+			IstFahrer = reader.IsDBNull(14) ? false : reader.GetBoolean(14);
+			Status = reader.IsDBNull(15) ? FahrerStatus.unbekannt : (FahrerStatus)reader.GetInt32(15); 
+			FuehrerscheinAusstellungsDatum = reader.IsDBNull(16) ? null : (DateTime?)reader.GetDateTime(16);
+			FuehrerscheinAblaufDatum = reader.IsDBNull(17) ? null : (DateTime?)reader.GetDateTime(17);
+			FuehrerscheinNummer = reader.IsDBNull(18) ? null : reader.GetString(18);
 		}
 		 
 		#endregion
@@ -484,13 +487,32 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("fahrerliste")]
 		public List<Fahrer>? FahrerListe { get; set; }
 
+		[JsonIgnore()]
 		public byte[]? ProfilBild { get; set; }
 
 		[JsonPropertyName("kundennummer")]
 		public int? KundenNummer { get; set; }
 
+		[JsonPropertyName("istfahrer")]
+		public bool IstFahrer { get; set; } = false;
+
+		[JsonPropertyName("status")]
+		public FahrerStatus Status { get; set; } = FahrerStatus.unbekannt;
+
+		[JsonIgnore()]
+		public byte[]? FahrerFoto { get; set; }
+
+		[JsonPropertyName("fuehrerscheinausstellungsdatum")]
+		public DateTime? FuehrerscheinAusstellungsDatum { get; set; }
+
+		[JsonPropertyName("fuehrerscheinablaufdatum")]
+		public DateTime? FuehrerscheinAblaufDatum { get; set; }
+
+		[JsonPropertyName("fuehrerscheinnummer")]
+		public string? FuehrerscheinNummer { get; set; }
+
 		[JsonPropertyName("fuehrerscheinklassenlist")]
-		public List<string>? FuehrerscheinklassenList { get; set; }
+		public List<FuehrerscheinKlasse>? FuehrerscheinKlassenList { get; set; }
 
 		#endregion
 
@@ -519,14 +541,14 @@ namespace VRentalsClasses.Models
             {
                 command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
                     $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
-                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn where users_id = :pid";
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr where users_id = :pid";
             }
             else
 			{
 				this.RegistrierungsTag = DateTime.Now;
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.UserId = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn, :if, :sta, :faud, :fabd, :fnmr)";
 			}
 
 			command.Parameters.AddWithValue("pid", this.UserId);
@@ -544,6 +566,11 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("bmerk", String.IsNullOrEmpty(this.BenutzerMerkmal) ? (object)DBNull.Value : (object)this.BenutzerMerkmal);
 			command.Parameters.AddWithValue("merkgb", this.MerkmalGiltBis.HasValue ? (object)this.MerkmalGiltBis.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("kn", this.KundenNummer.HasValue ? (int)this.KundenNummer : (object)DBNull.Value);
+			command.Parameters.AddWithValue("if", this.IstFahrer);
+			command.Parameters.AddWithValue("sta", (int)this.Status);
+			command.Parameters.AddWithValue("faud", this.FuehrerscheinAusstellungsDatum.HasValue ? (object)this.FuehrerscheinAusstellungsDatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("fabd", this.FuehrerscheinAblaufDatum.HasValue ? (object)this.FuehrerscheinAblaufDatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("fnmr", String.IsNullOrEmpty(this.FuehrerscheinNummer) ? (object)DBNull.Value : (object)this.FuehrerscheinNummer);
 
 			try
 			{
@@ -577,7 +604,8 @@ namespace VRentalsClasses.Models
 
 			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
 					$" passwort = :pwd, rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
-					$" where users_id = :pid";
+					$" , registrierungstag = :regt, letzteanmeldung = :lanm," +
+					$" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr where users_id = :pid";
 
 			command.Parameters.AddWithValue("pid", user_id);
 			command.Parameters.AddWithValue("vn", String.IsNullOrEmpty(this.Vorname) ? (object)DBNull.Value : (object)this.Vorname);
@@ -589,11 +617,16 @@ namespace VRentalsClasses.Models
             command.Parameters.AddWithValue("rl", (int)this.Rolle);
 			command.Parameters.AddWithValue("gebd", this.Geburtsdatum.HasValue ? (object)this.Geburtsdatum.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("gebo", String.IsNullOrEmpty(this.GeburtsOrt) ? (object)DBNull.Value : (object)this.GeburtsOrt);
-			//command.Parameters.AddWithValue("regt", this.RegistrierungsTag.HasValue ? (object)this.RegistrierungsTag.Value : (object)DBNull.Value);
-			//command.Parameters.AddWithValue("lanm", this.LetzteAnmeldung.HasValue ? (object)this.LetzteAnmeldung.Value : (object)DBNull.Value);
-			//command.Parameters.AddWithValue("bmerk", String.IsNullOrEmpty(this.BenutzerMerkmal) ? (object)DBNull.Value : (object)this.BenutzerMerkmal);
-			//command.Parameters.AddWithValue("merkgb", this.MerkmalGiltBis.HasValue ? (object)this.MerkmalGiltBis.Value : (object)DBNull.Value);
-			//command.Parameters.AddWithValue("kn", this.KundenNummer.HasValue ? (int)this.KundenNummer : (object)DBNull.Value);
+			command.Parameters.AddWithValue("regt", this.RegistrierungsTag.HasValue ? (object)this.RegistrierungsTag.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("lanm", this.LetzteAnmeldung.HasValue ? (object)this.LetzteAnmeldung.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("bmerk", String.IsNullOrEmpty(this.BenutzerMerkmal) ? (object)DBNull.Value : (object)this.BenutzerMerkmal);
+			command.Parameters.AddWithValue("merkgb", this.MerkmalGiltBis.HasValue ? (object)this.MerkmalGiltBis.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("kn", this.KundenNummer.HasValue ? (int)this.KundenNummer : (object)DBNull.Value);
+			command.Parameters.AddWithValue("if", this.IstFahrer);
+			command.Parameters.AddWithValue("sta", (int)this.Status);
+			command.Parameters.AddWithValue("faud", this.FuehrerscheinAusstellungsDatum.HasValue ? (object)this.FuehrerscheinAusstellungsDatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("fabd", this.FuehrerscheinAblaufDatum.HasValue ? (object)this.FuehrerscheinAblaufDatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("fnmr", String.IsNullOrEmpty(this.FuehrerscheinNummer) ? (object)DBNull.Value : (object)this.FuehrerscheinNummer);
 
 			try
 			{

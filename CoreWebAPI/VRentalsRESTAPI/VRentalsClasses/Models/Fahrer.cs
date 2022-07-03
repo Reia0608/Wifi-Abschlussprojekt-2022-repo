@@ -7,7 +7,7 @@ using VRentalsClasses.Interfaces;
 
 namespace VRentalsClasses.Models
 {
-    public class Fahrer: IFahrer
+    public class Fahrer
     {
         //************************************************************************
         #region properties

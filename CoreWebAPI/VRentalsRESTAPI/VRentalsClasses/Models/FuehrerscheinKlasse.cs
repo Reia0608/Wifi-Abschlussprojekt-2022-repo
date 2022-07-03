@@ -9,6 +9,9 @@ namespace VRentalsClasses.Models
 {
     public class FuehrerscheinKlasse: IFuehrerscheinKlassen
     {
+        #region static methods
+
+        #endregion
         //************************************************************************
 
         #region properties

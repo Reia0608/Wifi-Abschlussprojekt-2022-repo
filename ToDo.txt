@@ -27,6 +27,7 @@
 
 6. When saving staff personel that has become an admin log off and log in as that admin instead, then remove the admin role from the previous admin account.
 
+7. Create a helper for converting enum rolle and status.
 
 ===== Priority 3=====
 
@@ -54,6 +55,10 @@ show the appropriate behaviour like checkboxAllKfz.
 
 11. When saving on the website, the blue highlight in the sidebar is on the wrong element.
 
+12. WIP: Precheck the checkboxes under dialogFuehrerschein Modal in page-profile.js and page-personal-profile.js
+
+13. Put the images on the website unto a canvas.
+
 ===== Priority 4=====
 
 1. Create an image carousel/slider for multiple images.
@@ -62,3 +67,4 @@ show the appropriate behaviour like checkboxAllKfz.
 4. Make it so that images can be added by drag and drop, as well as on click.
 5. Generate a unique ID for the clients on registering.
 6. Put the images into a canvas on the website
+7. Save Registrierungstag upon registering on website, and save Letzte Anmeldung on logging onto the website.

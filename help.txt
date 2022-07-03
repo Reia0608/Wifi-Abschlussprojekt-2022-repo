@@ -183,6 +183,14 @@ https://stackoverflow.com/questions/39329681/how-to-read-array-field-from-databa
 
 https://stackoverflow.com/questions/18654994/reading-an-array-column-in-c-sharp
 
+==============================================================================
+====================== Change a constraint in POSTGRESQL =====================
+==============================================================================
+
+https://gist.github.com/scaryguy/6269293
+
+https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-primary-key/
+
 ================================================
 ====================== TODO=====================
 ================================================

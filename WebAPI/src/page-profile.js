@@ -20,6 +20,11 @@ export default class PageProfile
 			const buttonFSKNeu = this.app.Main.querySelector('#buttonFSKNeu');
 			const dialogFuehrerschein = new bootstrap.Modal(modalFSKBody);
 			const buttonModalFSKSpeichern = this.app.Main.querySelector('#buttonModalFSKSpeichern');
+			const inputStatus = this.app.Main.querySelector('#inputStatus');
+			const inputDateAusstellung = this.app.Main.querySelector('#inputDateAusstellung');
+			const inputDateAblauf = this.app.Main.querySelector('#inputDateAblauf');
+			const inputFuehrerscheinnummer = this.app.Main.querySelector('#inputFuehrerscheinnummer');
+			const collapseFuehrerschein = this.app.Main.querySelector('#collapseFuehrerschein');
 			
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			 
@@ -148,23 +153,21 @@ export default class PageProfile
 			});
 
 			//-------------------------------------------------------------
-			// Button-Führerscheinklassen-Neu-click
+			// Button-Führerscheinklassen-Hinzufügen/Entfernen-click
 
 			buttonFSKNeu.addEventListener( 'click', (e) => 
 			{
+				this.app.ApiBenutzerGetFSKObject((response) => 
+				{
+					this.fuehrerscheinklassenlist = response;
+
+					// WIP check/ uncheck boxes in Modal
+				}, (ex) => 
+				{
+					alert(ex);
+				}, appArgs.pid);
+
 				dialogFuehrerschein.show();
-			});
-
-			// Button checkboxAll-click
-
-			this.checkboxAll.addEventListener('click', ()=>
-			{
-				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
-				let selected = this.checkboxAll.checked;
-				for(let checkbox of checkboxCollection) 
-				{    
-					checkbox.checked = selected; 
-				}
 			});
 
 			// Button Modal Führerscheinklassen checkboxAll-click
@@ -199,85 +202,32 @@ export default class PageProfile
 					}
 				}
 
-				this.app.ApiBenutzerDelete(() =>
+				this.app.ApiBenutzerFSKAdd(() =>
 				{
-					this.datenLaden();
+					this.datenLaden(appArgs.pid);
 				}, (ex) =>
 				{
 					alert(ex);
-				}, FSKList);
+				},appArgs.pid ,selectedFSKList);
 			
 				dialogFuehrerschein.hide();
 			});
 
-			//---------------------------
-			// buttonModalFSKSpeichern.addEventListener('click', (e) => 
-			// {
-			// 	let saveOk = true;
-			// 	// labelAltesPasswort.classList.remove('is-invalid', 'is-valid');
-			// 	// labelNeuesPasswort1.classList.remove('is-invalid', 'is-valid');
-			// 	// labelNeuesPasswort2.classList.remove('is-invalid', 'is-valid');
-
-			// 	if (!labelAltesPasswort.value) 
-			// 		{
-			// 			saveOk = false;
-			// 			labelAltesPasswort.classList.add('is-invalid');
-			// 		}
-			// 		else
-			// 		{
-			// 			labelAltesPasswort.classList.add('is-valid');
-			// 		} 
-
-			// 		if(!labelNeuesPasswort1.value || labelAltesPasswort.value == labelNeuesPasswort1.value)
-			// 		{
-			// 			saveOk = false;
-			// 			labelNeuesPasswort1.classList.add('is-invalid');
-			// 		}
-			// 		else
-			// 		{
-			// 			labelNeuesPasswort1.classList.add('is-valid');
-			// 		} 
-
-			// 		if (labelNeuesPasswort1.value != labelNeuesPasswort2.value) 
-			// 		{
-			// 			saveOk = false;
-			// 			labelNeuesPasswort2.classList.add('is-invalid');
-			// 		}
-			// 		else
-			// 		{
-			// 			labelNeuesPasswort2.classList.add('is-valid');
-			// 		} 
-
-			// 		this.app.ApiBenutzerCheck((response) => 
-			// 		{
-			// 			if(response.success == false)
-			// 			{
-			// 				saveOk = false;
-			// 				alert("falsches Passwort!");
-			// 			}
-			// 			else
-			// 			{
-			// 				if (saveOk) 
-			// 				{
-			// 					this.benutzer.passwort = labelNeuesPasswort1.value;
-
-			// 					// Update the database.
-			// 					this.app.ApiBenutzerSet(() => 
-			// 					{
-			// 						console.log("database was updated!");
-			// 					}, (ex) => 
-			// 					{
-			// 						alert(ex);
-			// 					}, this.benutzer);
-
-			// 					dialogPasswort.hide();
-			// 				}
-			// 			}
-			// 		}, (ex) => 
-			// 		{
-			// 			alert(ex);
-			// 		}, benutzerMerkmal);
-			// });
+			//-------------------------------------------------------------
+			// Checkbox-Switch-Ist-Fahrer-click
+			checkboxSwitchIstFahrer.addEventListener('click', (e) =>
+			{
+				if(checkboxSwitchIstFahrer.checked == true)
+				{
+					this.benutzer.istfahrer = true;
+					collapseFuehrerschein.classList.add("show");
+				}
+				else
+				{
+					this.benutzer.istfahrer = false;
+					collapseFuehrerschein.classList.remove("show");
+				}
+			});
 
             //-------------------------------------------------------------
 			// speichern
@@ -290,6 +240,7 @@ export default class PageProfile
                 const inputDateGeburtsdatum = this.app.Main.querySelector('#inputDateGeburtsdatum');
                 const inputGeburtsort = this.app.Main.querySelector('#inputGeburtsort');
                 const divProfile = this.app.Main.querySelector('#divProfile');
+				const checkboxSwitchIstFahrer = this.app.Main.querySelector('#checkboxSwitchIstFahrer');
 
 				if (inputBenutzername.value && inputVorname.value && inputNachname.value) 
 				{
@@ -305,7 +256,21 @@ export default class PageProfile
 						}
 						this.benutzer.geburtsort = inputGeburtsort.value;
 						
-
+						if(checkboxSwitchIstFahrer.checked)
+						{
+							this.benutzer.istfahrer = true;
+							this.benutzer.status = parseInt(inputStatus.value);
+							if(inputDateAusstellung.value)
+							{
+								this.benutzer.fuehrerscheinausstellungsdatum = inputDateAusstellung.value;
+							}
+							if(inputDateAblauf.value)
+							{
+								this.benutzer.fuehrerscheinablaufdatum = inputDateAblauf.value;
+							}
+							this.benutzer.fuehrerscheinnummer = inputFuehrerscheinnummer.value;
+						}
+						 
 						this.app.ApiBenutzerSet((response) => 
 						{
 							if (benutzerBild.bild_bytes) 
@@ -377,6 +342,16 @@ export default class PageProfile
                 inputDateGeburtsdatum.value = new Date(this.benutzer.geburtsdatum).toLocaleDateString('en-CA');
                 inputGeburtsort.value = this.benutzer.geburtsort;
 
+				if(this.benutzer.istfahrer)
+				{
+					checkboxSwitchIstFahrer.checked = true;
+					collapseFuehrerschein.classList.add("show");
+					inputStatus.value = this.benutzer.status;
+					inputDateAusstellung.value = new Date(this.benutzer.fuehrerscheinausstellungsdatum).toLocaleDateString('en-CA');
+					inputDateAblauf.value = new Date(this.benutzer.fuehrerscheinablaufdatum).toLocaleDateString('en-CA');
+					inputFuehrerscheinnummer.value = this.benutzer.fuehrerscheinnummer;
+				}
+
                 //  Profilbild anzeigen
                 this.app.ApiBilderGetBenutzerList((response) =>
                 {
@@ -385,7 +360,8 @@ export default class PageProfile
                         let bildliste = response;
                         imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
                     }
-                    // List Anzeigen API call goes here
+                    // Führerscheinklassen anzeigen
+					this.FSKListAnzeigen(this.benutzer.userid);
                 }, (ex) => 
                 {
                     alert(ex);
@@ -402,27 +378,26 @@ export default class PageProfile
     }
 
 	// Führerscheinklassen anzeigen
-	FSKListAnzeigen() 
+	FSKListAnzeigen(benutzer_id) 
 	{
 		const tableFSKList = this.app.Main.querySelector('#tableFSKList');
 		const trFSKHeader = this.app.Main.querySelector('#trFSKHeader');
 
 		let html = '';
 
-		if(typeof this.kraftfahrzeug != "undefined")
+		if(typeof this.benutzer != "undefined")
 		{
-			this.app.ApiFSKGetKfzList((response) => 
+			this.app.ApiBenutzerGetFSKList((response) => 
 			{
-				this.kraftfahrzeug.fuehrerscheinklassenlist = response;
+				this.fuehrerscheinklassenlist = response;
 				let iterator = 0;
-				for (let fskitem of this.kraftfahrzeug.fuehrerscheinklassenlist) 
+				for (let fskitem of this.fuehrerscheinklassenlist) 
 				{
 					html += 
 					`
-					<tr data-schaden-idx="${iterator}">
+					<tr data-fsk-idx="${iterator}">
 						<th scope="row">
-							<button type="button" class="btn btn-sm" id="buttonFSKDel_${fskitem}"><span class="iconify" data-icon="mdi-delete"></span></button>
-						</th>
+						</th><th>
 						<td scope="col">${(fskitem ? fskitem : '&nbsp;')}</td>
 					</tr>
 					`;
@@ -432,13 +407,13 @@ export default class PageProfile
 			}, (ex) => 
 			{
 				alert(ex);
-			}, this.kraftfahrzeug.kraftfahrzeug_id);
+			}, benutzer_id);
 		}
 		else
 		{
 			html = 
 			`
-			<td>Erzeugen Sie bitte einen Benutzer um die FSK eintragen zu können!</td>
+			<td>Erzeugen Sie bitte einen Benutzer um die Führerscheinklassen eintragen zu können!</td>
 			`
 			trFSKHeader.innerHTML = html;
 		}		

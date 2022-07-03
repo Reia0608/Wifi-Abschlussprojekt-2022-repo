@@ -7,10 +7,21 @@ using VRentalsClasses.Models;
 
 namespace VRentalsClasses.Interfaces
 {
+    public enum FahrerStatus
+    {
+        unbekannt = 0,
+        frei = 1,
+        termin = 2,
+        krank = 3,
+        urlaub = 4,
+    }
     public interface IFahrer: IPerson
     {
         //************************************************************************
         #region properties
+        public bool IstFahrer { get; set; } 
+
+        public FahrerStatus Status { get; set; }
 
         public byte[]? FahrerFoto { get; set; }
 

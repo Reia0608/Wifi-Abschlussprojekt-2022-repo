@@ -419,6 +419,58 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiBenutzerGetFSKList(successCallback, errorCallback, pid)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/fsk/' + pid, 
+		{
+			method: 'GET',
+			cache: 'no-cache',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBenutzerGetFSKObject(successCallback, errorCallback, pid)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/objfsk/' + pid, 
+		{
+			method: 'GET',
+			cache: 'no-cache',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
 	ApiBenutzerFSKAdd(successCallback, errorCallback, pid ,fskList)
 	{
 		$('body').addClass('waiting');

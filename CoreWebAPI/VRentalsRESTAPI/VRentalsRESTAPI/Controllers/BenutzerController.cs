@@ -140,6 +140,38 @@ namespace VRentalsRESTAPI.Controllers
 			}
 		}
 
+		// GET: api/<BenutzerController>/fsk/5
+		[HttpGet("fsk/{id}")]
+		public List<string> GetFSKByUserId(int id)
+		{
+			BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(id);
+			Benutzer benutzer = Benutzer.Get(this);
+			if (benutzer?.Rolle == RollenTyp.Admin)
+			{
+				return BenutzerFuehrerschein.GetStringList(id);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		// GET: api/<BenutzerController>/fsk/5
+		[HttpGet("objfsk/{id}")]
+		public BenutzerFuehrerschein GetFSKObjectByUserId(int id)
+		{
+			BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(id);
+			Benutzer benutzer = Benutzer.Get(this);
+			if (benutzer?.Rolle == RollenTyp.Admin)
+			{
+				return BenutzerFuehrerschein.Get(id);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		[HttpDelete("logoff")]
 		public IActionResult LogoffPerson()
 		{

@@ -10,6 +10,127 @@ namespace VRentalsClasses.Models
 {
     public class BenutzerFuehrerschein
     {
+        //************************************************************************
+
+        #region constants
+        private const string SCHEMA = "rentals";
+        private const string TABLE = "tbl_fsk";
+        private const string COLUMNS = "fsk_id, users_id, am, a1, a2, a, b1, b, c1, c, d1, d, be, c1e, ce, d1e, de, f";
+        #endregion
+
+        //************************************************************************
+
+        #region static methods
+        public static BenutzerFuehrerschein Get(int User_Id)
+        {
+            BenutzerFuehrerschein benutzerFuehrerschein = new BenutzerFuehrerschein();
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where users_id = :uid";
+            command.Parameters.AddWithValue("uid", User_Id);
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                reader.Read();
+                benutzerFuehrerschein = new BenutzerFuehrerschein(reader);
+            }
+            catch (Exception ex)
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return benutzerFuehrerschein;
+        }
+
+        public static List<string?> GetStringList(int User_Id)
+        {
+            List<string?> FSKStringList = new List<string?>();
+            BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(User_Id);
+            
+            if(benutzerFuehrerschein.AM == true)
+            {
+                FSKStringList.Add("AM");
+            }
+            if (benutzerFuehrerschein.A1 == true)
+            {
+                FSKStringList.Add("A1");
+            }
+            if (benutzerFuehrerschein.A2 == true)
+            {
+                FSKStringList.Add("A2");
+            }
+            if (benutzerFuehrerschein.A == true)
+            {
+                FSKStringList.Add("A");
+            }
+            if (benutzerFuehrerschein.B1 == true)
+            {
+                FSKStringList.Add("B1");
+            }
+            if (benutzerFuehrerschein.B == true)
+            {
+                FSKStringList.Add("B");
+            }
+            if (benutzerFuehrerschein.C1 == true)
+            {
+                FSKStringList.Add("C1");
+            }
+            if (benutzerFuehrerschein.C == true)
+            {
+                FSKStringList.Add("C");
+            }
+            if (benutzerFuehrerschein.D1 == true)
+            {
+                FSKStringList.Add("D1");
+            }
+            if (benutzerFuehrerschein.D == true)
+            {
+                FSKStringList.Add("D");
+            }
+            if (benutzerFuehrerschein.BE == true)
+            {
+                FSKStringList.Add("BE");
+            }
+            if (benutzerFuehrerschein.C1E == true)
+            {
+                FSKStringList.Add("C1E");
+            }
+            if (benutzerFuehrerschein.CE == true)
+            {
+                FSKStringList.Add("CE");
+            }
+            if (benutzerFuehrerschein.D1E == true)
+            {
+                FSKStringList.Add("D1E");
+            }
+            if (benutzerFuehrerschein.DE == true)
+            {
+                FSKStringList.Add("DE");
+            }
+            if (benutzerFuehrerschein.F == true)
+            {
+                FSKStringList.Add("F");
+            }
+
+            return FSKStringList;
+        }
+        #endregion
+
+        //************************************************************************
+
         #region constructor
         public BenutzerFuehrerschein()
         {
@@ -38,6 +159,8 @@ namespace VRentalsClasses.Models
             F = reader.IsDBNull(17) ? false : reader.GetBoolean(17);
         }
         #endregion
+
+        //************************************************************************
 
         #region properties
         [JsonPropertyName("fsk_id")]

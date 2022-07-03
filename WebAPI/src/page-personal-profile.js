@@ -17,6 +17,11 @@ export default class PagePersonalProfile
 			const buttonPasswortAendern = this.app.Main.querySelector('#buttonPasswortAendern');
 			const dialogPasswort = new bootstrap.Modal(modalPasswortBody);
 			const buttonModalPasswortSpeichern = this.app.Main.querySelector('#buttonModalPasswortSpeichern');
+			const buttonFSKNeu = this.app.Main.querySelector('#buttonFSKNeu');
+			const dialogFuehrerschein = new bootstrap.Modal(modalFSKBody);
+			const buttonModalFSKSpeichern = this.app.Main.querySelector('#buttonModalFSKSpeichern');
+
+			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 
             // Initialisierung
 			var benutzerBild = {};
@@ -140,6 +145,79 @@ export default class PagePersonalProfile
 					}, benutzerMerkmal);
 			});
 
+			//-------------------------------------------------------------
+			// Button-Führerscheinklassen-Hinzufügen/Entfernen-click
+
+			buttonFSKNeu.addEventListener( 'click', (e) => 
+			{
+				this.app.ApiBenutzerGetFSKObject((response) => 
+				{
+					this.benutzer.fuehrerscheinklassenlist = response;
+
+					// WIP check/ uncheck boxes in Modal
+				}, (ex) => 
+				{
+					alert(ex);
+				}, this.benutzer.userid);
+
+				dialogFuehrerschein.show();
+			});
+
+			// Button checkboxAll-click
+
+			this.checkboxAll.addEventListener('click', ()=>
+			{
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
+				let selected = this.checkboxAll.checked;
+				for(let checkbox of checkboxCollection) 
+				{    
+					checkbox.checked = selected; 
+				}
+			});
+
+			// Button Modal Führerscheinklassen checkboxAll-click
+
+			this.checkboxAll.addEventListener('click', ()=>
+			{
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
+				let selected = this.checkboxAll.checked;
+				for(let checkbox of checkboxCollection) 
+				{    
+					checkbox.checked = selected; 
+				}
+			});
+
+			
+			//-------------------------------------------------------------
+			// Button-Modal-Führerscheinklassen-speichern-click
+
+			buttonModalFSKSpeichern.addEventListener( 'click', (e) => 
+			{
+				let selectedFSKList = [];
+				let checkboxCollection = this.app.Main.querySelectorAll('#checkboxSelect');
+				for(let checkbox of checkboxCollection) 
+				{    
+					if(checkbox.checked)
+					{
+						selectedFSKList.push(true);
+					} 
+					else
+					{
+						selectedFSKList.push(false);
+					}
+				}
+
+				this.app.ApiBenutzerFSKAdd(() =>
+				{
+					this.datenLaden(this.benutzer.userid);
+				}, (ex) =>
+				{
+					alert(ex);
+				},this.benutzer.userid ,selectedFSKList);
+			
+				dialogFuehrerschein.hide();
+			});
+
             //-------------------------------------------------------------
 			// speichern
 			buttonBenutzerSpeichern.addEventListener('click', (e) => 
@@ -209,6 +287,7 @@ export default class PagePersonalProfile
             if(response.success)
             {
                 this.benutzer = response.benutzer;
+				this.benutzer.userid = response.benutzer.userid;
 
                 inputRolle.value = this.benutzer.rolle;
                 inputBenutzername.value = this.benutzer.username;
@@ -225,7 +304,8 @@ export default class PagePersonalProfile
                         let bildliste = response;
                         imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
                     }
-                    // List Anzeigen API call goes here
+                    // Führerscheinklassenlist anzeigen
+					this.FSKListAnzeigen(this.benutzer.userid);
                 }, (ex) => 
                 {
                     alert(ex);
@@ -240,4 +320,46 @@ export default class PagePersonalProfile
             alert(ex);
         },  benutzerMerkmal);
     }
+
+	// Führerscheinklassen anzeigen
+	FSKListAnzeigen(benutzer_id) 
+	{
+		const tableFSKList = this.app.Main.querySelector('#tableFSKList');
+		const trFSKHeader = this.app.Main.querySelector('#trFSKHeader');
+
+		let html = '';
+
+		if(typeof this.benutzer != "undefined")
+		{
+			this.app.ApiBenutzerGetFSKList((response) => 
+			{
+				this.benutzer.fuehrerscheinklassenlist = response;
+				let iterator = 0;
+				for (let fskitem of this.benutzer.fuehrerscheinklassenlist) 
+				{
+					html += 
+					`
+					<tr data-fsk-idx="${iterator}">
+						<th scope="row">
+						</th><th>
+						<td scope="col">${(fskitem ? fskitem : '&nbsp;')}</td>
+					</tr>
+					`;
+					iterator++;
+				}
+				tableFSKList.innerHTML = html;
+			}, (ex) => 
+			{
+				alert(ex);
+			}, benutzer_id);
+		}
+		else
+		{
+			html = 
+			`
+			<td>Erzeugen Sie bitte einen Benutzer um die Führerscheinklassen eintragen zu können!</td>
+			`
+			trFSKHeader.innerHTML = html;
+		}		
+	}
 }
