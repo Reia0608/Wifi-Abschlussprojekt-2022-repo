@@ -75,4 +75,66 @@ export default class Helper
 			console.log("Conversion failed: schadensart is not a string or number!");
 		}
 	}
+
+	RolleConverter(rolle)
+	{
+		if(typeof rolle === "string")
+		{
+			switch(rolle)
+			{
+				case 'Kunde': return 0;
+				case 'Admin': return 1;
+				case 'User': return 2;
+				default: return 0;
+			}
+		}
+		else if(typeof rolle === "number")
+		{
+			switch(rolle)
+			{
+				case 0: return 'Kunde';
+				case 1: return 'Admin';
+				case 2: return 'User';
+				default: return 'Unbekannt';
+			}
+		}
+		else
+		{
+			console.log("Conversion failed: rolle is not a string or number!");
+		}
+	}
+
+	StatusConverter(status)
+	{
+		if(typeof status === "string")
+		{
+			switch(status)
+			{
+				case 'unbekannt': return 0;
+				case 'frei': return 1;
+				case 'termin': return 2;
+				case 'krank': return 3;
+				case 'urlaub': return 4;
+				case 'keinFahrer': return 5;
+				default: return 5;
+			}
+		}
+		else if(typeof status === "number")
+		{
+			switch(status)
+			{
+				case 0: return 'unbekannt';
+				case 1: return 'frei';
+				case 2: return 'termin';
+				case 3: return 'krank';
+				case 4: return 'urlaub';
+				case 5: return 'keinFahrer';
+				default: return 'keinFahrer';
+			}
+		}
+		else
+		{
+			console.log("Conversion failed: status is not a string or number!");
+		}
+	}
 }

@@ -191,6 +191,24 @@ https://gist.github.com/scaryguy/6269293
 
 https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-primary-key/
 
+==================================================
+====================== VIEWS =====================
+==================================================
+
+https://www.postgresqltutorial.com/postgresql-views/managing-postgresql-views/
+
+https://www.w3schools.com/sql/sql_join_inner.asp
+
+https://stackoverflow.com/questions/62428160/view-doesnt-allow-null-value
+
+========================================================
+====================== FILTER DATA =====================
+========================================================
+
+https://www.w3schools.com/howto/howto_js_filter_elements.asp
+
+https://www.prisma.io/dataguide/postgresql/reading-and-querying-data/filtering-data
+
 ================================================
 ====================== TODO=====================
 ================================================

@@ -1,4 +1,6 @@
 import Helper from "./helper.js";
+import "./../node_modules/@popperjs/core/dist/umd/popper.min.js";
+import "./../node_modules/bootstrap/dist/js/bootstrap.min.js";
 
 export default class PageStaffList 
 {
@@ -9,9 +11,20 @@ export default class PageStaffList
 		{
 			const buttonPersonalNeu = this.app.Main.querySelector('#buttonPersonalNeu');
             const tbodyStaffList = this.app.Main.querySelector('#tbodyStaffList');
+			const buttonFilterAlle = this.app.Main.querySelector('#buttonFilterAlle');
+			const buttonFilterRecht = this.app.Main.querySelector('#buttonFilterRecht');
+			const buttonFilterLenkerberechtigung = this.app.Main.querySelector('#buttonFilterLenkerberechtigung');
+			const buttonFilterStatus = this.app.Main.querySelector('#buttonFilterStatus');
+			const dropdownItemUnbekannt = this.app.Main.querySelector('#dropdownItemUnbekannt');
+			const dropdownItemFrei = this.app.Main.querySelector('#dropdownItemFrei');
+			const dropdownItemTermin = this.app.Main.querySelector('#dropdownItemTermin');
+			const dropdownItemKrank = this.app.Main.querySelector('#dropdownItemKrank');
+			const dropdownItemUrlaub = this.app.Main.querySelector('#dropdownItemUrlaub');
+			const dropdownItemKeinFahrer = this.app.Main.querySelector('#dropdownItemKeinFahrer');
 
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			this.buttonPersonalLoeschen = this.app.Main.querySelector('#buttonPersonalLoeschen');
+			this.activeButton = buttonFilterAlle;
 
 			this.datenLaden();
 
@@ -102,18 +115,182 @@ export default class PageStaffList
 				}
 			});
 
+			// Button Filter-Alle-click
+
+			buttonFilterAlle.addEventListener('click', ()=>
+			{
+				this.datenLaden();
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterAlle;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Recht-click
+
+			buttonFilterRecht.addEventListener('click', ()=>
+			{
+				this.filterBy();
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterRecht;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-click
+
+			buttonFilterLenkerberechtigung.addEventListener('click', ()=>
+			{
+				this.datenLaden();
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Status-click
+
+			buttonFilterStatus.addEventListener('click', ()=>
+			{
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterStatus;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Status-Unbekannt-click
+
+			dropdownItemUnbekannt.addEventListener('click', ()=>
+			{
+				this.filterBy("status", "unbekannt");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterStatus;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Status-Frei-click
+
+			dropdownItemFrei.addEventListener('click', ()=>
+			{
+				this.filterBy("status", "frei");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterStatus;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Status-Termin-click
+
+			dropdownItemTermin.addEventListener('click', ()=>
+			{
+				this.filterBy("status", "termin");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterStatus;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Status-Krank-click
+
+			dropdownItemKrank.addEventListener('click', ()=>
+			{
+				this.filterBy("status", "krank");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterStatus;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Status-Urlaub-click
+
+			dropdownItemUrlaub.addEventListener('click', ()=>
+			{
+				this.filterBy("status", "urlaub");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterStatus;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Status-Urlaub-click
+
+			dropdownItemKeinFahrer.addEventListener('click', ()=>
+			{
+				this.filterBy("status", "keinFahrer");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterStatus;
+				this.activeButton.classList.add('active');
+			});
 		});
 	}
 
 	datenLaden()
 	{
-		this.app.ApiBenutzerGetList((response) => 
+		this.app.ApiBenutzerGetStaff((response) => 
 		{
 			let html = '';
 			let iterator = 1;
 			this.Helper = new Helper();
 			for (let personal of response) 
 			{
+				let fsk = '';
+				if (personal.am)
+				{
+					fsk += 'AM, ';
+				}
+				if (personal.a1)
+				{
+					fsk += 'A1, ';
+				}
+				if (personal.a2)
+				{
+					fsk += 'A2, ';
+				}
+				if (personal.a)
+				{
+					fsk += 'A, ';
+				}
+				if (personal.b1)
+				{
+					fsk += 'B1, ';
+				}
+				if (personal.b)
+				{
+					fsk += 'B, ';
+				}
+				if (personal.c1)
+				{
+					fsk += 'C1, ';
+				}
+				if (personal.c)
+				{
+					fsk += 'C, ';
+				}
+				if (personal.d1)
+				{
+					fsk += 'D1, ';
+				}
+				if (personal.d)
+				{
+					fsk += 'D, ';
+				}
+				if (personal.be)
+				{
+					fsk += 'BE, ';
+				}
+				if (personal.c1e)
+				{
+					fsk += 'C1E, ';
+				}
+				if (personal.ce)
+				{
+					fsk += 'CE, ';
+				}
+				if (personal.d1e)
+				{
+					fsk += 'D1E, ';
+				}
+				if (personal.de)
+				{
+					fsk += 'DE, ';
+				}
+				if (personal.f)
+				{
+					fsk += 'F, ';
+				}
+
 				html += 
 				`
 				<tr data-benutzer-id="${personal.userid}">
@@ -121,7 +298,9 @@ export default class PageStaffList
 					<td>${personal.vorname}</td>
 					<td>${personal.nachname}</td>
 					<td>${personal.username}</td>
-					<td>${personal.kundennummer}</td>
+					<td>${new Helper().StatusConverter(personal.status)}</td>
+					<td>${fsk}</td>
+					<td>${new Helper().RolleConverter(personal.rolle)}</td>
 					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-benutzer-id="${personal.userid}"></th>
 				</tr>
 				`;
@@ -132,6 +311,104 @@ export default class PageStaffList
 		}, (ex) => 
 		{
 			alert(ex);
-		}, 2);
+		});
+	}
+
+	filterBy(by, value)
+	{
+		this.app.ApiBenutzerFilterPersonalBy((response) => 
+		{
+			let html = '';
+			let iterator = 1;
+			this.Helper = new Helper();
+			for (let personal of response) 
+			{
+				let fsk = '';
+				if (personal.am)
+				{
+					fsk += 'AM, ';
+				}
+				if (personal.a1)
+				{
+					fsk += 'A1, ';
+				}
+				if (personal.a2)
+				{
+					fsk += 'A2, ';
+				}
+				if (personal.a)
+				{
+					fsk += 'A, ';
+				}
+				if (personal.b1)
+				{
+					fsk += 'B1, ';
+				}
+				if (personal.b)
+				{
+					fsk += 'B, ';
+				}
+				if (personal.c1)
+				{
+					fsk += 'C1, ';
+				}
+				if (personal.c)
+				{
+					fsk += 'C, ';
+				}
+				if (personal.d1)
+				{
+					fsk += 'D1, ';
+				}
+				if (personal.d)
+				{
+					fsk += 'D, ';
+				}
+				if (personal.be)
+				{
+					fsk += 'BE, ';
+				}
+				if (personal.c1e)
+				{
+					fsk += 'C1E, ';
+				}
+				if (personal.ce)
+				{
+					fsk += 'CE, ';
+				}
+				if (personal.d1e)
+				{
+					fsk += 'D1E, ';
+				}
+				if (personal.de)
+				{
+					fsk += 'DE, ';
+				}
+				if (personal.f)
+				{
+					fsk += 'F, ';
+				}
+
+				html += 
+				`
+				<tr data-benutzer-id="${personal.userid}">
+					<th scope="row">${iterator}</th>
+					<td>${personal.vorname}</td>
+					<td>${personal.nachname}</td>
+					<td>${personal.username}</td>
+					<td>${new Helper().StatusConverter(personal.status)}</td>
+					<td>${fsk}</td>
+					<td>${new Helper().RolleConverter(personal.rolle)}</td>
+					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-benutzer-id="${personal.userid}"></th>
+				</tr>
+				`;
+				iterator++;
+			}
+
+			tbodyStaffList.innerHTML = html;
+		}, (ex) => 
+		{
+			alert(ex);
+		}, by, value);
 	}
 }

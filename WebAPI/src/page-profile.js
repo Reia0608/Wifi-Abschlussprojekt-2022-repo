@@ -1,5 +1,6 @@
 import  "./../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
 import "./app.js";
+import Helper from "./helper.js";
 
 export default class PageProfile
 {
@@ -20,7 +21,7 @@ export default class PageProfile
 			const buttonFSKNeu = this.app.Main.querySelector('#buttonFSKNeu');
 			const dialogFuehrerschein = new bootstrap.Modal(modalFSKBody);
 			const buttonModalFSKSpeichern = this.app.Main.querySelector('#buttonModalFSKSpeichern');
-			const inputStatus = this.app.Main.querySelector('#inputStatus');
+			const selectStatus = this.app.Main.querySelector('#selectStatus');
 			const inputDateAusstellung = this.app.Main.querySelector('#inputDateAusstellung');
 			const inputDateAblauf = this.app.Main.querySelector('#inputDateAblauf');
 			const inputFuehrerscheinnummer = this.app.Main.querySelector('#inputFuehrerscheinnummer');
@@ -244,9 +245,10 @@ export default class PageProfile
 
 				if (inputBenutzername.value && inputVorname.value && inputNachname.value) 
 				{
+					let saveOk = true;
 					if(benutzerMerkmal)
 					{
-						this.benutzer.rolle = parseInt(inputRolle.value);
+						this.benutzer.rolle = parseInt(new Helper().RolleConverter(inputRolle.value));
 						this.benutzer.username = inputBenutzername.value;
 						this.benutzer.vorname = inputVorname.value;
 						this.benutzer.nachname = inputNachname.value;
@@ -259,7 +261,58 @@ export default class PageProfile
 						if(checkboxSwitchIstFahrer.checked)
 						{
 							this.benutzer.istfahrer = true;
-							this.benutzer.status = parseInt(inputStatus.value);
+
+							if (selectStatus.value == '0') 
+							{
+								saveOk = false;
+								selectStatus.classList.add('is-invalid');
+								selectStatus.classList.remove('is-valid')
+							}
+							else 
+							{
+								selectStatus.classList.add('is-valid');
+								selectStatus.classList.remove('is-invalid')
+							}
+
+							if(!inputDateAusstellung.value)
+							{
+								saveOk = false;
+								inputDateAusstellung.classList.add('is-invalid');
+								inputDateAusstellung.classList.remove('is-valid');
+							}
+							else
+							{
+								inputDateAusstellung.classList.add('is-valid');
+								inputDateAusstellung.classList.remove('is-invalid');
+							}
+
+							if(!inputDateAblauf.value)
+							{
+								saveOk = false;
+								inputDateAblauf.classList.add('is-invalid');
+								inputDateAblauf.classList.remove('is-valid');
+							}
+							else
+							{
+								inputDateAblauf.classList.add('is-valid');
+								inputDateAblauf.classList.remove('is-invalid');
+							}
+
+							if(!inputFuehrerscheinnummer.value)
+							{
+								saveOk = false;
+								inputFuehrerscheinnummer.classList.add('is-invalid');
+								inputFuehrerscheinnummer.classList.remove('is-valid');
+							}
+							else
+							{
+								inputFuehrerscheinnummer.classList.add('is-valid');
+								inputFuehrerscheinnummer.classList.remove('is-invalid');
+							}
+
+							if(saveOk)
+							{
+								this.benutzer.status = parseInt(selectStatus.value);
 							if(inputDateAusstellung.value)
 							{
 								this.benutzer.fuehrerscheinausstellungsdatum = inputDateAusstellung.value;
@@ -269,9 +322,12 @@ export default class PageProfile
 								this.benutzer.fuehrerscheinablaufdatum = inputDateAblauf.value;
 							}
 							this.benutzer.fuehrerscheinnummer = inputFuehrerscheinnummer.value;
+							}
 						}
 						 
-						this.app.ApiBenutzerSet((response) => 
+						if(saveOk)
+						{
+							this.app.ApiBenutzerSet((response) => 
 						{
 							if (benutzerBild.bild_bytes) 
 							{
@@ -299,6 +355,7 @@ export default class PageProfile
 									break;
 							default: location.hash = '#clientlist';
 									break;
+						}
 						}
 					}
 				}
@@ -335,7 +392,7 @@ export default class PageProfile
             {
                 this.benutzer = response.benutzer;
 
-                inputRolle.value = this.benutzer.rolle;
+                inputRolle.value = new Helper().RolleConverter(this.benutzer.rolle);
                 inputBenutzername.value = this.benutzer.username;
                 inputVorname.value = this.benutzer.vorname;
                 inputNachname.value = this.benutzer.nachname;
@@ -346,7 +403,7 @@ export default class PageProfile
 				{
 					checkboxSwitchIstFahrer.checked = true;
 					collapseFuehrerschein.classList.add("show");
-					inputStatus.value = this.benutzer.status;
+					selectStatus.value = this.benutzer.status;
 					inputDateAusstellung.value = new Date(this.benutzer.fuehrerscheinausstellungsdatum).toLocaleDateString('en-CA');
 					inputDateAblauf.value = new Date(this.benutzer.fuehrerscheinablaufdatum).toLocaleDateString('en-CA');
 					inputFuehrerscheinnummer.value = this.benutzer.fuehrerscheinnummer;

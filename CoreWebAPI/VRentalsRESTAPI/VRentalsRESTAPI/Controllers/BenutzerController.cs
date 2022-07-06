@@ -140,6 +140,36 @@ namespace VRentalsRESTAPI.Controllers
 			}
 		}
 
+		// GET: api/<BenutzerController>/allstaff
+		[HttpGet("allstaff")]
+		public IEnumerable<Personal> GetAllStaff()
+		{
+			Benutzer benutzer = Benutzer.Get(this);
+			if (benutzer?.Rolle == RollenTyp.Admin)
+			{
+				return Personal.GetStaffList();
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		// GET: api/<BenutzerController>/allstaff/filterby/status/unbekannt
+		[HttpGet("allstaff/filter/{by}/{value}")]
+		public IEnumerable<Personal> GetStaffFilteredBy(string by, string value)
+		{
+			Benutzer benutzer = Benutzer.Get(this);
+			if (benutzer?.Rolle == RollenTyp.Admin)
+			{
+				return Personal.FilterBy(by, value);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		// GET: api/<BenutzerController>/fsk/5
 		[HttpGet("fsk/{id}")]
 		public List<string> GetFSKByUserId(int id)

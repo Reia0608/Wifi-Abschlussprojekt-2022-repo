@@ -14,6 +14,7 @@ namespace VRentalsClasses.Interfaces
         termin = 2,
         krank = 3,
         urlaub = 4,
+        keinFahrer = 5,
     }
     public interface IFahrer: IPerson
     {

@@ -1,6 +1,7 @@
 import './app.js';
 import Sidebar from './component-sidebar.js';
 import Banner from './component-banner.js';
+import Helper from './helper.js';
 
 
 export default class LoginManager
@@ -58,10 +59,10 @@ export default class LoginManager
                     switch(response.benutzer.rolle) 
                     {
                         case 1:
-                            bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + response.benutzer.rolle.toString() + ')';
+                            bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + new Helper().RolleConverter(response.benutzer.rolle)  + ')';
                             break;
                         case 2:
-                            bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + response.benutzer.rolle.toString() + ')';
+                            bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + new Helper().RolleConverter(response.benutzer.rolle) + ')';
                             break;
                         default:
                             bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname;

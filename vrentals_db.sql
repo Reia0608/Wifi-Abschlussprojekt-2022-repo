@@ -545,4 +545,36 @@ ALTER TABLE rentals.tbl_fuehrerscheinklasse
 ALTER TABLE rentals.tbl_fsk
 	ADD CONSTRAINT users_fsk_fk FOREIGN KEY (users_id) REFERENCES rentals.tbl_users (users_id);
 	
+-- ##################################################################
+-- ############################# VIEWS ##############################
+-- ##################################################################
 
+CREATE VIEW rentals.staff_list AS 
+SELECT
+tbl_users.users_id AS uid,
+tbl_users.vorname,
+tbl_users.nachname,
+tbl_users.username,
+tbl_users.istfahrer,
+tbl_users.status,
+tbl_users.rolle,
+tbl_fsk.am,
+tbl_fsk.a1,
+tbl_fsk.a2,
+tbl_fsk.a,
+tbl_fsk.b1,
+tbl_fsk.b,
+tbl_fsk.c1,
+tbl_fsk.c,
+tbl_fsk.d1,
+tbl_fsk.d,
+tbl_fsk.be,
+tbl_fsk.c1e,
+tbl_fsk.ce,
+tbl_fsk.d1e,
+tbl_fsk.de,
+tbl_fsk.f
+FROM rentals.tbl_users
+LEFT JOIN rentals.tbl_fsk USING (users_id)
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.staff_list TO vrentalsuser;
