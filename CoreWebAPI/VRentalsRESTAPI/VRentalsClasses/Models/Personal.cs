@@ -57,12 +57,16 @@ namespace VRentalsClasses.Models
 			if (by == "status")
             {
 				int convertedValue = StatusConverter(value);
-				Condition = $"WHERE {by} = {convertedValue} AND (rolle = 2 OR rolle = 1)";
+				Condition = $"WHERE {by} = {convertedValue} AND (rolle = 2 OR rolle = 1)"; // WIP: does this condition mess up the filter?
 			}
 			else if (by == "rolle")
             {
 				int convertedValue = RolleConverter(value);
 				Condition = $"WHERE {by} = {convertedValue} AND (rolle = 2 OR rolle = 1)";
+			}
+			else if (by == "fsk")
+			{
+				Condition = $"WHERE {value} = true AND (rolle = 2 OR rolle = 1)";
 			}
 			else
             {
@@ -134,13 +138,13 @@ namespace VRentalsClasses.Models
 			int result = 0;
 			switch (toConvert)
 			{
-				case "kunde":
+				case "Kunde":
 					result = 0;
 					break;
-				case "admin":
+				case "Admin":
 					result = 1;
 					break;
-				case "user":
+				case "User":
 					result = 2;
 					break;
 				default:

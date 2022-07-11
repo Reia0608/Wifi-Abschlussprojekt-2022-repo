@@ -294,6 +294,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Select All Staff",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/allstaff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"allstaff"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

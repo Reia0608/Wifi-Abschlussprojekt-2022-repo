@@ -737,6 +737,31 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiKraftfahrzeugFilterBy(successCallback, errorCallback, by, value) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/filter/' + by + '/' + value, 
+		{
+			method: 'GET',
+			cache: 'no-cache',
+			credentials: 'include'
+		})
+		.then((response)=>
+		{
+			if (response.status == 200 || response.status == 401)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		}).then(successCallback)
+		.catch(errorCallback);
+	}
+
 	//==================================================================================
 	// Anhänger
 

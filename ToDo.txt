@@ -32,6 +32,8 @@
 
 7. Create a helper for converting enum rolle and status.
 
+8. // WIP: Check if the condition "rolle = 2 OR rolle = 1" in Personal.cs messes up the filter results.
+
 ===== Priority 3=====
 
 1. Load image browser on-click for images on the website.
@@ -63,6 +65,8 @@ show the appropriate behaviour like checkboxAllKfz.
 13. Put the images on the website unto a canvas.
 
 14. Unter Verwaltung Personal, Rechte des Personals anzeigen.
+
+15. Add is-valid/is-invalid type control to Baujahr on page-car-details.js to check if a number has been entered.
 
 ===== Priority 4=====
 

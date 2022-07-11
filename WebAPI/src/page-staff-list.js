@@ -21,6 +21,25 @@ export default class PageStaffList
 			const dropdownItemKrank = this.app.Main.querySelector('#dropdownItemKrank');
 			const dropdownItemUrlaub = this.app.Main.querySelector('#dropdownItemUrlaub');
 			const dropdownItemKeinFahrer = this.app.Main.querySelector('#dropdownItemKeinFahrer');
+			const dropdownItemKunde = this.app.Main.querySelector('#dropdownItemKunde');
+			const dropdownItemUser = this.app.Main.querySelector('#dropdownItemUser');
+			const dropdownItemAdmin = this.app.Main.querySelector('#dropdownItemAdmin');
+			const dropdownItemAM = this.app.Main.querySelector('#dropdownItemAM');
+			const dropdownItemA1 = this.app.Main.querySelector('#dropdownItemA1');
+			const dropdownItemA2 = this.app.Main.querySelector('#dropdownItemA1');
+			const dropdownItemA = this.app.Main.querySelector('#dropdownItemA');
+			const dropdownItemB1 = this.app.Main.querySelector('#dropdownItemB1');
+			const dropdownItemB = this.app.Main.querySelector('#dropdownItemB');
+			const dropdownItemC1 = this.app.Main.querySelector('#dropdownItemC1');
+			const dropdownItemC = this.app.Main.querySelector('#dropdownItemC');
+			const dropdownItemD1 = this.app.Main.querySelector('#dropdownItemD1');
+			const dropdownItemD = this.app.Main.querySelector('#dropdownItemAM');
+			const dropdownItemBE = this.app.Main.querySelector('#dropdownItemBE');
+			const dropdownItemC1E = this.app.Main.querySelector('#dropdownItemC1E');
+			const dropdownItemCE = this.app.Main.querySelector('#dropdownItemCE');
+			const dropdownItemD1E = this.app.Main.querySelector('#dropdownItemD1E');
+			const dropdownItemDE = this.app.Main.querySelector('#dropdownItemDE');
+			const dropdownItemF = this.app.Main.querySelector('#dropdownItemF');
 
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			this.buttonPersonalLoeschen = this.app.Main.querySelector('#buttonPersonalLoeschen');
@@ -115,6 +134,7 @@ export default class PageStaffList
 				}
 			});
 
+			//--------------------------------------
 			// Button Filter-Alle-click
 
 			buttonFilterAlle.addEventListener('click', ()=>
@@ -125,26 +145,199 @@ export default class PageStaffList
 				this.activeButton.classList.add('active');
 			});
 
-			// Button Filter-Recht-click
+			//--------------------------------------
+			// Button Filter-Recht-Kunde-click
 
-			buttonFilterRecht.addEventListener('click', ()=>
+			dropdownItemKunde.addEventListener('click', ()=>
 			{
-				this.filterBy();
+				this.filterBy("rolle", "Kunde");
 				this.activeButton.classList.remove('active');
 				this.activeButton = buttonFilterRecht;
 				this.activeButton.classList.add('active');
 			});
 
-			// Button Filter-Lenkerberechtigung-click
+			// Button Filter-Recht-User-click
 
-			buttonFilterLenkerberechtigung.addEventListener('click', ()=>
+			dropdownItemUser.addEventListener('click', ()=>
 			{
-				this.datenLaden();
+				this.filterBy("rolle", "User");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterRecht;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Recht-Admin-click
+
+			dropdownItemAdmin.addEventListener('click', ()=>
+			{
+				this.filterBy("rolle", "Admin");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterRecht;
+				this.activeButton.classList.add('active');
+			});
+
+			//--------------------------------------
+			// Button Filter-Lenkerberechtigung-AM-click
+
+			dropdownItemAM.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "am");
 				this.activeButton.classList.remove('active');
 				this.activeButton = buttonFilterLenkerberechtigung;
 				this.activeButton.classList.add('active');
 			});
 
+			// Button Filter-Lenkerberechtigung-A1-click
+
+			dropdownItemA1.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "a1");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-A2-click
+
+			dropdownItemA2.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "a2");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-A-click
+
+			dropdownItemA.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "a");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-B1-click
+
+			dropdownItemB1.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "b1");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-B-click
+
+			dropdownItemB.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "b");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-C1-click
+
+			dropdownItemC1.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "c1");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-C-click
+
+			dropdownItemC.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "c");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-D1-click
+
+			dropdownItemD1.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "d1");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-D-click
+
+			dropdownItemD.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "d");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-BE-click
+
+			dropdownItemBE.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "be");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-C1E-click
+
+			dropdownItemC1E.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "c1e");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-CE-click
+
+			dropdownItemCE.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "ce");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-D1E-click
+
+			dropdownItemD1E.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "d1e");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-DE-click
+
+			dropdownItemDE.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "de");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Lenkerberechtigung-F-click
+
+			dropdownItemF.addEventListener('click', ()=>
+			{
+				this.filterBy("fsk", "f");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterLenkerberechtigung;
+				this.activeButton.classList.add('active');
+			});
+
+			//--------------------------------------
 			// Button Filter-Status-click
 
 			buttonFilterStatus.addEventListener('click', ()=>
@@ -204,7 +397,7 @@ export default class PageStaffList
 				this.activeButton.classList.add('active');
 			});
 
-			// Button Filter-Status-Urlaub-click
+			// Button Filter-Status-Kein-Fahrer-click
 
 			dropdownItemKeinFahrer.addEventListener('click', ()=>
 			{

@@ -17,7 +17,8 @@ namespace VRentalsClasses.Models
         private const string TABLE_KFZ = "tbl_kraftfahrzeug";
 		private const string TABLE_BILDER = "tbl_bilder";
 		private const string COLUMNS_BILDER = "bilder_id, bild_bytes, bild_url, kraftfahrzeug_id, anhaenger_id, users_id, schaden_id";
-		private const string COLUMNS_KFZ = "kraftfahrzeug_id, mietpreis, gegenstandzustand, kategorie, marke, modell, ausgabenstelle_id, aktueller_standort_id, kennzeichen";
+		private const string COLUMNS_KFZ = "kraftfahrzeug_id, mietpreis, gegenstandzustand, kategorie, marke, modell, ausgabenstelle_id, aktueller_standort_id, kennzeichen, baujahr, klasse";
+		
 		#endregion
 
 		//************************************************************************
@@ -280,6 +281,62 @@ namespace VRentalsClasses.Models
 
 			return result;
 		}
+
+		public static List<Kraftfahrzeug> FilterBy(string by, string value)
+		{
+			List<Kraftfahrzeug> kraftfahrzeugList = new List<Kraftfahrzeug>();
+			Kraftfahrzeug? kraftfahrzeug = new Kraftfahrzeug();
+			string Condition = "";
+
+			if (by == "alter")
+			{
+				int currentYear = DateTime.Now.Year;
+				bool success = false;
+				int Baujahr = 0;
+				success = Int32.TryParse(value, out Baujahr);
+				Baujahr = currentYear - Baujahr; 
+				Condition = $"WHERE baujahr = {Baujahr}";
+			}
+			else if (by == "klasse")
+			{
+				Condition = $"WHERE {by} = '{value}'";
+			}
+			else if (by == "kategorie")
+			{
+				Condition = $"WHERE {by} = '{value}'";
+			}
+			else
+			{
+				Condition = $"WHERE {by} = '{value}'";
+			}
+
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"SELECT {COLUMNS_KFZ} FROM {SCHEMA}.{TABLE_KFZ} {Condition} order by marke";
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			try
+			{
+				while (reader.Read())
+				{
+					kraftfahrzeugList.Add(kraftfahrzeug = new Kraftfahrzeug(reader));
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				reader.Close();
+				DBConnection.GetConnection().Close();
+			}
+			return kraftfahrzeugList;
+		}
 		#endregion
 		//************************************************************************
 		#region constructors#
@@ -299,6 +356,8 @@ namespace VRentalsClasses.Models
 			Ausgabenstelle_Id = reader.IsDBNull(6) ? null: reader.GetInt32(6);
 			AktuellerStandort = reader.IsDBNull(7) ? null : reader.GetInt32(7);
 			Kennzeichen = reader.IsDBNull(8) ? null : reader.GetString(8);
+			Baujahr = reader.IsDBNull(9) ? null : reader.GetInt32(9);
+			Klasse = reader.IsDBNull(10) ? null : reader.GetString(10);
 		}
 
 		#endregion
@@ -343,6 +402,12 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("kennzeichen")]
 		public string? Kennzeichen { get; set; }
 
+		[JsonPropertyName("baujahr")]
+		public int? Baujahr { get; set; }
+
+		[JsonPropertyName("klasse")]
+		public string? Klasse { get; set; }
+
 		#endregion
 
 		//************************************************************************
@@ -363,13 +428,13 @@ namespace VRentalsClasses.Models
 
 			if (this.KraftfahrzeugId.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeug_id = :kid";
+				command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken, baujahr = :bj, klasse = :kla where kraftfahrzeug_id = :kid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE_KFZ}_seq')";
 				this.KraftfahrzeugId = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE_KFZ} ({COLUMNS_KFZ}) values (:kid, :mp, :gz, :k, :ma, :mo, :asid, :aso, :ken)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE_KFZ} ({COLUMNS_KFZ}) values (:kid, :mp, :gz, :k, :ma, :mo, :asid, :aso, :ken, :bj, :kla)";
 			}
 
 			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId);
@@ -381,6 +446,8 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (int)this.Ausgabenstelle_Id : (object)DBNull.Value);
 			command.Parameters.AddWithValue("aso", this.AktuellerStandort.HasValue ? (int)this.AktuellerStandort : (object)DBNull.Value);
 			command.Parameters.AddWithValue("ken", String.IsNullOrEmpty(this.Kennzeichen) ? (object)DBNull.Value : (object)this.Kennzeichen);
+			command.Parameters.AddWithValue("bj", this.Baujahr.HasValue ? (int)this.Baujahr : 9999);
+			command.Parameters.AddWithValue("kla", String.IsNullOrEmpty(this.Klasse) ? (object)DBNull.Value : (object)this.Klasse);
 
 			try
 			{
@@ -485,7 +552,7 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken where kraftfahrzeug_id = :kid";
+			command.CommandText = $"update {SCHEMA}.{TABLE_KFZ} set mietpreis = :mp, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, ausgabenstelle_id = :asid, aktueller_standort_id = :aso, kennzeichen = :ken, baujahr = :bj, klasse = :kla where kraftfahrzeug_id = :kid";
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("kid", id);
 			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
@@ -496,6 +563,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (int)this.Ausgabenstelle_Id : (object)DBNull.Value);
 			command.Parameters.AddWithValue("aso", this.AktuellerStandort.HasValue ? (int)this.AktuellerStandort : (object)DBNull.Value);
 			command.Parameters.AddWithValue("ken", String.IsNullOrEmpty(this.Kennzeichen) ? (object)DBNull.Value : (object)this.Kennzeichen);
+			command.Parameters.AddWithValue("bj", this.Baujahr.HasValue ? (int)this.Baujahr : 9999);
+			command.Parameters.AddWithValue("kla", String.IsNullOrEmpty(this.Klasse) ? (object)DBNull.Value: (object)this.Klasse);
+
 
 			try
 			{

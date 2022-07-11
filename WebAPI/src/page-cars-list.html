@@ -1,6 +1,63 @@
 <div class="container">
     <button type="button" class="btn btn-outline-dark btn-sm" color="#0d6efd" id="buttonKfzNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neues KfZ</button>
     <button type="button" class="btn btn-outline-dark btn-sm" color="#0d6efd" id="buttonKfzLoeschen"><span class="iconify me-2" data-icon="cil:trash"></span>Gewählte KfZ löschen</button>
+    <div class="row mt-3">
+      <div class="col-12">
+        <label>Filtern nach:  </label>
+        <button type="button" class="btn btn-outline-dark btn-sm active" color="#0d6efd" id="buttonFilterAlle">Alle</button>
+        <div class="dropdown" style="display:inline;">
+          <button class="btn btn-outline-dark btn-sm dropdown-toggle" color="#0d6efd" type="button" id="buttonFilterAlter" data-bs-toggle="dropdown" aria-expanded="false">
+            Alter
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+              <form>
+                <input type="text" id="dropdownItemAlter">
+                <input type="submit" id="inputSubmitAlter">
+              </form>
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown" style="display:inline;">
+          <button class="btn btn-outline-dark btn-sm dropdown-toggle" color="#0d6efd" type="button" id="buttonFilterKlasse" data-bs-toggle="dropdown" aria-expanded="false">
+            Klasse
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item" id="dropdownItemPKW">PKW</a></li>
+            <li><a class="dropdown-item" id="dropdownItemLKW">LKW</a></li>
+            <li><a class="dropdown-item" id="dropdownItemAnhaenger">Anhänger</a></li>
+            <li><a class="dropdown-item" id="dropdownItemNFZ">NFZ</a></li>
+            <li><a class="dropdown-item" id="dropdownItemNKW">NKW</a></li>
+            <li><a class="dropdown-item" id="dropdownItemKTW">KTW</a></li>
+            <li><a class="dropdown-item" id="dropdownItemNAW">NAW</a></li>
+            <li><a class="dropdown-item" id="dropdownItemGKW">GKW</a></li>
+            <li><a class="dropdown-item" id="dropdownItemSonstige2">Sonstige</a></li>
+            <li><a class="dropdown-item" id="dropdownItemUnbekannt2">Unbekannt</a></li>
+          </ul>
+        </div>
+        <div class="dropdown" style="display:inline;">
+          <button class="btn btn-outline-dark btn-sm dropdown-toggle" color="#0d6efd" type="button" id="buttonFilterKategorie" data-bs-toggle="dropdown" aria-expanded="false">
+            Kategorie
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+            <li><a class="dropdown-item" id="dropdownItemKleinwagen">Kleinwagen</a></li>
+            <li><a class="dropdown-item" id="dropdownItemCabrio">Cabrio</a></li>
+            <li><a class="dropdown-item" id="dropdownItemCoupe">Coupé</a></li>
+            <li><a class="dropdown-item" id="dropdownItemSUV">SUV/ Geländewagen</a></li>
+            <li><a class="dropdown-item" id="dropdownItemPickup">Pickup</a></li>
+            <li><a class="dropdown-item" id="dropdownItemCombi">Combi</a></li>
+            <li><a class="dropdown-item" id="dropdownItemLimousine">Limousine</a></li>
+            <li><a class="dropdown-item" id="dropdownItemVan">Van/ Kleinbus</a></li>
+            <li><a class="dropdown-item" id="dropdownItemTransporter">Transporter</a></li>
+            <li><a class="dropdown-item" id="dropdownItemElektroauto">Elektroauto</a></li>
+            <li><a class="dropdown-item" id="dropdownItemSportwagen">Sportwagen</a></li>
+            <li><a class="dropdown-item" id="dropdownItemOldtimer">Oldtimer</a></li>
+            <li><a class="dropdown-item" id="dropdownItemSonstige3">Sonstige</a></li>
+            <li><a class="dropdown-item" id="dropdownItemUnbekannt3">Unbekannt</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <ul class="nav nav-tabs mt-5">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#carlist">KfZ Liste</a>
@@ -28,6 +85,9 @@
         <th scope="col">Aktueller Standort</th>
         <th scope="col">Mietpreis</th>
         <th scope="col">Kennzeichen</th>
+        <th scope="col">Alter</th>
+        <th scope="col">Klasse</th>
+        <th scope="col">Kategorie</th>
         <th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
       </tr>
     </thead>

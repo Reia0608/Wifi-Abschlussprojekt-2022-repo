@@ -209,6 +209,12 @@ https://www.w3schools.com/howto/howto_js_filter_elements.asp
 
 https://www.prisma.io/dataguide/postgresql/reading-and-querying-data/filtering-data
 
+====================================================================
+====================== Listen to a submit form =====================
+====================================================================
+
+https://thewebdev.info/2021/05/06/how-to-listen-to-the-form-submit-event-in-javascript/#:~:text=to%20listen%20to%20the%20form%20submit%20event%20and%20get%20the,submit'%20as%20the%20first%20argument.
+
 ================================================
 ====================== TODO=====================
 ================================================

@@ -27,6 +27,13 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("{id}")]
         public Kraftfahrzeug Get(int id) => Kraftfahrzeug.Get(id);
 
+        // GET: api/<BenutzerController>/filter/klasse/unbekannt
+        [HttpGet("filter/{by}/{value}")]
+        public IEnumerable<Kraftfahrzeug> FilteredBy(string by, string value)
+        {
+                return Kraftfahrzeug.FilterBy(by, value);
+        }
+
         // POST: api/<KraftfahrzeugController>
         [HttpPost]
         public IActionResult Post([FromBody] Kraftfahrzeug kraftfahrzeug)

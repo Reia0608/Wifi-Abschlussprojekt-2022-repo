@@ -31,8 +31,6 @@ namespace VRentalsClasses.Models
 		public static Benutzer Get(ControllerBase controller)
 		{
 			Benutzer benutzer = new Benutzer();
-			//Funktionen funktion = new Funktionen();
-			//string bm = funktion.GetCookie(controller);
 			string bm = controller.Request.Cookies["benutzermerkmal"];
 			if (!String.IsNullOrEmpty(bm))
 			{

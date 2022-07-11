@@ -120,7 +120,9 @@ CREATE TABLE rentals.tbl_kraftfahrzeug
 	marke character varying,
 	modell character varying,
 	ausgabenstelle_id numeric,
-	kennzeichen character varying
+	kennzeichen character varying,
+	baujahr numeric,
+	klasse character varying
 	-- bilder liste
 	-- standortliste
 	--aktuellerstandort

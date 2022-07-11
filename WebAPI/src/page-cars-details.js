@@ -22,6 +22,7 @@ export default class PageCarsDetails
 			const labelBeschreibung = args.app.Main.querySelector('#labelBeschreibung');	
 			const divDateSchaden = args.app.Main.querySelector('#divDateSchaden');
 			const imgBild = this.app.Main.querySelector('#imgBild');
+			const spanKraftfahrzeugJahre = this.app.Main.querySelector('#spanKraftfahrzeugJahre');
 			
 			// Initialisierung
 			var kfzbild = {};
@@ -76,6 +77,9 @@ export default class PageCarsDetails
 				const inputModell = this.app.Main.querySelector('#inputModell');
 				const inputKennzeichen = this.app.Main.querySelector('#inputKennzeichen');
 				const inputMietpreis = this.app.Main.querySelector('#inputMietpreis');
+				const inputBaujahr = this.app.Main.querySelector('#inputBaujahr');
+				const selectKlasse = this.app.Main.querySelector('#selectKlasse');
+				const selectKategorie = this.app.Main.querySelector('#selectKategorie');
 
 				if (inputMarke.value && inputModell.value) 
 				{
@@ -91,6 +95,9 @@ export default class PageCarsDetails
 					this.kraftfahrzeug.modell = inputModell.value;
 					this.kraftfahrzeug.kennzeichen = inputKennzeichen.value;
 					this.kraftfahrzeug.mietpreis = inputMietpreis.value && !isNaN(inputMietpreis.value) ? parseFloat(inputMietpreis.value) : null;
+					this.kraftfahrzeug.baujahr = parseInt(inputBaujahr.value);
+					this.kraftfahrzeug.klasse = selectKlasse.options[selectKlasse.selectedIndex].text;
+					this.kraftfahrzeug.kategorie = selectKategorie.options[selectKategorie.selectedIndex].text;
 
 					this.app.ApiKraftfahrzeugSet((response) => 
 					{
@@ -280,6 +287,7 @@ export default class PageCarsDetails
 	{
 		this.app.ApiKraftfahrzeugGet((response) => 
 		{
+			let currentYear = new Date().getFullYear();
 			this.kraftfahrzeug = response;
 
 			//const bildliste = response.bildliste;
@@ -288,7 +296,26 @@ export default class PageCarsDetails
 			inputModell.value = this.kraftfahrzeug.modell;
 			inputKennzeichen.value = this.kraftfahrzeug.kennzeichen;
 			inputMietpreis.value = this.kraftfahrzeug.mietpreis;
-
+			inputBaujahr.value = this.kraftfahrzeug.baujahr;
+			spanKraftfahrzeugJahre.textContent = (currentYear - inputBaujahr.value).toString();
+			if(this.kraftfahrzeug.klasse == null)
+			{
+				selectKlasse.value = '0';
+			}
+			else
+			{
+				selectKlasse.options[selectKlasse.selectedIndex].text = this.kraftfahrzeug.klasse;
+			}
+			
+			if(this.kraftfahrzeug.kategorie == null)
+			{
+				selectKategorie.value = '0';
+			}
+			else
+			{
+				selectKategorie.options[selectKategorie.selectedIndex].text = this.kraftfahrzeug.kategorie;
+			}
+			
 			// Kfz Bild anzeigen
 			this.app.ApiBilderGetKfzList((response) =>
 			{
