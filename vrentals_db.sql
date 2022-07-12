@@ -577,6 +577,28 @@ tbl_fsk.d1e,
 tbl_fsk.de,
 tbl_fsk.f
 FROM rentals.tbl_users
-LEFT JOIN rentals.tbl_fsk USING (users_id)
+LEFT JOIN rentals.tbl_fsk USING (users_id);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.staff_list TO vrentalsuser;
+
+
+CREATE VIEW rentals.car_list AS 
+SELECT
+tbl_kraftfahrzeug.kraftfahrzeug_id AS kid,
+tbl_kraftfahrzeug.mietpreis,
+tbl_kraftfahrzeug.gegenstandzustand,
+tbl_kraftfahrzeug.kategorie,
+tbl_kraftfahrzeug.aktueller_standort_id,
+tbl_kraftfahrzeug.adresse_id,
+tbl_kraftfahrzeug.marke,
+tbl_kraftfahrzeug.modell,
+tbl_kraftfahrzeug.ausgabenstelle_id,
+tbl_kraftfahrzeug.kennzeichen,
+tbl_kraftfahrzeug.baujahr,
+tbl_kraftfahrzeug.klasse,
+tbl_bilder.bild_bytes
+
+FROM rentals.tbl_kraftfahrzeug
+LEFT JOIN rentals.tbl_bilder USING (kraftfahrzeug_id);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.car_list TO vrentalsuser;

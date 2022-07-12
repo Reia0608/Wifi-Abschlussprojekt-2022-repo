@@ -79,6 +79,27 @@ namespace VRentalsClasses.Models
 			return bilderListe;
 		}
 
+		public static List<Bild> GetAllKfzBildList()
+        {
+			List<Bild> bilderListe = new List<Bild>();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id IS NOT NULL"; // WIP: order by?
+		NpgsqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				bilderListe.Add(new Bild(reader));
+			}
+			reader.Close();
+			DBConnection.GetConnection().Close();
+			return bilderListe;
+		}
+
 		public static List<Bild> GetKfzBildList(int? kraftfahrzeug_id)
 		{
 			List<Bild> bilderListe = new List<Bild>();

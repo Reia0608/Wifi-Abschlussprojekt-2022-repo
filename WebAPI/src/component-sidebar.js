@@ -16,6 +16,7 @@ export default class Sidebar
 			this.sideNavButtonSearch = this.target.querySelector('#sideNavButtonSearch');
 			this.sideNavButtonProfile = this.target.querySelector('#sideNavButtonProfile');
 			this.sideNavButtonKfzList = this.target.querySelector('#sideNavButtonKfzList');
+			this.sideNavButtonCarList = this.target.querySelector('#sideNavButtonCarList');
 
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
@@ -78,6 +79,17 @@ export default class Sidebar
 				}
 			});
 
+			this.sideNavButtonCarList.addEventListener('click', (e)=>
+			{
+				location.hash = '#cars';
+				if(activeSideNavButton != this.sideNavButtonCarList)
+				{
+					this.sideNavButtonCarList.classList.add("active");
+					activeSideNavButton.classList.remove("active");
+					activeSideNavButton = this.sideNavButtonCarList;
+				}
+			});
+
 			if(this.sideNavButtonLogin)
 			{
 				this.sideNavButtonLogin.addEventListener('click', (e)=>
@@ -116,9 +128,9 @@ export default class Sidebar
 	{
 		return this.displaySidebar;
 	}
-	set DisplaySidebar(val) 
+	set DisplaySidebar(value) 
 	{
-		this.displaySidebar = val;
+		this.displaySidebar = value;
 		if (this.displaySidebar) this.nav.classList.remove('d-none');
 		else this.nav.classList.add('d-none');
 	}
@@ -128,9 +140,9 @@ export default class Sidebar
 		return this.displayLogoff;
 	}
 	// unnecessary?
-	set DisplayLogoff(val) 
+	set DisplayLogoff(value) 
 	{
-		this.displayLogoff = val;
+		this.displayLogoff = value;
 
 		if (this.displayLogoff) 
 		{
@@ -141,6 +153,24 @@ export default class Sidebar
 		{
 			this.sideNavButtonLogin.classList.remove('d-none');
 			this.sideNavButtonLogoff.classList.add('d-none');
+		}
+	}
+
+	get DisplayCarList()
+	{
+		return this.DisplayCarList;
+	}
+	set DisplayCarList(value)
+	{
+		this.DisplayCarList = value;
+
+		if(this.displayCarList)
+		{
+			this.sideNavButtonCarList.classList.add('d-none');
+		}
+		else
+		{
+			this.sideNavButtonCarList.classList.remove('d-none');
 		}
 	}
 }

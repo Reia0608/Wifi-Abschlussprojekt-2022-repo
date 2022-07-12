@@ -14,6 +14,7 @@ import PageTrailerDetails from './page-trailer-details.js';
 import PageClientList from './page-client-list.js';
 import PageStaffList from './page-staff-list.js';
 import PagePersonalProfile from './page-personal-profile.js';
+import PageCars from './page-cars.js';
 
 
 
@@ -136,6 +137,9 @@ export default class Application
 				break;
 			case '#staffdetails':
 				new PageProfile(args);
+			case '#cars':
+				new PageCars(args);
+				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;
@@ -1250,6 +1254,56 @@ export default class Application
 	{
 		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'bilder/kfz/' + kraftfahrzeug_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBilderGetAllKfzList(successCallback, errorCallback)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/kfz', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiKraftfahrzeugGetCardList(successCallback, errorCallback)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/karten', 
 		{
 			method: 'GET',
 			credentials: 'include'

@@ -23,6 +23,13 @@ namespace VRentalsRESTAPI.Controllers
             return Kraftfahrzeug.GetList();
         }
 
+        // GET: api/<FahrzeugController>/karten
+        [HttpGet("karten")]
+        public IEnumerable<Kraftfahrzeugkarte> SelectAllCards()
+        {
+            return Kraftfahrzeugkarte.GetList();
+        }
+
         // GET: api/<KraftfahrzeugController>/5
         [HttpGet("{id}")]
         public Kraftfahrzeug Get(int id) => Kraftfahrzeug.Get(id);

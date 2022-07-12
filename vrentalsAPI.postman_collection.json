@@ -502,6 +502,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GET All Kraftfahrzeugkarten",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug/karten",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug",
+								"karten"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1126,6 +1147,32 @@
 								"api",
 								"adresse",
 								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BilderController",
+			"item": [
+				{
+					"name": "Get All Bilder of All Kraftfahrzeug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bilder/kfz",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bilder",
+								"kfz"
 							]
 						}
 					},

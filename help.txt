@@ -215,6 +215,19 @@ https://www.prisma.io/dataguide/postgresql/reading-and-querying-data/filtering-d
 
 https://thewebdev.info/2021/05/06/how-to-listen-to-the-form-submit-event-in-javascript/#:~:text=to%20listen%20to%20the%20form%20submit%20event%20and%20get%20the,submit'%20as%20the%20first%20argument.
 
+================================================================
+====================== Line Breaks in HTML =====================
+================================================================
+
+https://blog.hubspot.com/website/html-line-break#:~:text=To%20do%20a%20line%20break%20in%20HTML%2C%20use%20the%20%3Cbr,element%2C%20there's%20no%20closing%20tag.
+
+
+================================================================
+====================== Fast Image Loading ======================
+================================================================
+
+https://stackoverflow.com/questions/6818921/most-efficient-way-to-display-card-images-for-javascript-game
+
 ================================================
 ====================== TODO=====================
 ================================================

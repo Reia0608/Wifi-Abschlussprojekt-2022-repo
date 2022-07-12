@@ -68,6 +68,8 @@ show the appropriate behaviour like checkboxAllKfz.
 
 15. Add is-valid/is-invalid type control to Baujahr on page-car-details.js to check if a number has been entered.
 
+16. Optimize image loading in page-cars.html.
+
 ===== Priority 4=====
 
 1. Create an image carousel/slider for multiple images.
@@ -78,3 +80,4 @@ show the appropriate behaviour like checkboxAllKfz.
 6. Put the images into a canvas on the website
 7. Save Registrierungstag upon registering on website, and save Letzte Anmeldung on logging onto the website.
 8. Add valid/invalid to all the forms on the website.
+9. Create a remember list for the client where he can add a personal selection of cars.
