@@ -228,6 +228,12 @@ https://blog.hubspot.com/website/html-line-break#:~:text=To%20do%20a%20line%20br
 
 https://stackoverflow.com/questions/6818921/most-efficient-way-to-display-card-images-for-javascript-game
 
+================================================================
+====================== Lazy Image Loading ======================
+================================================================
+
+https://imagekit.io/blog/lazy-loading-images-complete-guide/#the-general-concept-of-lazy-loading-images-in-img-tag
+
 ================================================
 ====================== TODO=====================
 ================================================

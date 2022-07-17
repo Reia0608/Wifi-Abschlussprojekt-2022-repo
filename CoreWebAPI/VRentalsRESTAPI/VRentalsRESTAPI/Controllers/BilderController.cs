@@ -55,6 +55,10 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("{id}")]
         public Bild Get(int id) => Bild.Get(id);
 
+        // GET: api/<BilderController>/kfz/5
+        [HttpGet("singlekfz/{id}")]
+        public Bild GetBildByKfz(int id) => Bild.GetBildByKfz(id);
+
         // POST: api/<BilderController>
         [HttpPost]
         public IActionResult Post([FromBody] Bild bild)
@@ -77,8 +81,39 @@ namespace VRentalsRESTAPI.Controllers
             }
             return result;
         }
+        
+        // PUT: api/<BilderController>/kfz
+        [HttpPut("kfz")]
+        public IActionResult PutByKraftfahrzeugId([FromBody] Bild bild)
+        {
+            IActionResult result = null;
+            try
+            {
+                Bild dbBild = Bild.GetByKraftfahrzeugId(bild.KraftfahrzeugId);
+                if (dbBild == null)
+                {
+                    result = NotFound();
+                }
+                else
+                {
+                    if (bild.Save() == 1)
+                    {
+                        result = Ok();
+                    }
+                    else
+                    {
+                        result = NoContent();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+            return result;
+        }
 
-        // PUT: api/<BilderController>/5
+        // PUT: api/<BilderController>/
         [HttpPut]
         public IActionResult Put([FromBody] Bild bild)
         {
@@ -88,7 +123,22 @@ namespace VRentalsRESTAPI.Controllers
                 Bild dbBild = Bild.Get(bild.Bilder_Id);
                 if (dbBild == null)
                 {
-                    result = NotFound();
+                    dbBild = Bild.GetByKraftfahrzeugId(bild.KraftfahrzeugId);
+                    if(dbBild == null)
+                    {
+                        result = NotFound();
+                    }
+                    else
+                    {
+                        if (bild.Save() >= 1)
+                        {
+                            result = Ok();
+                        }
+                        else
+                        {
+                            result = NoContent();
+                        }
+                    }
                 }
                 else
                 {

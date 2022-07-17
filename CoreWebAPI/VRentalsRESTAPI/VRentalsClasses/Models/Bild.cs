@@ -20,9 +20,51 @@ namespace VRentalsClasses.Models
 		//************************************************************************
 		#region static methods
 		// WIP: if anhaenger_id does not exist in the db, creates a new entry with null values!
-		public static Bild Get(int? bilder_id)
+		public static Bild? Get(int? bilder_id)
 		{
-			Bild bild = new Bild();	
+			Bild? bild = new Bild();
+			if (bilder_id == null)
+            {
+				bild = null;
+            }
+			else
+            {
+				if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+				{
+					DBConnection.GetConnection().Open();
+				}
+
+				NpgsqlCommand command = new NpgsqlCommand();
+				command.Connection = DBConnection.GetConnection();
+				command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where bilder_id = :bid";
+				command.Parameters.AddWithValue("bid", bilder_id);
+				NpgsqlDataReader reader = command.ExecuteReader();
+				try
+				{
+					if (reader.Read())
+					{
+						bild = new Bild();
+						{
+							bild = new Bild(reader);
+						};
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+				finally
+				{
+					reader.Close();
+					DBConnection.GetConnection().Close();
+				}
+			}
+			return bild;
+		}
+
+		public static Bild GetByKraftfahrzeugId(int? kraftfahrzeug_id)
+		{
+			Bild bild = new Bild();
 
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
@@ -31,8 +73,8 @@ namespace VRentalsClasses.Models
 
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where bilder_id = :bid";
-			command.Parameters.AddWithValue("bid", bilder_id);
+			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid";
+			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 			try
 			{
@@ -79,6 +121,28 @@ namespace VRentalsClasses.Models
 			return bilderListe;
 		}
 
+		public static Bild GetBildByKfz(int kraftfahrzeug_id)
+		{
+			Bild kfzBild = new Bild();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id = :kid";
+			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			reader.Read();
+			
+			kfzBild = new Bild(reader);
+			
+			reader.Close();
+			DBConnection.GetConnection().Close();
+			return kfzBild;
+		}
+
 		public static List<Bild> GetAllKfzBildList()
         {
 			List<Bild> bilderListe = new List<Bild>();
@@ -89,7 +153,7 @@ namespace VRentalsClasses.Models
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
 			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id IS NOT NULL"; // WIP: order by?
-		NpgsqlDataReader reader = command.ExecuteReader();
+			NpgsqlDataReader reader = command.ExecuteReader();
 
 			while (reader.Read())
 			{
@@ -110,7 +174,7 @@ namespace VRentalsClasses.Models
 			}
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid"; // WIP: order by?
+			command.CommandText = $"select distinct {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid"; // WIP: order by?
 			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -232,6 +296,10 @@ namespace VRentalsClasses.Models
 			{
 				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where bilder_id = :bid";
 			}
+			else if (this.KraftfahrzeugId.HasValue)
+			{
+				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where kraftfahrzeug_id = :kid";
+			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
@@ -239,7 +307,10 @@ namespace VRentalsClasses.Models
 				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bid, :bbs, :url, :kid, :aid, :uid, :sid)";
 			}
 
-			command.Parameters.AddWithValue("bid", this.Bilder_Id);
+			if(this.Bilder_Id != null)
+            {
+				command.Parameters.AddWithValue("bid", this.Bilder_Id);
+			}
 			command.Parameters.AddWithValue("bbs", this.BildBytes == null ? (object)DBNull.Value : this.BildBytes);
 			command.Parameters.AddWithValue("url", String.IsNullOrEmpty(this.Bild_Url) ? (object)DBNull.Value : (object)this.Bild_Url);
 			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId.HasValue ? (object)this.KraftfahrzeugId.Value : (object)DBNull.Value);

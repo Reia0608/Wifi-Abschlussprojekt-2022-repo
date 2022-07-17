@@ -15,6 +15,7 @@ import PageClientList from './page-client-list.js';
 import PageStaffList from './page-staff-list.js';
 import PagePersonalProfile from './page-personal-profile.js';
 import PageCars from './page-cars.js';
+import PageClientCarDetails from './page-client-car-details.js';
 
 
 
@@ -139,6 +140,9 @@ export default class Application
 				new PageProfile(args);
 			case '#cars':
 				new PageCars(args);
+				break;
+			case '#clientcardetails':
+				new PageClientCarDetails(args);
 				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
@@ -1350,12 +1354,36 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiBilderGetKraftfahrzeug(successCallback, errorCallback, kraftfahrzeug_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/singlekfz/' + kraftfahrzeug_id, 
+		{
+			method: 'GET',
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
 	ApiBilderSet(successCallback, errorCallback, bild)
 	{
 		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'bilder', 
 		{
-			method: bild.bilder_id ? 'PUT' : 'POST',
+			method: bild.kraftfahrzeug_id ? 'PUT' : 'POST',
 			cache: 'no-cache',
 			headers: 
 			{

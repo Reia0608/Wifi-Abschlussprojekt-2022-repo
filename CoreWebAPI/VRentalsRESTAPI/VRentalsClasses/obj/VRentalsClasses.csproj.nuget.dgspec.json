@@ -44,21 +44,17 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
-            "Google.Cloud.Firestore": {
-              "target": "Package",
-              "version": "[2.5.0, )"
-            },
             "Microsoft.AspNetCore.Mvc": {
               "target": "Package",
               "version": "[2.2.0, )"
             },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
-              "version": "[7.0.0-preview.4.22229.4, )"
+              "version": "[7.0.0-preview.6.22324.4, )"
             },
             "Npgsql": {
               "target": "Package",
-              "version": "[7.0.0-preview.4, )"
+              "version": "[7.0.0-preview.6, )"
             }
           },
           "imports": [

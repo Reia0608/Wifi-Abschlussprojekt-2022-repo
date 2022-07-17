@@ -99,7 +99,7 @@ export default class PageCarsDetails
 					this.kraftfahrzeug.klasse = selectKlasse.options[selectKlasse.selectedIndex].text;
 					this.kraftfahrzeug.kategorie = selectKategorie.options[selectKategorie.selectedIndex].text;
 
-					this.app.ApiKraftfahrzeugSet((response) => 
+					this.app.ApiKraftfahrzeugSet(() => 
 					{
 						if (kfzbild.bild_bytes) 
 						{

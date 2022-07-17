@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using VRentalsClasses.Models;
 using VRentalsClasses.Interfaces;
-using Google.Cloud.Firestore;
 using System.Net;
 
 namespace VRentalsRESTAPI.Controllers
