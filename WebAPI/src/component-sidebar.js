@@ -34,6 +34,15 @@ export default class Sidebar
 				this.sideNavButtonLogoff.classList.add('d-none');
 			}
 
+			if(args.rolle == 1)
+			{
+				this.sideNavButtonKfzList.classList.remove('d-none');
+			}
+			else
+			{
+				this.sideNavButtonKfzList.classList.add('d-none');
+			}
+
 			this.sideNavButtonHome.addEventListener('click', (e)=>
 			{
 				location.hash = '#main';

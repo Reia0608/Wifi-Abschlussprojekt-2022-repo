@@ -164,6 +164,41 @@ namespace VRentalsClasses.Models
 			return bilderListe;
 		}
 
+		public static List<Bild> GetAllBildBySpecificKfzList(string kfzString)
+		{
+			string Condition = $"";
+			kfzString = kfzString.Remove(kfzString.Length - 1, 1);
+			string[] kfzList = kfzString.Split("_");
+			List<Bild> bilderListe = new List<Bild>();
+			foreach (string kfz_id in kfzList)
+            {
+				if(kfz_id.Equals(kfzList.Last()))
+                {
+					Condition += "kraftfahrzeug_id = " + kfz_id;
+				}
+				else
+                {
+					Condition += "kraftfahrzeug_id = " + kfz_id + " OR ";
+				}	
+            }
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				DBConnection.GetConnection().Open();
+			}
+			NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE {Condition}"; // WIP: order by?
+			NpgsqlDataReader reader = command.ExecuteReader();
+
+			while (reader.Read())
+			{
+				bilderListe.Add(new Bild(reader));
+			}
+			reader.Close();
+			DBConnection.GetConnection().Close();
+			return bilderListe;
+		}
+
 		public static List<Bild> GetKfzBildList(int? kraftfahrzeug_id)
 		{
 			List<Bild> bilderListe = new List<Bild>();

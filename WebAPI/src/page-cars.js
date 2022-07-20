@@ -9,6 +9,43 @@ export default class PageCars
 		{
             const carListBody = this.app.Main.querySelector('#carListBody');
 
+			const buttonFilterAlle = this.app.Main.querySelector('#buttonFilterAlle');
+			const buttonFilterAlter = this.app.Main.querySelector('#buttonFilterAlter');
+			const buttonFilterKlasse = this.app.Main.querySelector('#buttonFilterKlasse');
+			const buttonFilterKategorie = this.app.Main.querySelector('#buttonFilterKategorie');
+
+			const dropdownItemPKW = this.app.Main.querySelector('#dropdownItemPKW');
+			const dropdownItemLKW = this.app.Main.querySelector('#dropdownItemLKW');
+			const dropdownItemAnhaenger = this.app.Main.querySelector('#dropdownItemAnhaenger');
+			const dropdownItemNFZ = this.app.Main.querySelector('#dropdownItemNFZ');
+			const dropdownItemNKW = this.app.Main.querySelector('#dropdownItemNKW');
+			const dropdownItemKTW = this.app.Main.querySelector('#dropdownItemKTW');
+			const dropdownItemNAW = this.app.Main.querySelector('#dropdownItemNAW');
+			const dropdownItemGKW = this.app.Main.querySelector('#dropdownItemGKW');
+			const dropdownItemSonstige2 = this.app.Main.querySelector('#dropdownItemSonstige2');
+			const dropdownItemUnbekannt2 = this.app.Main.querySelector('#dropdownItemUnbekannt2');
+
+			const dropdownItemKleinwagen = this.app.Main.querySelector('#dropdownItemKleinwagen');
+			const dropdownItemCabrio = this.app.Main.querySelector('#dropdownItemCabrio');
+			const dropdownItemCoupe = this.app.Main.querySelector('#dropdownItemCoupe');
+			const dropdownItemSUV = this.app.Main.querySelector('#dropdownItemSUV');
+			const dropdownItemPickup = this.app.Main.querySelector('#dropdownItemPickup');
+			const dropdownItemCombi = this.app.Main.querySelector('#dropdownItemCombi');
+			const dropdownItemLimousine = this.app.Main.querySelector('#dropdownItemLimousine');
+			const dropdownItemVan = this.app.Main.querySelector('#dropdownItemVan');
+			const dropdownItemTransporter = this.app.Main.querySelector('#dropdownItemTransporter');
+			const dropdownItemElektroauto = this.app.Main.querySelector('#dropdownItemElektroauto');
+			const dropdownItemSportwagen = this.app.Main.querySelector('#dropdownItemSportwagen');
+			const dropdownItemOldtimer = this.app.Main.querySelector('#dropdownItemOldtimer');
+			const dropdownItemSonstige3 = this.app.Main.querySelector('#dropdownItemSonstige3');
+			const dropdownItemUnbekannt3 = this.app.Main.querySelector('#dropdownItemUnbekannt3');
+			const ulDropdownAusgabenstelle = this.app.Main.querySelector('#ulDropdownAusgabenstelle');
+
+			const dropdownItemAlter = this.app.Main.querySelector('#dropdownItemAlter');
+			const formFilterByAlter = document.querySelector("form");
+
+			this.activeButton = buttonFilterAlle;
+
             this.datenLaden();
 
 			// ListGroupElement-click
@@ -39,59 +76,341 @@ export default class PageCars
 					window.open('#clientcardetails?kid=' + kraftfahrzeug_id, '_self');
 				}
 			});
-        });
+
+			//--------------------------------------
+			// Button Filter-Alle-click
+
+			buttonFilterAlle.addEventListener('click', ()=>
+			{
+				this.datenLaden();
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterAlle;
+				this.activeButton.classList.add('active');
+			});
+
+			//--------------------------------------
+			// Button Filter-Alter-submit
+
+			formFilterByAlter.addEventListener('submit', ()=>
+			{
+				this.filterBy("alter", dropdownItemAlter.value);
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterAlter;
+				this.activeButton.classList.add('active');
+			});
+
+			//--------------------------------------
+			// Button Filter-Klasse-PKW-click
+
+			dropdownItemPKW.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "PKW");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Klasse-LKW-click
+
+			dropdownItemLKW.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "LKW");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+			
+			// Button Filter-Klasse-Anhänger-click
+
+			dropdownItemAnhaenger.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "Anhaenger");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+			
+			// Button Filter-Klasse-NFZ-click
+
+			dropdownItemNFZ.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "NFZ");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+			
+			// Button Filter-Klasse-NKW-click
+
+			dropdownItemNKW.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "NKW");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+			
+			// Button Filter-Klasse-KTW-click
+
+			dropdownItemKTW.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "KTW");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+		
+			// Button Filter-Klasse-NAW-click
+
+			dropdownItemNAW.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "NAW");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+			
+			// Button Filter-Klasse-GKW-click
+
+			dropdownItemGKW.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "GKW");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+			
+			// Button Filter-Klasse-Sonstige2-click
+
+			dropdownItemSonstige2.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "Sonstige");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+			
+			// Button Filter-Klasse-Unbekannt2-click
+
+			dropdownItemUnbekannt2.addEventListener('click', ()=>
+			{
+				this.filterBy("klasse", "Unbekannt");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKlasse;
+				this.activeButton.classList.add('active');
+			});
+
+			//--------------------------------------
+			// Button Filter-Kategorie-Kleinwagen-click
+
+			dropdownItemKleinwagen.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Kleinwagen");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Cabrio-click
+
+			dropdownItemCabrio.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Cabrio");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Coupe-click
+
+			dropdownItemCoupe.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Coupé");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-SUV-click
+
+			dropdownItemSUV.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "SUV/ Geländewagen");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Pickup-click
+
+			dropdownItemPickup.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Pickup");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Combi-click
+
+			dropdownItemCombi.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Combi");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Limousine-click
+
+			dropdownItemLimousine.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Limousine");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Van-click
+
+			dropdownItemVan.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Van/ Kleinbus");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Transporter-click
+
+			dropdownItemTransporter.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Transporter");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Elektroauto-click
+
+			dropdownItemElektroauto.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Elektroauto");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Sportwagen-click
+
+			dropdownItemSportwagen.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Sportwagen");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Oldtimer-click
+
+			dropdownItemOldtimer.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Oldtimer");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Sonstige3-click
+
+			dropdownItemSonstige3.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Sonstige");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Kategorie-Unbekannt3-click
+
+			dropdownItemUnbekannt3.addEventListener('click', ()=>
+			{
+				this.filterBy("kategorie", "Unbekannt");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterKategorie;
+				this.activeButton.classList.add('active');
+			});
+		});
 	}
 
 	datenLaden()
 	{
-		this.app.ApiKraftfahrzeugGetList((response) => 
+		this.app.ApiAusgabenstelleGetList((response) =>
 		{
 			let html = '';
 			let iterator = 1;
-			this.Helper = new Helper();
-			let currentYear = new Date().getFullYear();
-			for (let kraftfahrzeug of response) 
+			if(response.length != 0)
 			{
-				html += 
-				`<div class="card cards" style="width: 18rem;">
-                    <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" id="imgBild_${iterator}">
-                    <div class="card-body" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
-						<h5 class="card-title">${kraftfahrzeug.marke} ${kraftfahrzeug.modell}</h5>
-						<p class="card-text">
-							Alter: ${currentYear - kraftfahrzeug.baujahr} Jahre<br>
-							Klasse: ${kraftfahrzeug.klasse}<br>
-							Kategorie: ${kraftfahrzeug.kategorie}<br>
-							Mietpreis: €${kraftfahrzeug.mietpreis},-<br>
-						</p>
-						<a class="btn btn-primary" id="aEinzelheiten_${iterator}">Einzelheiten</a>
-                    </div>
-                </div>
-                `;
-				iterator++;
-			}
-
-			carListBody.innerHTML = html;
-
-			this.app.ApiBilderGetAllKfzList((response) =>
-			{
-				let jiterator = 1;
-				for(let i = 0; i < response.length; i++)
+				foreach(ausgabenstelle in response)
 				{
-					for (let kfzBild of response)
+					html += `
+							<li><a class="dropdown-item" id="dropdownItemAusgabenstelle_${iterator}">${ausgabenstelle}</a></li>
+							`;
+					iterator++;
+				}
+			}
+			this.app.ApiKraftfahrzeugGetList((response) => 
+			{
+				let html = '';
+				let iterator = 1;
+				this.Helper = new Helper();
+				let currentYear = new Date().getFullYear();
+				for (let kraftfahrzeug of response) 
+				{
+					html += 
+					`<div class="card cards" style="width: 18rem;">
+						<img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" id="imgBild_${iterator}">
+						<div class="card-body" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
+							<h5 class="card-title">${kraftfahrzeug.marke} ${kraftfahrzeug.modell}</h5>
+							<p class="card-text">
+								Alter: ${currentYear - kraftfahrzeug.baujahr} Jahre<br>
+								Klasse: ${kraftfahrzeug.klasse}<br>
+								Kategorie: ${kraftfahrzeug.kategorie}<br>
+								Mietpreis: €${kraftfahrzeug.mietpreis},-<br>
+							</p>
+							<a class="btn btn-primary" id="aEinzelheiten_${iterator}">Einzelheiten</a>
+						</div>
+					</div>
+					`;
+					iterator++;
+				}
+
+				carListBody.innerHTML = html;
+
+				this.app.ApiBilderGetAllKfzList((response) =>
+				{
+					let jiterator = 1;
+					for(let i = 0; i < response.length; i++)
 					{
-						if(jiterator <= response.length)
+						for (let kfzBild of response)
 						{
-							var imgIdentifier = "imgBild_" + jiterator.toString();
-							var imgBild = document.getElementById(imgIdentifier);
-	
-							if(kfzBild.kraftfahrzeug_id == imgBild.dataset.kraftfahrzeugId)
+							if(jiterator <= response.length)
 							{
-								imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
-								jiterator++;
-							}	
+								var imgIdentifier = "imgBild_" + jiterator.toString();
+								var imgBild = document.getElementById(imgIdentifier);
+		
+								if(kfzBild.kraftfahrzeug_id == imgBild.dataset.kraftfahrzeugId)
+								{
+									imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
+									jiterator++;
+								}	
+							}
 						}
 					}
-				}
+				}, (ex) => 
+				{
+					alert(ex);
+				});
 			}, (ex) => 
 			{
 				alert(ex);
@@ -110,28 +429,61 @@ export default class PageCars
 			let iterator = 1;
 			this.Helper = new Helper();
 			let currentYear = new Date().getFullYear();
-			for (let kraftfahrzeug of response) 
+			let kfzList = '';
+			if(response.length == 0)
 			{
-				html += 
-				`
-				<tr data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
-					<th scope="row">${iterator}</th>
-					<td>${kraftfahrzeug.marke}</td>
-					<td>${kraftfahrzeug.modell}</td>
-					<td>${this.Helper.GegenstandZustandConverter(kraftfahrzeug.gegenstandzustand)}</td>
-					<td>${kraftfahrzeug.aktuellerstandort}</td>
-					<td>${kraftfahrzeug.mietpreis}</td>
-					<td>${kraftfahrzeug.kennzeichen}</td>
-					<td>${currentYear - kraftfahrzeug.baujahr}</td>
-					<td>${kraftfahrzeug.klasse}</td>
-					<td>${kraftfahrzeug.kategorie}</td>
-					<th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxSelect" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}"></th>
-				</tr>
-				`;
-				iterator++;
+				carListBody.innerHTML = "Es wurden keine KfZ gefunden, die dieser Bedingung entsprechen!"
 			}
+			else
+			{
+				for (let kraftfahrzeug of response) 
+				{
+					html += 
+					`<div class="card cards" style="width: 18rem;">
+						<img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" id="imgBild_${iterator}">
+						<div class="card-body" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
+							<h5 class="card-title">${kraftfahrzeug.marke} ${kraftfahrzeug.modell}</h5>
+							<p class="card-text">
+								Alter: ${currentYear - kraftfahrzeug.baujahr} Jahre<br>
+								Klasse: ${kraftfahrzeug.klasse}<br>
+								Kategorie: ${kraftfahrzeug.kategorie}<br>
+								Mietpreis: €${kraftfahrzeug.mietpreis},-<br>
+							</p>
+							<a class="btn btn-primary" id="aEinzelheiten_${iterator}">Einzelheiten</a>
+						</div>
+					</div>
+					`;
+					iterator++;
+					kfzList += kraftfahrzeug.kraftfahrzeug_id.toString() + '_';
+				}
 
-			carListBody.innerHTML = html;
+				carListBody.innerHTML = html;
+
+				this.app.ApiBilderGetSpecificKfzList((response) =>
+				{
+					let jiterator = 1;
+					for(let i = 0; i < response.length; i++)
+					{
+						for (let kfzBild of response)
+						{
+							if(jiterator <= response.length)
+							{
+								var imgIdentifier = "imgBild_" + jiterator.toString();
+								var imgBild = document.getElementById(imgIdentifier);
+		
+								if(kfzBild.kraftfahrzeug_id == imgBild.dataset.kraftfahrzeugId)
+								{
+									imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
+									jiterator++;
+								}	
+							}
+						}
+					}
+				}, (ex) => 
+				{
+					alert(ex);
+				}, kfzList);
+			}
 		}, (ex) => 
 		{
 			alert(ex);

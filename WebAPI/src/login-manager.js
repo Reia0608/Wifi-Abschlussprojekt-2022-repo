@@ -20,6 +20,7 @@ export default class LoginManager
 			app: appArgs,
 			loggedin: false,
 			displaySidebar: false,
+			rolle: 0,
 			logoffClick: () =>
 			{
 				this.Logoff(appArgs);
@@ -55,7 +56,7 @@ export default class LoginManager
                     bannerArgs.displayBanner = true;
                     bannerArgs.displayLogoff = true;
                     bannerArgs.Benutzer = response.benutzer;
-                    // this.GruppeList = r.gruppelist;
+                    sidebarArgs.rolle = response.benutzer.rolle;
                     switch(response.benutzer.rolle) 
                     {
                         case 1:

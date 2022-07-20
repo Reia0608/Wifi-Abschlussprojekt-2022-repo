@@ -12,6 +12,10 @@
 
 5. Add rechte to benutzer, and add its functions to page-staff-list.js.
 
+6. SUV/ Geländewagen as well as Van/ Kleinbus filter are not working on all car lists because of umlaut and / characters.
+
+7. Show on the cards on page-client-car-list.html if a car is available to rent or not.
+
 
 ===== Priority 2=====
 

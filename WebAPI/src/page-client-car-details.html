@@ -14,21 +14,27 @@
 		<div class="col-lg-6 mt-3">
 			<div class="row ">
 				<div class="col-4 text-end">Marke</div>
-				<div class="col-6"><input type="text" class="form-control form-control-sm" id="inputMarke" /></div>
+				<div class="col-6">
+					<div class="col-sm-9 text-secondary" id="divMarke"></div>
+				</div>
 			</div>
 			<div class="row mt-3">
 				<div class="col-4 text-end">Modell</div>
-				<div class="col-8"><input type="text" class="form-control form-control-sm" id="inputModell" /></div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divModell"></div>
+				</div>
 			</div>
 			<div class="row mt-3">
 				<div class="col-4 text-end">Kennzeichen</div>
-				<div class="col-8"><input type="text" class="form-control form-control-sm" id="inputKennzeichen" /></div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divKennzeichen"></div>
+				</div>
 			</div>
 			<div class="row mt-3">
 				<div class="col-4 text-end">Mietpreis</div>
 				<div class="col-8">
 					<div class="input-group input-group-sm">
-						<input type="text" class="form-control form-control-sm" id="inputMietpreis" />
+						<div class="form-control-sm" id="divMietpreis"></div>
 						<span class="input-group-text">€</span>
 					</div>
 				</div>
@@ -37,8 +43,8 @@
 				<div class="col-4 text-end">Baujahr</div>
 				<div class="col-8">
 					<div class="input-group input-group-sm">
-						<input type="text" class="form-control form-control-sm" id="inputBaujahr" />
-						<span class="input-group-text" id="spanKraftfahrzeugJahre">?</span>
+						<div class="form-control-sm" id="divBaujahr"></div>
+						<span class="input-group-text" id="divKraftfahrzeugJahre">?</span>
 						<span class="input-group-text">Jahre</span>
 					</div>
 				</div>
@@ -46,39 +52,13 @@
 			<div class="row mt-3">
 				<div class="col-4 text-end">Klasse</div>
 				<div class="col-8">
-					<select name="selectKlasse" id="selectKlasse" class="form-select form-select-sm col-4">
-						<option value="0">Unbekannt</option>
-						<option value="1">PKW</option>
-						<option value="2">LKW</option>
-						<option value="3">Anhänger</option>
-						<option value="4">NFZ</option>
-						<option value="5">NKW</option>
-						<option value="6">KTW</option>
-						<option value="7">NAW</option>
-						<option value="8">GKW</option>
-						<option value="9">Sonstige</option>
-					</select>
+					<div class="col-sm-9 text-secondary" id="divKlasse"></div>
 				</div>
 			</div>
 			<div class="row mt-3">
 				<div class="col-4 text-end">Kategorie</div>
 				<div class="col-8">
-					<select name="selectKategorie" id="selectKategorie" class="form-select form-select-sm col-4">
-						<option value="0">Unbekannt</option>
-						<option value="1">Kleinwagen</option>
-						<option value="2">Cabrio</option>
-						<option value="3">Coupé</option>
-						<option value="4">SUV/ Geländewagen</option>
-						<option value="5">Pickup</option>
-						<option value="6">Kombi</option>
-						<option value="7">Limousine</option>
-						<option value="8">Van/ Kleinbus</option>
-						<option value="9">Transporter</option>
-						<option value="10">Elektroauto</option>
-						<option value="11">Sportwagen</option>
-						<option value="12">Oldtimer</option>
-						<option value="13">Sonstige</option>
-					</select>
+					<div class="col-sm-9 text-secondary" id="divKategorie"></div>
 				</div>
 			</div>
 		</div>

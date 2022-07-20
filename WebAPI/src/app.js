@@ -1378,6 +1378,30 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiBilderGetSpecificKfzList(successCallback, errorCallback, kfzList)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/specifickfz/' + kfzList, 
+		{
+			method: 'GET',
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
 	ApiBilderSet(successCallback, errorCallback, bild)
 	{
 		$('body').addClass('waiting');

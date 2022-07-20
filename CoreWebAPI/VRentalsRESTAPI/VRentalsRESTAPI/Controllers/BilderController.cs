@@ -44,6 +44,13 @@ namespace VRentalsRESTAPI.Controllers
             return Bild.GetAllKfzBildList();
         }
 
+        // GET: api/<BilderController>/specifickfz
+        [HttpGet("specifickfz/{kfzlist}")]
+        public IEnumerable<Bild> GetAllBildBySpecificKfzList(string kfzlist)
+        {
+            return Bild.GetAllBildBySpecificKfzList(kfzlist);
+        }
+
         // GET: api/<BilderController>/anhaenger/5
         [HttpGet("anhaenger/{id}")]
         public IEnumerable<Bild> SelectAllFromAnhaenger(int id)

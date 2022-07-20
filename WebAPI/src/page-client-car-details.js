@@ -14,7 +14,7 @@ export default class PageClientCarDetails
 			const buttonKfzMieten = args.app.Main.querySelector('#buttonKfzMieten');
 			const buttonKfzZurueck = args.app.Main.querySelector('#buttonKfzZurueck');
 			const imgBild = this.app.Main.querySelector('#imgBild');
-			const spanKraftfahrzeugJahre = this.app.Main.querySelector('#spanKraftfahrzeugJahre');
+			const divKraftfahrzeugJahre = this.app.Main.querySelector('#divKraftfahrzeugJahre');
 			
 			// Initialisierung
 			var kfzbild = {};
@@ -65,15 +65,15 @@ export default class PageClientCarDetails
 			// Mieten
 			buttonKfzMieten.addEventListener('click', (e) => 
 			{
-				const inputMarke = this.app.Main.querySelector('#inputMarke');
-				const inputModell = this.app.Main.querySelector('#inputModell');
-				const inputKennzeichen = this.app.Main.querySelector('#inputKennzeichen');
-				const inputMietpreis = this.app.Main.querySelector('#inputMietpreis');
-				const inputBaujahr = this.app.Main.querySelector('#inputBaujahr');
-				const selectKlasse = this.app.Main.querySelector('#selectKlasse');
-				const selectKategorie = this.app.Main.querySelector('#selectKategorie');
+				const divMarke = this.app.Main.querySelector('#divMarke');
+				const divModell = this.app.Main.querySelector('#divModell');
+				const divKennzeichen = this.app.Main.querySelector('#divKennzeichen');
+				const divMietpreis = this.app.Main.querySelector('#divMietpreis');
+				const divBaujahr = this.app.Main.querySelector('#divBaujahr');
+				const divKlasse = this.app.Main.querySelector('#divKlasse');
+				const divKategorie = this.app.Main.querySelector('#divKategorie');
 
-				if (inputMarke.value && inputModell.value) 
+				if (divMarke.value && divModell.value) 
 				{
 					if(args.kid)
 					{
@@ -83,13 +83,13 @@ export default class PageClientCarDetails
 					{
 						this.kraftfahrzeug = {};
 					}
-					this.kraftfahrzeug.marke = inputMarke.value;
-					this.kraftfahrzeug.modell = inputModell.value;
-					this.kraftfahrzeug.kennzeichen = inputKennzeichen.value;
-					this.kraftfahrzeug.mietpreis = inputMietpreis.value && !isNaN(inputMietpreis.value) ? parseFloat(inputMietpreis.value) : null;
-					this.kraftfahrzeug.baujahr = parseInt(inputBaujahr.value);
-					this.kraftfahrzeug.klasse = selectKlasse.options[selectKlasse.selectedIndex].text;
-					this.kraftfahrzeug.kategorie = selectKategorie.options[selectKategorie.selectedIndex].text;
+					this.kraftfahrzeug.marke = divMarke.innerHTML;
+					this.kraftfahrzeug.modell = divModell.innerHTML;
+					this.kraftfahrzeug.kennzeichen = divKennzeichen.innerHTML;
+					this.kraftfahrzeug.mietpreis = divMietpreis.value && !isNaN(divMietpreis.value) ? parseFloat(divMietpreis.value) : null;
+					this.kraftfahrzeug.baujahr = parseInt(divBaujahr.innerHTML);
+					this.kraftfahrzeug.klasse = divKlasse.options[selectKlasse.selectedIndex].text;
+					this.kraftfahrzeug.kategorie = divKategorie.options[selectKategorie.selectedIndex].text;
 
 					this.app.ApiKraftfahrzeugSet(() => 
 					{
@@ -138,28 +138,28 @@ export default class PageClientCarDetails
 
 			//const bildliste = response.bildliste;
 
-			inputMarke.value = this.kraftfahrzeug.marke;
-			inputModell.value = this.kraftfahrzeug.modell;
-			inputKennzeichen.value = this.kraftfahrzeug.kennzeichen;
-			inputMietpreis.value = this.kraftfahrzeug.mietpreis;
-			inputBaujahr.value = this.kraftfahrzeug.baujahr;
-			spanKraftfahrzeugJahre.textContent = (currentYear - inputBaujahr.value).toString();
+			divMarke.innerHTML = this.kraftfahrzeug.marke;
+			divModell.innerHTML = this.kraftfahrzeug.modell;
+			divKennzeichen.innerHTML = this.kraftfahrzeug.kennzeichen;
+			divMietpreis.innerHTML = this.kraftfahrzeug.mietpreis;
+			divBaujahr.innerHTML = this.kraftfahrzeug.baujahr;
+			divKraftfahrzeugJahre.innerHTML = (currentYear - divBaujahr.innerHTML).toString();
 			if(this.kraftfahrzeug.klasse == null)
 			{
-				selectKlasse.value = '0';
+				divKlasse.innerHTML = '0';
 			}
 			else
 			{
-				selectKlasse.options[selectKlasse.selectedIndex].text = this.kraftfahrzeug.klasse;
+				divKlasse.innerHTML = this.kraftfahrzeug.klasse;
 			}
 			
 			if(this.kraftfahrzeug.kategorie == null)
 			{
-				selectKategorie.value = '0';
+				divKategorie.innerHTML = '0';
 			}
 			else
 			{
-				selectKategorie.options[selectKategorie.selectedIndex].text = this.kraftfahrzeug.kategorie;
+				divKategorie.innerHTML = this.kraftfahrzeug.kategorie;
 			}
 			
 			// Kfz Bild anzeigen
