@@ -62,58 +62,10 @@ export default class PageClientCarDetails
 			});
 			
 			//-------------------------------------------------------------
-			// Mieten
+			// KfZ Mieten
 			buttonKfzMieten.addEventListener('click', (e) => 
 			{
-				const divMarke = this.app.Main.querySelector('#divMarke');
-				const divModell = this.app.Main.querySelector('#divModell');
-				const divKennzeichen = this.app.Main.querySelector('#divKennzeichen');
-				const divMietpreis = this.app.Main.querySelector('#divMietpreis');
-				const divBaujahr = this.app.Main.querySelector('#divBaujahr');
-				const divKlasse = this.app.Main.querySelector('#divKlasse');
-				const divKategorie = this.app.Main.querySelector('#divKategorie');
-
-				if (divMarke.value && divModell.value) 
-				{
-					if(args.kid)
-					{
-						this.kraftfahrzeug.kraftfahrzeug_id = parseInt(args.kid);
-					}
-					else
-					{
-						this.kraftfahrzeug = {};
-					}
-					this.kraftfahrzeug.marke = divMarke.innerHTML;
-					this.kraftfahrzeug.modell = divModell.innerHTML;
-					this.kraftfahrzeug.kennzeichen = divKennzeichen.innerHTML;
-					this.kraftfahrzeug.mietpreis = divMietpreis.value && !isNaN(divMietpreis.value) ? parseFloat(divMietpreis.value) : null;
-					this.kraftfahrzeug.baujahr = parseInt(divBaujahr.innerHTML);
-					this.kraftfahrzeug.klasse = divKlasse.options[selectKlasse.selectedIndex].text;
-					this.kraftfahrzeug.kategorie = divKategorie.options[selectKategorie.selectedIndex].text;
-
-					this.app.ApiKraftfahrzeugSet(() => 
-					{
-						if (kfzbild.bild_bytes) 
-						{
-							kfzbild.kraftfahrzeug_id = this.kraftfahrzeug.kraftfahrzeug_id;
-							this.app.ApiBilderSet(() => 
-							{
-
-							}, (ex) => 
-							{
-								alert(ex);
-							}, kfzbild);
-						}
-					}, (ex) => 
-					{
-						alert(ex);
-					}, this.kraftfahrzeug);
-				}
-				else 
-				{
-					alert('Marke und Modell sind Pflicht!');
-				}
-				location.hash = '#cars';
+				location.hash = '#rentstepone';
 			});
 
 			//-------------------------------------------------------------

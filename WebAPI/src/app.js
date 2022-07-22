@@ -16,7 +16,7 @@ import PageStaffList from './page-staff-list.js';
 import PagePersonalProfile from './page-personal-profile.js';
 import PageCars from './page-cars.js';
 import PageClientCarDetails from './page-client-car-details.js';
-
+import PageRentStepOne from './page-mieten-step-one.js';
 
 
 export default class Application 
@@ -143,6 +143,9 @@ export default class Application
 				break;
 			case '#clientcardetails':
 				new PageClientCarDetails(args);
+				break;
+			case '#rentstepone':
+				new PageRentStepOne(args);
 				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'

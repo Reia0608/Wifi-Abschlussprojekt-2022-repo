@@ -238,6 +238,21 @@ https://imagekit.io/blog/lazy-loading-images-complete-guide/#the-general-concept
 ====================== TODO=====================
 ================================================
 
+https://freefrontend.com/bootstrap-payment-forms/
+
+https://bbbootstrap.com/snippets/bootstrap-collapsible-credit-card-payment-form-details-95174592
+
+https://bbbootstrap.com/snippets/bootstrap-5-vehicle-features-payment-details-36075039
+
+https://bbbootstrap.com/snippets/payment-form-three-different-payment-options-13285516
+
+https://www.sixt.at/funnel/#/reservation/personaldetails
+
+https://www.europcar.de/de-de/reservation/vehicles?gclsrc=aw.ds&gclsrc=aw.ds&gclid=Cj0KCQjwlemWBhDUARIsAFp1rLWdfiz2t7tHNp7Yo_WeKKE3rSeoge7Yfppouh99RMu5tE60KXrz5bIaAiSBEALw_wcB&vehicleType=CR&driverAge=26&checkoutYear=2022&checkoutMonth=07&checkoutDay=26&checkinYear=2022&checkinMonth=07&checkinDay=22&checkoutHour=13&checkoutMinute=15&checkinHour=17&checkinMinute=00&checkinLocation=SZGC01&checkoutLocation=SZGC01&countryOfResidence=AT&promoCode=
+
+car, dates and places, schutzpakete+extras, payment method, summary+submit
+
+
 https://stackoverflow.com/questions/236624/how-to-access-html-element-without-id
 
 https://jquery.com/

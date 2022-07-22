@@ -13,6 +13,7 @@ export default class PageCars
 			const buttonFilterAlter = this.app.Main.querySelector('#buttonFilterAlter');
 			const buttonFilterKlasse = this.app.Main.querySelector('#buttonFilterKlasse');
 			const buttonFilterKategorie = this.app.Main.querySelector('#buttonFilterKategorie');
+			const buttonFilterPreis = this.app.Main.querySelector('#buttonFilterPreis');
 
 			const dropdownItemPKW = this.app.Main.querySelector('#dropdownItemPKW');
 			const dropdownItemLKW = this.app.Main.querySelector('#dropdownItemLKW');
@@ -41,8 +42,12 @@ export default class PageCars
 			const dropdownItemUnbekannt3 = this.app.Main.querySelector('#dropdownItemUnbekannt3');
 			const ulDropdownAusgabenstelle = this.app.Main.querySelector('#ulDropdownAusgabenstelle');
 
-			const dropdownItemAlter = this.app.Main.querySelector('#dropdownItemAlter');
-			const formFilterByAlter = document.querySelector("form");
+			const inputSubmitPreis = this.app.Main.querySelector('#inputSubmitPreis');
+			const selectPreisOperator = this.app.Main.querySelector('#selectPreisOperator');
+			const dropdownItemPreis = this.app.Main.querySelector('#dropdownItemPreis');
+
+			const formFilterByPreis = this.app.Main.querySelector('#formPreis');
+			const formFilterByAlter = document.querySelector("#formAlter");
 
 			this.activeButton = buttonFilterAlle;
 
@@ -235,7 +240,7 @@ export default class PageCars
 
 			dropdownItemSUV.addEventListener('click', ()=>
 			{
-				this.filterBy("kategorie", "SUV/ Geländewagen");
+				this.filterBy("kategorie", "SUV_Gelaendewagen");
 				this.activeButton.classList.remove('active');
 				this.activeButton = buttonFilterKategorie;
 				this.activeButton.classList.add('active');
@@ -275,7 +280,7 @@ export default class PageCars
 
 			dropdownItemVan.addEventListener('click', ()=>
 			{
-				this.filterBy("kategorie", "Van/ Kleinbus");
+				this.filterBy("kategorie", "Van_Kleinbus");
 				this.activeButton.classList.remove('active');
 				this.activeButton = buttonFilterKategorie;
 				this.activeButton.classList.add('active');
@@ -340,6 +345,36 @@ export default class PageCars
 				this.activeButton = buttonFilterKategorie;
 				this.activeButton.classList.add('active');
 			});
+
+			//--------------------------------------
+			// Button Filter-Preis-submit
+
+			formFilterByPreis.addEventListener('submit', ()=>
+			{
+				if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '1')
+				{
+					this.filterBy("=", dropdownItemPreis.value);
+				}
+				else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '2')
+				{
+					this.filterBy(">", dropdownItemPreis.value);
+				}
+				else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '3')
+				{
+					this.filterBy("<", dropdownItemPreis.value);
+				}
+				else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '4')
+				{
+					this.filterBy(">=", dropdownItemPreis.value);
+				}
+				else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '5')
+				{
+					this.filterBy("<=", dropdownItemPreis.value);
+				}
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterPreis;
+				this.activeButton.classList.add('active');
+			});
 		});
 	}
 
@@ -351,14 +386,29 @@ export default class PageCars
 			let iterator = 1;
 			if(response.length != 0)
 			{
-				foreach(ausgabenstelle in response)
+				for(let ausgabenstelle of response)
 				{
 					html += `
-							<li><a class="dropdown-item" id="dropdownItemAusgabenstelle_${iterator}">${ausgabenstelle}</a></li>
+							<li><a class="dropdown-item" id="dropdownItemAusgabenstelle" data-ausgabenstelle-id=${ausgabenstelle.ausgabenstelle_id}>${ausgabenstelle.ausgabenstelle_bezeichnung}</a></li>
 							`;
 					iterator++;
 				}
+				ulDropdownAusgabenstelle.innerHTML = html;
 			}
+
+			// Create dropdown Variables for Ausgabenstelle.
+			let ausgabenstelleCollection = this.app.Main.querySelectorAll('#dropdownItemAusgabenstelle');
+			for(let buttonAusgabenstelle of ausgabenstelleCollection) 
+			{    
+				buttonAusgabenstelle.addEventListener('click', ()=>
+				{
+					this.filterBy("ausgabenstelle", buttonAusgabenstelle.dataset.ausgabenstelleId);
+					this.activeButton.classList.remove('active');
+					this.activeButton = buttonAusgabenstelle;
+					this.activeButton.classList.add('active');
+				}); 
+			}
+
 			this.app.ApiKraftfahrzeugGetList((response) => 
 			{
 				let html = '';

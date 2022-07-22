@@ -14,7 +14,7 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li>
-                        <form>
+                        <form id="formAlter">
                             <input type="text" id="dropdownItemAlter">
                             <input type="submit" id="inputSubmitAlter">
                         </form>
@@ -25,7 +25,7 @@
                 <button class="btn btn-outline-dark btn-sm dropdown-toggle" color="#0d6efd" type="button" id="buttonFilterKlasse" data-bs-toggle="dropdown" aria-expanded="false">
                     Klasse
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                <ul class="dropdown-menu clickable" aria-labelledby="dropdownMenuButton2">
                     <li><a class="dropdown-item" id="dropdownItemPKW">PKW</a></li>
                     <li><a class="dropdown-item" id="dropdownItemLKW">LKW</a></li>
                     <li><a class="dropdown-item" id="dropdownItemAnhaenger">Anhänger</a></li>
@@ -42,7 +42,7 @@
                 <button class="btn btn-outline-dark btn-sm dropdown-toggle" color="#0d6efd" type="button" id="buttonFilterKategorie" data-bs-toggle="dropdown" aria-expanded="false">
                     Kategorie
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                <ul class="dropdown-menu clickable" aria-labelledby="dropdownMenuButton3">
                     <li><a class="dropdown-item" id="dropdownItemKleinwagen">Kleinwagen</a></li>
                     <li><a class="dropdown-item" id="dropdownItemCabrio">Cabrio</a></li>
                     <li><a class="dropdown-item" id="dropdownItemCoupe">Coupé</a></li>
@@ -64,16 +64,16 @@
                     Preis
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                    <select class="form-select clickable" aria-label="Default select example">
+                    <select class="form-select clickable" aria-label="Default select example" id="selectPreisOperator">
                         <option selected value="1">gleich</option>
                         <option value="2">größer als</option>
                         <option value="3">kleiner als</option>
-                        <option value="2">größer oder gleich</option>
-                        <option value="3">kleiner oder gleich</option>
+                        <option value="4">größer oder gleich</option>
+                        <option value="5">kleiner oder gleich</option>
                     </select>
-                    <form>
-                        <input type="text" id="dropdownItemAlter">
-                        <input type="submit" id="inputSubmitAlter">
+                    <form id="formPreis">
+                        <input type="text" id="dropdownItemPreis">
+                        <input type="submit" id="inputSubmitPreis">
                     </form>
                 </ul>
             </div>
@@ -81,7 +81,7 @@
                 <button class="btn btn-outline-dark btn-sm dropdown-toggle" color="#0d6efd" type="button" id="buttonFilterAusgabenstelle" data-bs-toggle="dropdown" aria-expanded="false">
                     Ausgabestelle
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3" id="ulDropdownAusgabenstelle">
+                <ul class="dropdown-menu clickable" aria-labelledby="dropdownMenuButton3" id="ulDropdownAusgabenstelle">
                     <li><a class="dropdown-item" id="dropdownItemKleinwagen">Kleinwagen</a></li>
                     <li><a class="dropdown-item" id="dropdownItemCabrio">Cabrio</a></li>
                     <li><a class="dropdown-item" id="dropdownItemCoupe">Coupé</a></li>

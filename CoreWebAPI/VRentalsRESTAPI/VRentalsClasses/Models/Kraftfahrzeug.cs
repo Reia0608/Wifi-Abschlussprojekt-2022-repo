@@ -303,7 +303,26 @@ namespace VRentalsClasses.Models
 			}
 			else if (by == "kategorie")
 			{
-				Condition = $"WHERE {by} = '{value}'";
+				if(value == "SUV_Gelaendewagen")
+                {
+					Condition = $"WHERE {by} = 'SUV/ Geländewagen'";
+				}
+				else if (value == "Van_Kleinbus")
+                {
+					Condition = $"WHERE {by} = 'Van/ Kleinbus'";
+				}
+				else
+                {
+					Condition = $"WHERE {by} = '{value}'";
+				}
+			}
+			else if(by == "ausgabenstelle")
+            {
+				Condition = $"WHERE ausgabenstelle_id = {value}";
+			}
+			else if (by == "=" || by == "<" || by == ">" || by == "<=" || by == ">=")
+			{
+				Condition = $"WHERE mietpreis {by} {value}";
 			}
 			else
 			{
