@@ -40,6 +40,15 @@
 
 9. Anhaenger and Benutzer need the same treatment as Kraftfahrzeug when it comes to Bilder: take the last Bild in the database not the first!
 
+10. Add car data: sitzplätze, türen, klimaanlage, kofferaum, getriebe: manuell/automatik, kategorie = karosserieform, kraftstoff, erstzulassung, 
+    Marke/ Modell/ Variante, Kilometerstand, leistung (kw), ausstattung (ABS, allrad, elektr. fensterheber, klimaautomatik, multifunktionslenkrad
+    sitzheizung, xenononscheinwerfer, abstandstempomat, anhängerkuplung, klimaanlage, led-scheinwerfer, navigationssystem, tempomat, etc), Farbe,
+    polsterfarbe, umwelt, angebote, nichtraucherfahrzeug... 
+
+11. In the first payment step, show the opening hours for vrentals and check the input if it is during those times.
+
+12. Gleicher Rückgabeort button on page-rent-step-one.html causes eye strain.
+
 ===== Priority 3=====
 
 1. Load image browser on-click for images on the website.
