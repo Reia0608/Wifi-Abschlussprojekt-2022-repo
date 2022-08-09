@@ -69,8 +69,6 @@ export default class LoginManager
                             bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname;
                             break;
                     }
-                    // navArgs.recht = this.Benutzer.rechttext;
-                    // this.GruppeList = r.gruppelist;
                     appArgs.Sidebar = new Sidebar(sidebarArgs);
                     appArgs.Banner = new Banner(bannerArgs)
                     if (!location.hash) location.hash = '#main';

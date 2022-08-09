@@ -14,8 +14,6 @@ namespace VRentalsClasses.Models
 {
 	public class DBConnection
 	{
-
-
 		public static string ReadConfiguration(string key, string defaultValue = null) => ReadConfiguration<string>(key, defaultValue);
 		public static T ReadConfiguration<T>(string key, T defaultValue = default(T))
 		{

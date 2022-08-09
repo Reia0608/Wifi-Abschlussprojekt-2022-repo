@@ -55,6 +55,10 @@ CREATE TABLE rentals.tbl_users
 	fuehrerscheinausstellungsdatum date,
 	fuehrerscheinablaufdatum date,
 	fuehrerscheinnummer character varying,
+	hatzugfahrzeug boolean,
+	eigeneszugfahrzeugmarke character varying,
+	eigeneszugfahrzeugmodell character varying,
+	eigeneszugfahrzeugkennzeichen character varying
 	
     PRIMARY KEY (users_id)
 );
@@ -70,6 +74,9 @@ ALTER TABLE IF EXISTS rentals.tbl_users
 
 ALTER TABLE IF EXISTS rentals.tbl_users
     ALTER COLUMN istfahrer SET DEFAULT false;
+	
+ALTER TABLE IF EXISTS rentals.tbl_users
+    ALTER COLUMN hatzugfahrzeug SET DEFAULT false;
 	
 ALTER TABLE IF EXISTS rentals.tbl_users
 OWNER TO postgres;

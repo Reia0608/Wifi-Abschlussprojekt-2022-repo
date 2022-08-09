@@ -446,21 +446,24 @@ export default class PageProfile
 		{
 			this.app.ApiBenutzerGetFSKList((response) => 
 			{
-				this.fuehrerscheinklassenlist = response;
-				let iterator = 0;
-				for (let fskitem of this.fuehrerscheinklassenlist) 
+				if(response != null)
 				{
-					html += 
-					`
-					<tr data-fsk-idx="${iterator}">
-						<th scope="row">
-						</th><th>
-						<td scope="col">${(fskitem ? fskitem : '&nbsp;')}</td>
-					</tr>
-					`;
-					iterator++;
+					this.fuehrerscheinklassenlist = response;
+					let iterator = 0;
+					for (let fskitem of this.fuehrerscheinklassenlist) 
+					{
+						html += 
+						`
+						<tr data-fsk-idx="${iterator}">
+							<th scope="row">
+							</th><th>
+							<td scope="col">${(fskitem ? fskitem : '&nbsp;')}</td>
+						</tr>
+						`;
+						iterator++;
+					}
+					tableFSKList.innerHTML = html;
 				}
-				tableFSKList.innerHTML = html;
 			}, (ex) => 
 			{
 				alert(ex);

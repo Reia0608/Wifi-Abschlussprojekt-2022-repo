@@ -16,6 +16,10 @@
 
 7. Show on the cards on page-client-car-list.html if a car is available to rent or not.
 
+8. Creating a new client as admin just creates an empty entry. Also what happens to the password?
+
+9. Does adding a Führerschein to a user in the PWA break the system?
+
 
 ===== Priority 2=====
 

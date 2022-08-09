@@ -21,7 +21,7 @@ namespace VRentalsClasses.Models
 		private const string COLUMNS_FUEHRERSCHEINKLASSE = "users_id, am, a1, a2, a, b1, b, c1, c, d1, d, be, c1e, ce, d1e, de, f";
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
         private const string COLUMNS = "users_id, vorname, nachname, geschlecht, username, passwort, rolle, geburtsdatum, geburtsort," +
-			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer, istfahrer, status, fuehrerscheinausstellungsdatum, fuehrerscheinablaufdatum, fuehrerscheinnummer";
+			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer, istfahrer, status, fuehrerscheinausstellungsdatum, fuehrerscheinablaufdatum, fuehrerscheinnummer, hatzugfahrzeug, eigeneszugfahrzeugmarke, eigeneszugfahrzeugmodell, eigeneszugfahrzeugkennzeichen";
 		private const string KONTAKT = "tbl_kontakt";
 		#endregion
 		
@@ -432,6 +432,10 @@ namespace VRentalsClasses.Models
 			FuehrerscheinAusstellungsDatum = reader.IsDBNull(16) ? null : (DateTime?)reader.GetDateTime(16);
 			FuehrerscheinAblaufDatum = reader.IsDBNull(17) ? null : (DateTime?)reader.GetDateTime(17);
 			FuehrerscheinNummer = reader.IsDBNull(18) ? null : reader.GetString(18);
+			HatEigenesZugfahrzeug = reader.IsDBNull(19) ? false : reader.GetBoolean(19);
+			EigenesZugfahrzeugMarke = reader.IsDBNull(20) ? null : reader.GetString(20);
+			EigenesZugfahrzeugModell = reader.IsDBNull(21) ? null : reader.GetString(21);
+			EigenesZugfahrzeugKennzeichen = reader.IsDBNull(22) ? null : reader.GetString(22);
 		}
 		 
 		#endregion
@@ -512,6 +516,18 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("fuehrerscheinklassenlist")]
 		public List<FuehrerscheinKlasse>? FuehrerscheinKlassenList { get; set; }
 
+		[JsonPropertyName("hatzugfahrzeug")]
+		public bool HatEigenesZugfahrzeug { get; set; }
+
+		[JsonPropertyName("eigeneszugfahrzeugmarke")]
+		public string? EigenesZugfahrzeugMarke { get; set; }
+
+		[JsonPropertyName("eigeneszugfahrzeugmodell")]
+		public string? EigenesZugfahrzeugModell { get; set; }
+
+		[JsonPropertyName("eigeneszugfahrzeugkennzeichen")]
+		public string? EigenesZugfahrzeugKennzeichen { get; set; }
+
 		#endregion
 
 		//************************************************************************
@@ -539,14 +555,14 @@ namespace VRentalsClasses.Models
             {
                 command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
                     $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
-                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr where users_id = :pid";
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk where users_id = :pid";
             }
             else
 			{
 				this.RegistrierungsTag = DateTime.Now;
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.UserId = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn, :if, :sta, :faud, :fabd, :fnmr)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn, :if, :sta, :faud, :fabd, :fnmr, :hzf, :ezma, :ezmo, :ezk)";
 			}
 
 			command.Parameters.AddWithValue("pid", this.UserId);
@@ -569,6 +585,11 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("faud", this.FuehrerscheinAusstellungsDatum.HasValue ? (object)this.FuehrerscheinAusstellungsDatum.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("fabd", this.FuehrerscheinAblaufDatum.HasValue ? (object)this.FuehrerscheinAblaufDatum.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("fnmr", String.IsNullOrEmpty(this.FuehrerscheinNummer) ? (object)DBNull.Value : (object)this.FuehrerscheinNummer);
+			command.Parameters.AddWithValue("hzf", this.HatEigenesZugfahrzeug);
+			command.Parameters.AddWithValue("ezma", String.IsNullOrEmpty(this.EigenesZugfahrzeugMarke) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugMarke);
+			command.Parameters.AddWithValue("ezmo", String.IsNullOrEmpty(this.EigenesZugfahrzeugModell) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugModell);
+			command.Parameters.AddWithValue("ezk", String.IsNullOrEmpty(this.EigenesZugfahrzeugKennzeichen) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugKennzeichen);
+
 
 			try
 			{
@@ -603,7 +624,7 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
 					$" passwort = :pwd, rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
 					$" , registrierungstag = :regt, letzteanmeldung = :lanm," +
-					$" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr where users_id = :pid";
+					$" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk where users_id = :pid";
 
 			command.Parameters.AddWithValue("pid", user_id);
 			command.Parameters.AddWithValue("vn", String.IsNullOrEmpty(this.Vorname) ? (object)DBNull.Value : (object)this.Vorname);
@@ -625,6 +646,10 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("faud", this.FuehrerscheinAusstellungsDatum.HasValue ? (object)this.FuehrerscheinAusstellungsDatum.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("fabd", this.FuehrerscheinAblaufDatum.HasValue ? (object)this.FuehrerscheinAblaufDatum.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("fnmr", String.IsNullOrEmpty(this.FuehrerscheinNummer) ? (object)DBNull.Value : (object)this.FuehrerscheinNummer);
+			command.Parameters.AddWithValue("hzf", this.HatEigenesZugfahrzeug);
+			command.Parameters.AddWithValue("ezma", String.IsNullOrEmpty(this.EigenesZugfahrzeugMarke) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugMarke);
+			command.Parameters.AddWithValue("ezmo", String.IsNullOrEmpty(this.EigenesZugfahrzeugModell) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugModell);
+			command.Parameters.AddWithValue("ezk", String.IsNullOrEmpty(this.EigenesZugfahrzeugKennzeichen) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugKennzeichen);
 
 			try
 			{
@@ -685,6 +710,34 @@ namespace VRentalsClasses.Models
 					foreach (int entry in listToDelete)
 					{
 						command.CommandText = $"delete from {SCHEMA}.{TABLE_BILDER} where users_id = :uid;";
+						command.Parameters.AddWithValue("uid", entry);
+						try
+						{
+							result += command.ExecuteNonQuery();
+							command.Parameters.Clear();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
+				try
+				{
+					if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+					{
+						command.Connection = DBConnection.GetConnection();
+						command.Connection.Open();
+					}
+
+					foreach (int entry in listToDelete)
+					{
+						command.CommandText = $"delete from {SCHEMA}.{TABLE_FUEHRERSCHEINKLASSE} where users_id = :uid;";
 						command.Parameters.AddWithValue("uid", entry);
 						try
 						{

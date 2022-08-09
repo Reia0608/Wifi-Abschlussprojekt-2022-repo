@@ -333,21 +333,24 @@ export default class PagePersonalProfile
 		{
 			this.app.ApiBenutzerGetFSKList((response) => 
 			{
-				this.benutzer.fuehrerscheinklassenlist = response;
-				let iterator = 0;
-				for (let fskitem of this.benutzer.fuehrerscheinklassenlist) 
+				if(response != null)
 				{
-					html += 
-					`
-					<tr data-fsk-idx="${iterator}">
-						<th scope="row">
-						</th><th>
-						<td scope="col">${(fskitem ? fskitem : '&nbsp;')}</td>
-					</tr>
-					`;
-					iterator++;
+					this.benutzer.fuehrerscheinklassenlist = response;
+					let iterator = 0;
+					for (let fskitem of this.benutzer.fuehrerscheinklassenlist) 
+					{
+						html += 
+						`
+						<tr data-fsk-idx="${iterator}">
+							<th scope="row">
+							</th><th>
+							<td scope="col">${(fskitem ? fskitem : '&nbsp;')}</td>
+						</tr>
+						`;
+						iterator++;
+					}
+					tableFSKList.innerHTML = html;
 				}
-				tableFSKList.innerHTML = html;
 			}, (ex) => 
 			{
 				alert(ex);

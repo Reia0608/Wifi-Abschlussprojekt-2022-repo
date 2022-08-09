@@ -1,7 +1,7 @@
 {
     "name": "vrentals PWA",
     "short_name": "vrentals", 
-    "start_url": "/index.html",
+    "start_url": "./index.html",
     "scope": ".", 
     "description": "PWA of the vrentals solution",
     "display": "standalone",

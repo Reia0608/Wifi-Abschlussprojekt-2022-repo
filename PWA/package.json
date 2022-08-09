@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"start": "http-server -c-1"
+    "start": "http-server -c-1"
   },
   "author": "Sami Ounis",
   "license": "ISC",
   "dependencies": {
     "http-server": "^14.1.0"
+  },
+  "devDependencies": {
+    "@iconify/iconify": "^2.2.1"
   }
 }

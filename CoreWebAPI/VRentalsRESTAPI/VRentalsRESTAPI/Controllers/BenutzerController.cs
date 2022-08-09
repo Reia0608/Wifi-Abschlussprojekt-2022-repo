@@ -175,7 +175,7 @@ namespace VRentalsRESTAPI.Controllers
 		{
 			BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(id);
 			Benutzer benutzer = Benutzer.Get(this);
-			if (benutzer?.Rolle == RollenTyp.Admin)
+			if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde && benutzerFuehrerschein.Users_Id == benutzer.UserId))
 			{
 				return BenutzerFuehrerschein.GetStringList(id);
 			}
@@ -191,7 +191,7 @@ namespace VRentalsRESTAPI.Controllers
 		{
 			BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(id);
 			Benutzer benutzer = Benutzer.Get(this);
-			if (benutzer?.Rolle == RollenTyp.Admin)
+			if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde && benutzer?.UserId == benutzerFuehrerschein.Users_Id))
 			{
 				return BenutzerFuehrerschein.Get(id);
 			}
