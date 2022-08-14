@@ -1,7 +1,5 @@
 const apiBaseUrl = 'http://localhost:59968/api/';
 
-const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-
 const imgContainer = document.querySelector('#imgContainer');
 const imgBild = document.querySelector('#imgBild');
 const buttonBenutzerSpeichern = document.querySelector('#buttonBenutzerSpeichern');
@@ -23,9 +21,13 @@ this.checkboxAll = document.querySelector('#checkboxAll');
 // Initialisierung
 var benutzerBild = {};
 
-if(benutzerMerkmal)
+var bm = localStorage.getItem("bm");
+
+this.benutzer = {};
+
+if(bm)
 {
-	datenLaden(benutzerMerkmal);
+	datenLaden(bm);
 }
 else
 {
@@ -140,7 +142,7 @@ buttonModalPasswortSpeichern.addEventListener('click', (e) =>
 		}, (ex) => 
 		{
 			alert(ex);
-		}, benutzerMerkmal);
+		}, bm);
 });
 
 //-------------------------------------------------------------
@@ -151,13 +153,14 @@ buttonFSKNeu.addEventListener( 'click', (e) =>
 	ApiBenutzerGetFSKObject((response) => 
 	{
 		this.fuehrerscheinklassenlist = response;
-		dialogFuehrerschein.show();
 
 		// WIP check/ uncheck boxes in Modal
 	}, (ex) => 
 	{
 		alert(ex);
 	}, this.benutzer.userid);
+
+	dialogFuehrerschein.show();
 });
 
 // Button Modal Führerscheinklassen checkboxAll-click
@@ -194,7 +197,7 @@ buttonModalFSKSpeichern.addEventListener( 'click', (e) =>
 
 	ApiBenutzerFSKAdd(() =>
 	{
-		this.datenLaden(benutzerMerkmal);
+		this.datenLaden(bm);
 	}, (ex) =>
 	{
 		alert(ex);
@@ -249,7 +252,7 @@ buttonBenutzerSpeichern.addEventListener('click', (e) =>
 	if (inputBenutzername.value && inputVorname.value && inputNachname.value) 
 	{
 		let saveOk = true;
-		if(benutzerMerkmal)
+		if(bm)
 		{
 			this.benutzer.username = inputBenutzername.value;
 			this.benutzer.vorname = inputVorname.value;
@@ -263,18 +266,6 @@ buttonBenutzerSpeichern.addEventListener('click', (e) =>
 			if(checkboxSwitchIstFahrer.checked)
 			{
 				this.benutzer.istfahrer = true;
-
-				if (selectStatus.value == '0') 
-				{
-					saveOk = false;
-					selectStatus.classList.add('is-invalid');
-					selectStatus.classList.remove('is-valid');
-				}
-				else 
-				{
-					selectStatus.classList.add('is-valid');
-					selectStatus.classList.remove('is-invalid');
-				}
 
 				if(!inputDateAusstellung.value)
 				{
@@ -314,7 +305,6 @@ buttonBenutzerSpeichern.addEventListener('click', (e) =>
 
 				if(saveOk)
 				{
-					this.benutzer.status = parseInt(selectStatus.value);
 					if(inputDateAusstellung.value)
 					{
 						this.benutzer.fuehrerscheinausstellungsdatum = inputDateAusstellung.value;
@@ -373,7 +363,7 @@ buttonBenutzerSpeichern.addEventListener('click', (e) =>
 
 			if(saveOk)
 			{
-				ApiBenutzerSet(() => 
+				ApiBenutzerSetWOP(() => 
 				{
 					if (benutzerBild.bild_bytes) 
 					{
@@ -405,7 +395,7 @@ buttonBenutzerSpeichern.addEventListener('click', (e) =>
 
 buttonBenutzerAbbrechen.addEventListener('click', (e) =>
 {
-	location.hash = '#main';
+	window.open('http://localhost:5500/src/index.html', '_self');
 });
 	
 //-------------------------------------------------------------
@@ -420,14 +410,32 @@ function datenLaden(benutzerMerkmal)
 			this.benutzer = response.benutzer;
 			this.benutzer.userid = response.benutzer.userid;
 
+			// Hauptdaten ausfüllen
 			inputBenutzername.value = this.benutzer.username;
 			inputVorname.value = this.benutzer.vorname;
 			inputNachname.value = this.benutzer.nachname;
 			inputDateGeburtsdatum.value = new Date(this.benutzer.geburtsdatum).toLocaleDateString('en-CA');
 			inputGeburtsort.value = this.benutzer.geburtsort;
-			inputMarke.value = this.benutzer.eigeneszugfahrzeugmarke;
-			inputModell.value = this.benutzer.eigeneszugfahrzeugmodell;
-			inputKennzeichen.value = this.benutzer.eigeneszugfahrzeugkennzeichen;
+
+			// Führerscheindaten ausfüllen
+			if(this.benutzer.istfahrer)
+			{
+				checkboxSwitchIstFahrer.checked = true;
+				collapseFuehrerschein.classList.add("show");
+				inputDateAusstellung.value = new Date(this.benutzer.fuehrerscheinausstellungsdatum).toLocaleDateString('en-CA');
+				inputDateAblauf.value = new Date(this.benutzer.fuehrerscheinablaufdatum).toLocaleDateString('en-CA');
+				inputFuehrerscheinnummer.value = this.benutzer.fuehrerscheinnummer;
+			}
+
+			// Daten für eigenes Zugfarhzeug ausfüllen
+			if(this.benutzer.hatzugfahrzeug)
+			{
+				checkboxSwitchHatZugfahrzeug.checked = true;
+				collapseZugfahrzeug.classList.add("show");
+				inputMarke.value = this.benutzer.eigeneszugfahrzeugmarke;
+				inputModell.value = this.benutzer.eigeneszugfahrzeugmodell;
+				inputKennzeichen.value = this.benutzer.eigeneszugfahrzeugkennzeichen;
+			}
 
 			//  Profilbild anzeigen
 			ApiBilderGetBenutzerList((response) =>
@@ -627,7 +635,36 @@ function ApiBenutzerSet(successCallback, errorCallback, benutzer)
 		}
 		else
 		{
+			throw new Error(response.status + ' ' + response.statusText);
+		} 
+	})
+	.catch(errorCallback);
+}
 
+function ApiBenutzerSetWOP(successCallback, errorCallback, benutzer) 
+{
+	fetch(apiBaseUrl + 'benutzer/wop' + (benutzer.userid ? '/' + benutzer.userid : ''), 
+	{
+		method: benutzer.userid ? 'PUT' : 'POST',
+		cache: 'no-cache',
+		headers: 
+		{
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(benutzer)
+	})
+	.then((response) => 
+	{
+		if (response.status == 200) 
+		{
+			return successCallback('Daten wurden erfolgreich geschickt!');
+		}
+		else if (response.status == 204) 
+		{
+			errorCallback('Daten sind unvollständig!');
+		}
+		else
+		{
 			throw new Error(response.status + ' ' + response.statusText);
 		} 
 	})

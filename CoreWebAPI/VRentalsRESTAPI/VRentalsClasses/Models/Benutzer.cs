@@ -666,6 +666,64 @@ namespace VRentalsClasses.Models
 			return result;
 		}
 
+		public int SaveWithoutPassword(int user_id)
+		{
+			int result = -1;
+			NpgsqlCommand command = new NpgsqlCommand();
+			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			{
+				command.Connection = DBConnection.GetConnection();
+				command.Connection.Open();
+			}
+
+			if (!String.IsNullOrEmpty(this.Passwort))
+			{
+				this.PasswortHash = GetPasswordHash(this.Passwort);
+			}
+
+			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
+					$" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
+					$" , registrierungstag = :regt, letzteanmeldung = :lanm," +
+					$" merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk where users_id = :pid";
+
+			command.Parameters.AddWithValue("pid", user_id);
+			command.Parameters.AddWithValue("vn", String.IsNullOrEmpty(this.Vorname) ? (object)DBNull.Value : (object)this.Vorname);
+			command.Parameters.AddWithValue("nn", String.IsNullOrEmpty(this.Nachname) ? (object)DBNull.Value : (object)this.Nachname);
+			command.Parameters.AddWithValue("ges", (int)this.Geschlecht);
+			command.Parameters.AddWithValue("un", String.IsNullOrEmpty(this.UserName) ? (object)DBNull.Value : (object)this.UserName);
+			//KontaktListe
+			command.Parameters.AddWithValue("rl", (int)this.Rolle);
+			command.Parameters.AddWithValue("gebd", this.Geburtsdatum.HasValue ? (object)this.Geburtsdatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("gebo", String.IsNullOrEmpty(this.GeburtsOrt) ? (object)DBNull.Value : (object)this.GeburtsOrt);
+			command.Parameters.AddWithValue("regt", this.RegistrierungsTag.HasValue ? (object)this.RegistrierungsTag.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("lanm", this.LetzteAnmeldung.HasValue ? (object)this.LetzteAnmeldung.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("merkgb", this.MerkmalGiltBis.HasValue ? (object)this.MerkmalGiltBis.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("kn", this.KundenNummer.HasValue ? (int)this.KundenNummer : (object)DBNull.Value);
+			command.Parameters.AddWithValue("if", this.IstFahrer);
+			command.Parameters.AddWithValue("sta", (int)this.Status);
+			command.Parameters.AddWithValue("faud", this.FuehrerscheinAusstellungsDatum.HasValue ? (object)this.FuehrerscheinAusstellungsDatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("fabd", this.FuehrerscheinAblaufDatum.HasValue ? (object)this.FuehrerscheinAblaufDatum.Value : (object)DBNull.Value);
+			command.Parameters.AddWithValue("fnmr", String.IsNullOrEmpty(this.FuehrerscheinNummer) ? (object)DBNull.Value : (object)this.FuehrerscheinNummer);
+			command.Parameters.AddWithValue("hzf", this.HatEigenesZugfahrzeug);
+			command.Parameters.AddWithValue("ezma", String.IsNullOrEmpty(this.EigenesZugfahrzeugMarke) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugMarke);
+			command.Parameters.AddWithValue("ezmo", String.IsNullOrEmpty(this.EigenesZugfahrzeugModell) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugModell);
+			command.Parameters.AddWithValue("ezk", String.IsNullOrEmpty(this.EigenesZugfahrzeugKennzeichen) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugKennzeichen);
+
+			try
+			{
+				result = command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				command.Connection.Close();
+			}
+			return result;
+		}
+
 		public int Delete()
 		{
 			int result = -1;

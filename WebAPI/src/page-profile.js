@@ -26,6 +26,10 @@ export default class PageProfile
 			const inputDateAblauf = this.app.Main.querySelector('#inputDateAblauf');
 			const inputFuehrerscheinnummer = this.app.Main.querySelector('#inputFuehrerscheinnummer');
 			const collapseFuehrerschein = this.app.Main.querySelector('#collapseFuehrerschein');
+			const checkboxSwitchHatZugfahrzeug = document.querySelector('#checkboxSwitchHatZugfahrzeug');
+			const inputMarke = document.querySelector('#inputMarke');
+			const inputModell = document.querySelector('#inputModell');
+			const inputKennzeichen = document.querySelector('#inputKennzeichen');
 			
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			 
@@ -230,6 +234,22 @@ export default class PageProfile
 				}
 			});
 
+			//-------------------------------------------------------------
+			// Checkbox-Switch-Hat-Zugfahrzeug-click
+			checkboxSwitchHatZugfahrzeug.addEventListener('click', (e) =>
+			{
+				if(checkboxSwitchHatZugfahrzeug.checked == true)
+				{
+					this.benutzer.hatzugfahrzeug = true;
+					collapseZugfahrzeug.classList.add("show");
+				}
+				else
+				{
+					this.benutzer.hatzugfahrzeug = false;
+					collapseZugfahrzeug.classList.remove("show");
+				}
+			});
+
             //-------------------------------------------------------------
 			// speichern
 			buttonBenutzerSpeichern.addEventListener('click', (e) => 
@@ -407,6 +427,15 @@ export default class PageProfile
 					inputDateAusstellung.value = new Date(this.benutzer.fuehrerscheinausstellungsdatum).toLocaleDateString('en-CA');
 					inputDateAblauf.value = new Date(this.benutzer.fuehrerscheinablaufdatum).toLocaleDateString('en-CA');
 					inputFuehrerscheinnummer.value = this.benutzer.fuehrerscheinnummer;
+				}
+
+				if(this.benutzer.hatzugfahrzeug)
+				{
+					checkboxSwitchHatZugfahrzeug.checked = true;
+					collapseZugfahrzeug.classList.add("show");
+					inputMarke.value = this.benutzer.eigeneszugfahrzeugmarke;
+					inputModell.value = this.benutzer.eigeneszugfahrzeugmodell;
+					inputKennzeichen.value = this.benutzer.eigeneszugfahrzeugkennzeichen;
 				}
 
                 //  Profilbild anzeigen

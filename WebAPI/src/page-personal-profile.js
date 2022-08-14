@@ -245,7 +245,7 @@ export default class PagePersonalProfile
 						this.benutzer.geburtsort = inputGeburtsort.value;
 						
 
-						this.app.ApiBenutzerSet((response) => 
+						this.app.ApiBenutzerSetWOP((response) => 
 						{
 							if (benutzerBild.bild_bytes) 
 							{

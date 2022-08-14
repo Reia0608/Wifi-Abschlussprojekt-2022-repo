@@ -1,5 +1,7 @@
 ===== Priority 1=====
 
+0. When trying to change the personal profile in either the Web App or the PWA, the password gets deleted in the database which prevents logging a second time.
+
 1. Make the user roles actually do something!
 
 2. Normal user can get user list. 
@@ -18,8 +20,7 @@
 
 8. Creating a new client as admin just creates an empty entry. Also what happens to the password?
 
-9. Does adding a Führerschein to a user in the PWA break the system?
-
+9. Add and remove the items in the nav in the PWA depending on whether or not a user is logged in.
 
 ===== Priority 2=====
 
@@ -52,6 +53,10 @@
 11. In the first payment step, show the opening hours for vrentals and check the input if it is during those times.
 
 12. Gleicher Rückgabeort button on page-rent-step-one.html causes eye strain.
+
+13. // WIP: check/ uncheck boxes in Modal for Fuehrerscheinklassenlist in profile for both the Web App and the PWA.
+
+14. // WIP: APISchadenSetBild is not just copy pasted. Needs to be changed to fullfill its function.
 
 ===== Priority 3=====
 

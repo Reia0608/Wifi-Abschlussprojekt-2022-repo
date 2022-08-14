@@ -289,6 +289,39 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiBenutzerSetWOP(successCallback, errorCallback, benutzer) 
+{
+	$('body').addClass('waiting');
+	fetch(this.apiBaseUrl + 'benutzer/wop' + (benutzer.userid ? '/' + benutzer.userid : ''), 
+	{
+		method: benutzer.userid ? 'PUT' : 'POST',
+		cache: 'no-cache',
+		headers: 
+		{
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(benutzer)
+	})
+	.then((response) => 
+	{
+		if (response.status == 200) 
+		{
+			$('body').removeClass('waiting');
+			return successCallback('Daten wurden erfolgreich geschickt!');
+		}
+		else if (response.status == 204) 
+		{
+			$('body').removeClass('waiting');
+			errorCallback('Daten sind unvollständig!');
+		}
+		else
+		{
+			throw new Error(response.status + ' ' + response.statusText);
+		} 
+	})
+	.catch(errorCallback);
+}
+
 	ApiBenutzerGetById(successCallback, errorCallback, pid) 
 	{
 		$('body').addClass('waiting');
@@ -1073,6 +1106,36 @@ export default class Application
 	}
 
 	ApiSchadenSet(successCallback, errorCallback, schaden)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'schaden', 
+		{
+			method: schaden.schaden_id ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(schaden)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return successCallback();
+			}
+			else if (response.status == 204) 
+			{
+				$('body').removeClass('waiting');
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.catch(errorCallback);
+	}
+
+	ApiSchadenSetBild(successCallback, errorCallback, schaden) // WIP!!!!
 	{
 		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'schaden', 

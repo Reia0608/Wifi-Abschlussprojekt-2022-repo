@@ -27,7 +27,7 @@ self.addEventListener('install', function(event)
 
 self.addEventListener('activate', function(event) 
 {
-    console.log('[SW]: Service worker activating, aber sowas von, jetzt aber echt...', event);
+    console.log('[SW]: Service worker activating...', event);
     event.waitUntil(
         caches.keys()
             .then(function(keyList) 

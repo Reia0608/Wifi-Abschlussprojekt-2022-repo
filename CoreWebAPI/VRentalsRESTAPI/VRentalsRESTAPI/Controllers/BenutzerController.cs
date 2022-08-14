@@ -300,6 +300,37 @@ namespace VRentalsRESTAPI.Controllers
 			return result;
 		}
 
+		// PUT: api/<BenutzerController>/5
+		[HttpPut("wop/{userid}")]
+		public IActionResult PutWithoutPassword(int userid, [FromBody] Benutzer benutzer)
+		{
+			IActionResult result = null;
+			try
+			{
+				Benutzer dbBenutzer = Benutzer.Get(userid);
+				if (dbBenutzer == null)
+				{
+					result = NotFound();
+				}
+				else
+				{
+					if (benutzer.SaveWithoutPassword(userid) == 1)
+					{
+						result = Ok(benutzer);
+					}
+					else
+					{
+						result = NoContent();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				result = StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+			}
+			return result;
+		}
+
 		[HttpPost()]
 		public IActionResult InsertBenutzer([FromBody] Benutzer benutzer)
 		{

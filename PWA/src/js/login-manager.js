@@ -6,7 +6,14 @@ const passwordButton = document.getElementById('passwordButton');
 const buttonRegister = document.querySelector('#buttonRegister'); 
 const buttonLogin = document.getElementById('buttonLogin');
 
-if(document.cookie) var benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+//======================================================================
+// Initialization
+
+if(document.cookie)
+{
+    const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+    localStorage.setItem("bm", benutzerMerkmal);
+}
 
 //======================================================================
 // events
@@ -28,7 +35,13 @@ buttonLogin.addEventListener( 'click', () =>
         {
             if (response.success) 
             {
-                ApiPageInit(() => 
+                if(document.cookie)
+                {
+                    var benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+                    localStorage.setItem("bm", benutzerMerkmal);
+                }
+
+                ApiPageInit((response) => 
                 {
                     console.log('login fetch successful!');
                     console.log("angemeldet!");
@@ -128,7 +141,7 @@ function ApiBenutzerLogoff(successCallback, errorCallback)
 
 function ApiPageInit(successCallback, errorCallback, benutzerMerkmal) 
 {
-    fetch(this.apiBaseUrl + 'page/init' + (benutzerMerkmal ? '?bm=' + benutzerMerkmal : '') , 
+    fetch(apiBaseUrl + 'page/init' + (benutzerMerkmal ? '?bm=' + benutzerMerkmal : '') , 
     {
         method: 'GET'
     })

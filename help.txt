@@ -234,6 +234,14 @@ https://stackoverflow.com/questions/6818921/most-efficient-way-to-display-card-i
 
 https://imagekit.io/blog/lazy-loading-images-complete-guide/#the-general-concept-of-lazy-loading-images-in-img-tag
 
+=================================================================
+====================== Local Storage in JS ======================
+=================================================================
+
+https://stackoverflow.com/questions/23476732/set-javascript-global-variables-across-multiple-pages
+http://diveintohtml5.info/storage.html
+https://blog.logrocket.com/storing-retrieving-javascript-objects-localstorage/
+
 ================================================
 ====================== TODO=====================
 ================================================
