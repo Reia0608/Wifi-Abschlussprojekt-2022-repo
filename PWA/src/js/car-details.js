@@ -1,8 +1,8 @@
 const apiBaseUrl = 'http://localhost:59968/api/';
 
 const imgContainer = document.querySelector('#imgContainer');
-const buttonKfzSpeichern = document.querySelector('#buttonKfzSpeichern');
-const buttonKfzAbbrechen = document.querySelector('#buttonKfzAbbrechen');
+const buttonKfzMieten = document.querySelector('#buttonKfzMieten');
+const buttonKfzZurueck = document.querySelector('#buttonKfzZurueck');
 const modalSchadenBody = document.querySelector('#modalSchadenBody');
 const buttonSchadenNeu = document.querySelector('#buttonSchadenNeu');
 const dialogSchaden = new bootstrap.Modal(modalSchadenBody);
@@ -63,64 +63,24 @@ imgContainer.addEventListener('click', (event) =>
 
 //-------------------------------------------------------------
 // speichern
-buttonKfzSpeichern.addEventListener('click', (e) => 
+buttonKfzMieten.addEventListener('click', (e) => 
 {
     const inputMarke = document.querySelector('#inputMarke');
     const inputModell = document.querySelector('#inputModell');
     const inputKennzeichen = document.querySelector('#inputKennzeichen');
     const inputMietpreis = document.querySelector('#inputMietpreis');
     const inputBaujahr = document.querySelector('#inputBaujahr');
-    const selectKlasse = document.querySelector('#selectKlasse');
-    const selectKategorie = document.querySelector('#selectKategorie');
+    const inputKlasse = document.querySelector('#inputKlasse');
+    const inputKategorie = document.querySelector('#inputKategorie');
 
-    if (inputMarke.value && inputModell.value) 
-    {
-        if(args.kid)
-        {
-            this.kraftfahrzeug.kraftfahrzeug_id = parseInt(args.kid);
-        }
-        else
-        {
-            this.kraftfahrzeug = {};
-        }
-        this.kraftfahrzeug.marke = inputMarke.value;
-        this.kraftfahrzeug.modell = inputModell.value;
-        this.kraftfahrzeug.kennzeichen = inputKennzeichen.value;
-        this.kraftfahrzeug.mietpreis = inputMietpreis.value && !isNaN(inputMietpreis.value) ? parseFloat(inputMietpreis.value) : null;
-        this.kraftfahrzeug.baujahr = parseInt(inputBaujahr.value);
-        this.kraftfahrzeug.klasse = selectKlasse.options[selectKlasse.selectedIndex].text;
-        this.kraftfahrzeug.kategorie = selectKategorie.options[selectKategorie.selectedIndex].text;
-
-        ApiKraftfahrzeugSet(() => 
-        {
-            if (kfzbild.bild_bytes) 
-            {
-                kfzbild.kraftfahrzeug_id = this.kraftfahrzeug.kraftfahrzeug_id;
-                ApiBilderSet(() => 
-                {
-
-                }, (ex) => 
-                {
-                    alert(ex);
-                }, kfzbild);
-            }
-        }, (ex) => 
-        {
-            alert(ex);
-        }, this.kraftfahrzeug);
-    }
-    else 
-    {
-        alert('Marke und Modell sind Pflicht!');
-    }
     location.hash = '#carlist';
 });
 
 //-------------------------------------------------------------
 // Vorgang abbrechen
-buttonKfzAbbrechen.addEventListener('click', (e) =>
+buttonKfzZurueck.addEventListener('click', (e) =>
 {
-    location.hash = '#carlist';
+    window.open('http://localhost:5500/src/car-list.html', '_self');
 });
 
 //------------------------------------------------------------------------------------------
@@ -293,20 +253,20 @@ function datenLaden(kraftfahrzeug_id)
         spanKraftfahrzeugJahre.textContent = (currentYear - inputBaujahr.value).toString();
         if(this.kraftfahrzeug.klasse == null)
         {
-            selectKlasse.value = '0';
+            inputKlasse.value = 'unbekannt';
         }
         else
         {
-            selectKlasse.options[selectKlasse.selectedIndex].text = this.kraftfahrzeug.klasse;
+            inputKlasse.value = this.kraftfahrzeug.klasse;
         }
         
         if(this.kraftfahrzeug.kategorie == null)
         {
-            selectKategorie.value = '0';
+            inputKategorie.value = 'unbekannt';
         }
         else
         {
-            selectKategorie.options[selectKategorie.selectedIndex].text = this.kraftfahrzeug.kategorie;
+            inputKategorie.value = this.kraftfahrzeug.kategorie;
         }
         
         // Kfz Bild anzeigen

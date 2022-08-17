@@ -8,13 +8,12 @@ self.addEventListener('install', function(event)
     console.log('[SW]: Service worker installing...', event);
     //new:
     event.waitUntil( //wont finish unitl caching is complete
-        //caches.open('static')
         caches.open(CACHE_STATIC_NAME)
             .then(function(cache) 
             {
                 console.log('[SW]: Precaching app shell...', event);
                 cache.addAll([
-                    '/',
+                    './',
                     './index.html',
                     './imprint.html',
                     './js/app.js',
@@ -49,33 +48,31 @@ self.addEventListener('fetch', function(event)
 {
     console.log('[SW]: Service worker fetching...', event);
     //new:
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(response)
-            {
-                if (response) 
+    event.respondWith((async ()=> 
+    {
+        const cachedResponse = await caches.match(event.request);
+        if(cachedResponse)
+        {
+            return cachedResponse; //response comes from the cache
+        }
+        else
+        {
+            return fetch(event.request) //not cached, get from internet...
+            .then(function(dynamicResponse) 
+            { //and place it into dynamic cache
+                caches.open(CACHE_DYNAMIC_NAME)
+                .then(function(cache) 
                 {
-                    return response; //response comes from the cache
-                } 
-                else 
-                {
-                    return fetch(event.request) //not cached, get from internet...
-                    .then(function(dynamicResponse) 
-                    { //and place it into dynamic cache
-                        caches.open(CACHE_DYNAMIC_NAME)
-                        .then(function(cache) 
-                        {
-                            cache.put(event.request.url, dynamicResponse.clone()) 
-                            //does not send request, uses response (can be done only once), and is therefore cloned
-                            //to respond back to the browser (clone is stored in cache, rest is shown)
-                            return dynamicResponse;
-                        })
-                    })
-                    .catch(function(error) 
-                    {
-                        //do not throw exception when fetching fails
-                    });
-                }
+                    cache.put(event.request.url, dynamicResponse.clone()) 
+                    //does not send request, uses response (can be done only once), and is therefore cloned
+                    //to respond back to the browser (clone is stored in cache, rest is shown)
+                    return dynamicResponse;
+                })
             })
-    );
+            .catch(function(error) 
+            {
+                //do not throw exception when fetching fails
+            });
+        }
+    }));
 });

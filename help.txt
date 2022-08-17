@@ -242,6 +242,18 @@ https://stackoverflow.com/questions/23476732/set-javascript-global-variables-acr
 http://diveintohtml5.info/storage.html
 https://blog.logrocket.com/storing-retrieving-javascript-objects-localstorage/
 
+=========================================================================
+====================== sourcemap warning in chrome ======================
+=========================================================================
+
+https://stackoverflow.com/questions/61339968/error-message-devtools-failed-to-load-sourcemap-could-not-load-content-for-chr
+
+======================================================================================================================
+====================== serviceworkers-fetch-object-that-was-not-a-response-was-passed-to-respond =====================
+======================================================================================================================
+
+https://stackoverflow.com/questions/57905153/serviceworkers-fetch-object-that-was-not-a-response-was-passed-to-respondwit
+
 ================================================
 ====================== TODO=====================
 ================================================
