@@ -22,6 +22,8 @@
 
 9. Add and remove the items in the nav in the PWA depending on whether or not a user is logged in.
 
+10. The PWA takes too long to load the pages in-between rent-step-XXX.html pages. The service worker is caching everything every time one goes to another page!
+
 ===== Priority 2=====
 
 0. Create a personal/kundennummer on staff/ client creation.

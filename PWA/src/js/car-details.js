@@ -4,13 +4,7 @@ const imgContainer = document.querySelector('#imgContainer');
 const buttonKfzMieten = document.querySelector('#buttonKfzMieten');
 const buttonKfzZurueck = document.querySelector('#buttonKfzZurueck');
 const modalSchadenBody = document.querySelector('#modalSchadenBody');
-const buttonSchadenNeu = document.querySelector('#buttonSchadenNeu');
-const dialogSchaden = new bootstrap.Modal(modalSchadenBody);
-const buttonModalSchadenSpeichern = document.querySelector('#buttonModalSchadenSpeichern');
-const labelAnfallendeKosten = document.querySelector('#labelAnfallendeKosten');
-const selectSchadenArt = document.querySelector('#selectSchadenArt');
-const labelBeschreibung = document.querySelector('#labelBeschreibung');	
-const divDateSchaden = document.querySelector('#divDateSchaden');
+const buttonModalSchadenSpeichern = document.querySelector('#buttonModalSchadenSpeichern');	
 const imgBild = document.querySelector('#imgBild');
 const spanKraftfahrzeugJahre = document.querySelector('#spanKraftfahrzeugJahre');
 
@@ -30,39 +24,8 @@ else
 }
 
 //-------------------------------------------------------------
-// drag & drop Bild
-imgContainer.addEventListener('dragover', (event) => 
-{
-    event.stopPropagation();
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
-});
+// KfZ Mieten
 
-imgContainer.addEventListener('drop', (event) => 
-{
-    event.stopPropagation();
-    event.preventDefault();
-    const fileList = event.dataTransfer.files;
-    this.bild = fileList[0];
-    const reader = new FileReader();
-    reader.addEventListener('load', (event) => 
-    {
-        // convert the image into a base64 string that can be saved as Byte[].
-        let base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
-        kfzbild.bild_bytes = base64String;
-
-        imgBild.src = event.target.result;	
-    });
-    reader.readAsDataURL(fileList[0]);
-});
-
-imgContainer.addEventListener('click', (event) =>
-{
-
-});
-
-//-------------------------------------------------------------
-// speichern
 buttonKfzMieten.addEventListener('click', (e) => 
 {
     const inputMarke = document.querySelector('#inputMarke');
@@ -73,11 +36,12 @@ buttonKfzMieten.addEventListener('click', (e) =>
     const inputKlasse = document.querySelector('#inputKlasse');
     const inputKategorie = document.querySelector('#inputKategorie');
 
-    location.hash = '#carlist';
+    window.open('http://localhost:5500/src/rent-step-one.html', '_self');
 });
 
 //-------------------------------------------------------------
 // Vorgang abbrechen
+
 buttonKfzZurueck.addEventListener('click', (e) =>
 {
     window.open('http://localhost:5500/src/car-list.html', '_self');
@@ -86,152 +50,6 @@ buttonKfzZurueck.addEventListener('click', (e) =>
 //------------------------------------------------------------------------------------------
 // alles rund um den Schaden
 
-
-//---------------------------
-buttonSchadenNeu.addEventListener( 'click', (e) => 
-{
-    labelAnfallendeKosten.value = '';
-    selectSchadenArt.value = '0';
-    labelBeschreibung.value = '';
-    this.schaden = null;
-    labelAnfallendeKosten.classList.remove('is-invalid', 'is-valid');
-    selectSchadenArt.classList.remove('is-invalid', 'is-valid');
-
-    dialogSchaden.show();
-});
-
-//---------------------------
-buttonModalSchadenSpeichern.addEventListener('click', (e) => 
-{
-    let schadensArtText = "Unbekannt";
-    let saveOk = true;
-    labelAnfallendeKosten.classList.remove('is-invalid', 'is-valid');
-    selectSchadenArt.classList.remove('is-invalid', 'is-valid');
-
-    if (!labelAnfallendeKosten.value || (labelAnfallendeKosten.value && isNaN(labelAnfallendeKosten.value))) 
-    {
-        saveOk = false;
-        labelAnfallendeKosten.classList.add('is-invalid');
-    }
-    else labelAnfallendeKosten.classList.add('is-valid');
-
-    if (selectSchadenArt.value == '0') 
-    {
-        saveOk = false;
-        selectSchadenArt.classList.add('is-invalid');
-    }
-    else selectSchadenArt.classList.add('is-valid');
-
-    if (saveOk) 
-    {
-        if (!this.schaden) 
-        {
-            this.schaden = 
-            {
-                schaden_id: null,
-                schaden_datum: new Date()
-            };
-        }
-        schadensArtText = selectSchadenArt.options[selectSchadenArt.selectedIndex].text;
-        this.schaden.kraftfahrzeug_id = parseInt(args.kid);
-        this.schaden.anfallendekosten = (labelAnfallendeKosten.value && !isNaN(labelAnfallendeKosten.value) ? parseInt(labelAnfallendeKosten.value) : 0);
-        this.schaden.schadensart = schadensArtText;
-        this.schaden.beschreibung = labelBeschreibung.value;
-
-        if(divDateSchaden.value == "")
-        {
-            this.schaden.schaden_datum = null;
-        }
-        else
-        {
-            this.schaden.schaden_datum = divDateSchaden.value;
-        }
-        
-        if(!this.kraftfahrzeug)
-        {
-            this.kraftfahrzeug = null;
-            if (!this.kraftfahrzeug.schadenlist)
-            {
-                this.kraftfahrzeug.schadenlist = [];
-            } 
-        }
-        
-        this.kraftfahrzeug.schadenlist.push(this.schaden);
-        
-
-        // Update the database.
-        ApiSchadenSet(() => 
-        {
-            console.log("database was updated!");
-            if (this.bild) 
-            {
-                this.bild.schaden_id = this.schaden.schaden_id;
-                ApiSchadenSetBild(() => 
-                {
-                    datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
-                }, (ex) => 
-                {
-                    alert(ex);
-                }, this.bild);
-            }
-            else
-            {
-                datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
-            }
-        }, (ex) => 
-        {
-            alert(ex);
-        }, this.schaden);
-
-        dialogSchaden.hide();
-    }
-});
-
-//---------------------------
-tableSchadenList.addEventListener('click', (e) => 
-{
-    let btn = null;
-    if (e.target.nodeName.toUpperCase() == 'PATH' && e.target.parentElement.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.parentElement.nodeName == 'BUTTON')
-    {
-        btn = e.target.parentElement.parentElement;
-    } 
-    else if (e.target.nodeName.toUpperCase() == 'SVG' && e.target.parentElement.nodeName == 'BUTTON')
-    {
-        btn = e.target.parentElement;
-    } 
-    else if (e.target.nodeName == 'BUTTON') 
-    {
-        btn = e.target;
-    }
-
-    if (btn) 
-    {
-        if (confirm('Wollen Sie den Schadenseintrag wirklich löschen?')) 
-        {
-            let id = parseInt(btn.id.split('_')[1], 10);
-
-            ApiSchadenDelete(() => 
-            {
-                console.log("entry was deleted!");
-                datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
-            }, (ex) => 
-            {
-                alert(ex);
-            }, id);
-        }	
-    }
-    else if (e.target.nodeName == 'TD') 
-    {
-        let idx = parseInt(e.target.parentElement.dataset.schadenIdx);
-        this.schaden = this.kraftfahrzeug.schadenlist[idx];
-        labelAnfallendeKosten.value = this.schaden.anfallendekosten;
-        selectSchadenArt.value =  new Helper().SchadensArtConverter(this.schaden.schadensart);
-        labelBeschreibung.value = this.schaden.beschreibung;
-        divDateSchaden.Value = new Date(this.schaden.schaden_datum); // WIP: does not show the date in the Modal!
-
-        dialogSchaden.show();
-    }
-});
 
 //-------------------------------------------------------------
 // Functions
@@ -307,14 +125,14 @@ function schadenListAnzeigen()
         ApiSchadenGetKfzList((response) => 
         {
             this.kraftfahrzeug.schadenlist = response;
-            let iterator = 0;
+            let iterator = 1;
             for (let schadenitem of this.kraftfahrzeug.schadenlist) 
             {
                 html += 
                 `
                 <tr data-schaden-idx="${iterator}">
                     <th scope="row">
-                        <button type="button" class="btn btn-sm" id="buttonSchadenDel_${schadenitem.schaden_id}"><span class="iconify" data-icon="mdi-delete"></span></button>
+                        ${iterator}
                     </th>
                     <td scope="col">${(schadenitem.schaden_datum ? dateFormatter.format(new Date(schadenitem.schaden_datum)) : '&nbsp;')}</td>
                     <td scope="col">${(schadenitem.schadensart ? schadenitem.schadensart : '&nbsp;')}</td>

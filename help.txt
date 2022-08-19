@@ -254,9 +254,35 @@ https://stackoverflow.com/questions/61339968/error-message-devtools-failed-to-lo
 
 https://stackoverflow.com/questions/57905153/serviceworkers-fetch-object-that-was-not-a-response-was-passed-to-respondwit
 
-================================================
-====================== TODO=====================
-================================================
+============================================================================
+====================== About service workers and scope =====================
+============================================================================
+
+https://web.dev/learn/pwa/service-workers/#registration_and_scope
+
+==================================================================
+====================== About service workers =====================
+==================================================================
+
+https://www.oreilly.com/library/view/building-progressive-web/9781491961643/ch04.html
+https://developer.mozilla.org/de/docs/Web/API/Service_Worker_API/Using_Service_Workers
+https://www.mediaevent.de/javascript/progressive-web-app.html
+
+==============================================================================
+====================== Managing service workers: Workbox =====================
+==============================================================================
+
+https://developer.chrome.com/docs/workbox/remove-buggy-service-workers/
+
+====================================================================
+====================== Combining Date and Time =====================
+====================================================================
+
+https://stackoverflow.com/questions/16597853/combine-date-and-time-string-into-single-date-with-javascript
+
+=================================================
+====================== TODO =====================
+=================================================
 
 https://freefrontend.com/bootstrap-payment-forms/
 

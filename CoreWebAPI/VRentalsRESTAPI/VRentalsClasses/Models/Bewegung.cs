@@ -29,10 +29,16 @@ namespace VRentalsClasses.Models
 		public Bewegung(NpgsqlDataReader reader)
 		{
 			Bewegung_Id = reader.GetInt32(0);
-			Benutzer_Id = reader.IsDBNull(1) ? null : reader.GetInt32(1);
-			BewegungsDatum = reader.IsDBNull(2) ? null : reader.GetDateTime(2);
-			Beschreibung = reader.IsDBNull(3) ? null : reader.GetString(3);
-			Grund = reader.IsDBNull(4) ? null : reader.GetString(4);
+			GemieteteGegenstaendeList = reader.IsDBNull(1) ? null : reader.GetInt32(1);
+			Benutzer_Id = reader.IsDBNull(2) ? null : reader.GetInt32(2);
+			BewegungsDatum = reader.IsDBNull(3) ? null : reader.GetDateTime(3);
+			Beschreibung = reader.IsDBNull(4) ? null : reader.GetString(4);
+			Grund = reader.IsDBNull(5) ? null : reader.GetString(5);
+			AbholOrt = reader.IsDBNull(6) ? null : reader.GetString(6);
+			RueckgabeOrt = reader.IsDBNull(7) ? null : reader.GetString(7);
+			AbholDatum = reader.IsDBNull(8) ? null : reader.GetDateTime(8);
+
+
 		}
 		#endregion
 		//************************************************************************
@@ -42,7 +48,7 @@ namespace VRentalsClasses.Models
 		public int? Bewegung_Id { get; set; }
 
 		[JsonPropertyName("gemietetegegenstaendelist")]
-		public List<IMietgegenstand>? GemieteteGegenstaendeList { get; set; }
+		public int? GemieteteGegenstaendeList { get; set; }
 
 		[JsonPropertyName("benutzerid")]
 		public int? Benutzer_Id { get; set; }
@@ -56,10 +62,28 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("grund")]
 		public string? Grund { get; set; }
 
-		#endregion
-		//************************************************************************
-		#region public methods
-		#endregion
-		//************************************************************************
-	}
+        [JsonPropertyName("abholort")]
+        public string? AbholOrt { get; set; }
+
+        [JsonPropertyName("rueckgabeort")]
+        public string? RueckgabeOrt { get; set; }
+
+        [JsonPropertyName("abholdatum")]
+        public DateOnly? AbholDatum { get; set; }
+
+        [JsonPropertyName("abholzeit")]
+        public DateTime? AbholZeit { get; set; }
+
+        [JsonPropertyName("rueckgabedatum")]
+        public DateOnly? RueckgabeDatum { get; set; }
+
+        [JsonPropertyName("rueckgabezeit")]
+        public DateTime? RueckgabeZeit { get; set; }
+
+        #endregion
+        //************************************************************************
+        #region public methods
+        #endregion
+        //************************************************************************
+    }
 }
