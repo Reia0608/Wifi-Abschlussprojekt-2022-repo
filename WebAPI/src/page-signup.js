@@ -1,5 +1,6 @@
 
-export default class PageSignup {
+export default class PageSignup 
+{
 	constructor(args) 
 	{
 		this.app = args.app;

@@ -280,6 +280,12 @@ https://developer.chrome.com/docs/workbox/remove-buggy-service-workers/
 
 https://stackoverflow.com/questions/16597853/combine-date-and-time-string-into-single-date-with-javascript
 
+============================================================
+====================== From SPA to PWA =====================
+============================================================
+
+https://simplabs.com/blog/2018/07/24/from-spa-to-pwa/
+
 =================================================
 ====================== TODO =====================
 =================================================

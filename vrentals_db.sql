@@ -352,7 +352,13 @@ CREATE TABLE rentals.tbl_bewegung
     bewegungsdatum date,
     beschreibung text,
     grund text,
-	mietgegenstand_id numeric
+	mietgegenstand_id numeric,
+	abholort character varying,
+	rueckgabeort character varying,
+	abholdatum date,
+	abholzeit time with time zone,
+	rueckgabedatum date,
+	rueckgabezeit time with time zone
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bewegung

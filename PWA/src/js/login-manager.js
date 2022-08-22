@@ -1,52 +1,54 @@
-const apiBaseUrl = 'http://localhost:59968/api/';
+import './app.js';
+import Navbar from './component-navbar.js';
+//import Helper from './helper.js';
 
-const inputUserName = document.getElementById('inputUserName');
-const inputPassword = document.getElementById('inputPassword');
-const passwordButton = document.getElementById('passwordButton');
-const buttonRegister = document.querySelector('#buttonRegister'); 
-const buttonLogin = document.getElementById('buttonLogin');
 
-//======================================================================
-// Initialization
-
-if(document.cookie)
+export default class LoginManager
 {
-    const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-    localStorage.setItem("bm", benutzerMerkmal);
-}
-
-//======================================================================
-// events
-
-// buttonRegister
-buttonRegister.addEventListener('click', (e) => 
-{
-    window.open('http://localhost:5500/src/signup.html', '_self');
-});
-
-//======================================================================
-// login
-
-buttonLogin.addEventListener( 'click', () => 
-{
-    if (inputUserName.value && inputPassword.value) 
+    constructor(appArgs)
     {
-        ApiBenutzerLogin((response) => 
-        {
-            if (response.success) 
+        //=====================================================
+		// local constants
+
+
+        //=====================================================
+		// local variables
+
+        let navbarArgs = 
+		{
+			app: appArgs,
+			loggedin: false,
+			rolle: 0,
+		};
+
+        //======================================================================
+        // Initialization
+
+        if (document.cookie) 
+		{
+            const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+			if (benutzerMerkmal) 
             {
-                if(document.cookie)
+                appArgs.ApiPageInit((response) => 
                 {
-                    var benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-                    localStorage.setItem("bm", benutzerMerkmal);
-                }
-
-                ApiPageInit((response) => 
-                {
-                    console.log('login fetch successful!');
+                    navbarArgs.loggedin = true;
+                    navbarArgs.rolle = response.benutzer.rolle;
+                    // switch(response.benutzer.rolle) 
+                    // {
+                    //     case 1:
+                    //         bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + new Helper().RolleConverter(response.benutzer.rolle)  + ')';
+                    //         break;
+                    //     case 2:
+                    //         bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + new Helper().RolleConverter(response.benutzer.rolle) + ')';
+                    //         break;
+                    //     default:
+                    //         bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname;
+                    //         break;
+                    // }
+                    appArgs.Navbar = new Navbar(navbarArgs);
+                    if (!location.hash) location.hash = '#main';
+                    appArgs.Navigate(location.hash);
                     console.log("angemeldet!");
-                    window.open('http://localhost:5500/src/index.html', '_self');
-
                 }, (ex) => 
                 {
                     alert(ex);
@@ -54,108 +56,54 @@ buttonLogin.addEventListener( 'click', () =>
             }
             else 
             {
-                alert(response.message);
+                this.Navbar = new Navbar(navbarArgs);
+                if (location.hash) appArgs.Navigate(location.hash);
+                else appArgs.Navigate('#main');
             }
-        }, (ex) => 
-        {
-            alert(ex);
-        }, 
-        {
-            benutzer: inputUserName.value,
-            pwd: inputPassword.value
-        });
+		}
+		else 
+		{
+			navbarArgs.loggedin = false;
+			this.Navbar = new Navbar(navbarArgs);
+			if (location.hash) appArgs.Navigate(location.hash);
+			else appArgs.Navigate('#main');
+		}
+
+        //======================================================================
+        // events
+
+        
+
+        //======================================================================
+        // login
+
+
+        //======================================================================
+        // API
+    
     }
-    else
-    {
-        alert('Benutzer/Passwort fehlt!!!');
-    } 
-})
 
-//======================================================================
-// eye-con
+    //=============================================================================
+	// public methods
+	//=============================================================================
 
-passwordButton.addEventListener('click', (e)=>
-{
-    if(passwordButton.dataset.view == 'off')
-    {
-        passwordButton.dataset.view = 'on';
-        passwordButton.innerHTML = '<span class="iconify" data-icon="mdi-eye-outline"></span>';
-        inputPassword.type = "text";
-    }
-    else
-    {
-        passwordButton.dataset.view = 'off';
-        passwordButton.innerHTML = '<span class="iconify" data-icon="mdi-eye-off-outline"></span>';
-        inputPassword.type = "password";
-    }
-});
+	Logoff(appArgs) 
+	{
+		appArgs.ApiBenutzerLogoff(() => 
+		{
+			let navbarArgs = 
+			{
+				app: appArgs,
+				loggedin: false,
+				rolle: 3,
+			};
 
-//======================================================================
-// API
-
-function ApiBenutzerLogin(successCallback, errorCallback, args) 
-{
-    fetch(apiBaseUrl + 'benutzer/login', 
-    {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'}, // 'Content-Type': 'application/x-www-form-urlencoded',
-        body: JSON.stringify(args),
-        cache: 'no-cache',
-        credentials: 'include'
-    })
-    .then((response)=>
-    {
-        if (response.status == 200 || response.status == 401)
-        {
-            return response.json();
-        } 
-        else
-        {
-            throw new Error(response.status + ' ' + response.statusText);
-        } 
-    }).then(successCallback)
-    .catch(errorCallback);
-}
-
-function ApiBenutzerLogoff(successCallback, errorCallback) 
-{
-    fetch(apiBaseUrl + 'benutzer/logoff', 
-    {
-        method: 'DELETE',
-        cache: 'no-cache',
-        credentials: 'include'
-    })
-    .then((response) => 
-    {
-        if (response.status == 200) 
-        {
-            return successCallback();
-        }
-        else
-        {
-            throw new Error(response.status + ' ' + response.statusText);
-        } 
-    })
-    .catch(errorCallback);
-}
-
-function ApiPageInit(successCallback, errorCallback, benutzerMerkmal) 
-{
-    fetch(apiBaseUrl + 'page/init' + (benutzerMerkmal ? '?bm=' + benutzerMerkmal : '') , 
-    {
-        method: 'GET'
-    })
-    .then((response) => 
-    {
-        if (response.status == 200) 
-        {
-            return response.json();
-        }
-        else
-        {
-            throw new Error(response.status + ' ' + response.statusText);
-        } 
-    })
-    .then(successCallback)
-    .catch(errorCallback);
+			this.Navbar = new Navbar(navbarArgs);
+			window.open('#logout', '_self');
+			console.log("abgemeldet!");
+		}, (ex) => 
+		{
+			alert(ex);
+		});
+	}
 }
