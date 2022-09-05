@@ -56,7 +56,89 @@ namespace VRentalsClasses.Models
 			return ausgabenstelle;
 		}
 
-		public static List<Ausgabenstelle> GetList()
+        public static List<string>? GetAllNames()
+        {
+            List<string>? resultAusgabenstelleListe = new List<string>();
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select ausgabenstelle_bezeichnung from {SCHEMA}.{TABLE}";
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+            try
+            {
+                while (reader.Read())
+                {
+                    resultAusgabenstelleListe.Add(reader.GetString(0));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return resultAusgabenstelleListe;
+        }
+
+        public static List<string>? GetByIdList(List<int?> ausgabenstelleListe)
+        {
+            List<string>? resultAusgabenstelleListe = new List<string>();
+			string condition = $" WHERE ";
+			int iterator = 0;
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+			foreach (int? entry in ausgabenstelleListe)
+			{
+				if(iterator == 0)
+				{
+                    condition += $"ausgabenstelle_id = {entry} ";
+					iterator++;
+                }
+				else
+				{
+					condition += $"OR ausgabenstelle_id = {entry} ";
+					iterator++;
+                }				
+			}
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select ausgabenstelle_bezeichnung from {SCHEMA}.{TABLE} {condition}";
+            
+            NpgsqlDataReader reader = command.ExecuteReader();
+            try
+            {
+                while (reader.Read())
+                {
+					resultAusgabenstelleListe.Add(reader.GetString(0));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return resultAusgabenstelleListe;
+        }
+
+        public static List<Ausgabenstelle> GetList()
 		{
 			List<Ausgabenstelle> ausgabenstellenList = new List<Ausgabenstelle>();
 			Ausgabenstelle ausgabenstelle = new Ausgabenstelle();

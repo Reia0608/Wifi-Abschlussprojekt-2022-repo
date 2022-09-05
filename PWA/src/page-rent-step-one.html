@@ -20,7 +20,14 @@
         <div class="col-12 col-md-6 mt-3">
             <div class="row">
                 <div class="col-6 text-end">Abholort</div>
-                <div class="col-6"><input type="text" placeholder="z.B. Wien" class="form-control form-control-sm" for="" id="inputTextAbholort" /></div>
+                <div class="col-6" id="divAbholortBody">
+                    <select class="form-select col-6" aria-label="Default select example" id="selectAbholort">
+                        <option selected>Bitte wählen</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
             </div>
             <div class="row mt-3">
                 <div class="form-check-reverse form-switch">
@@ -30,7 +37,14 @@
             </div>
             <div class="row mt-3" id="divRowRueckgabeort">
                 <div class="col-6 text-end">Rückgabeort</div>
-                <div class="col-6"><input type="text" placeholder="z.B. Linz" class="form-control form-control-sm" id="inputTextRueckgabeort" /></div>
+                <div class="col-6" id="divRueckgabeortBody">
+                    <select class="form-select" aria-label="Default select example" id="selectRueckgabeort">
+                        <option selected>Bitte wählen</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
             </div>
             <div class="row mt-3">
                 <div class="col-6 text-end">Abholdatum</div>

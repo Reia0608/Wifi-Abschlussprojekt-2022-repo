@@ -132,7 +132,43 @@ namespace VRentalsClasses.Models
 			return kraftfahrzeugListe;
 		}
 
-		public static int Delete(List<int> listToDelete)
+        public static List<int?> GetAusgabenstelleByMarkeAndModell(string? Marke, string? Modell)
+        {
+            List<int?> ausgabenstelleListe = new List<int?>();
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select ausgabenstelle_id from {SCHEMA}.{TABLE_KFZ} where marke like :mar and modell like :mod";
+            command.Parameters.AddWithValue("mar", Marke);
+			command.Parameters.AddWithValue("mod", Modell);
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+			try
+			{
+                while (reader.Read())
+                {
+                    ausgabenstelleListe.Add(reader.GetInt32(0));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
+            return ausgabenstelleListe;
+        }
+
+        public static int Delete(List<int> listToDelete)
 		{
 			int result = 0;
 			NpgsqlCommand command = new NpgsqlCommand();

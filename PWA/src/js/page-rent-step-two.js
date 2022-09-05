@@ -20,27 +20,79 @@ export default class PageRentStepTwo
 
             // Variablen
 
+            if(localStorage.getItem('rentObject'))
+            {
+                this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+                this.loadData();
+            }
             // Event Listeners
 
             inputButtonZurueck1.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-one.html', '_self');
+
+                location.hash = '#rentstepone';
             });
 
             inputButtonZurueck2.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-one.html', '_self');
+                location.hash = '#rentstepone';
             });            
 
             inputButtonWeiter1.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-three.html', '_self');
+                location.hash = '#rentstepthree';
             });
 
             inputButtonWeiter2.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-three.html', '_self');
+                location.hash = '#rentstepthree';
             });
         });
+    }
+
+    //=================================
+    // Functions
+
+    saveData()
+    {
+        const inputRadioBasisSchutzpaket = document.querySelector('#inputRadioBasisSchutzpaket');
+        const inputRadioMediumSchutzpaket = document.querySelector('#inputRadioMediumSchutzpaket');
+        const inputRadioPremiumSchutzpaket = document.querySelector('#inputRadioPremiumSchutzpaket');
+        const selectAnhaenger = document.querySelector('#selectAnhaenger');
+
+        var kid = localStorage.getItem("kid");
+
+        if(inputRadioBasisSchutzpaket.checked)
+        {
+            this.rentObject.schutzpaket = "Basisschutzpaket";
+        }
+        else if(inputRadioMediumSchutzpaket.checked)
+        {
+            this.rentObject.schutzpaket = "Mediumschutzpaket";
+        }
+        else if(inputRadioPremiumSchutzpaket.checked)
+        {
+            this.rentObject.schutzpaket = "Premiumschutzpaket";
+        }
+        
+        this.rentObject.mietgegenstand_liste.push(parseInt(kid));
+    }
+
+    loadData()
+    {
+        if(this.rentObject != {})
+        {
+            switch(this.rentObject.schutzpaket)
+            {
+                case 'Basisschutzpaket': inputRadioBasisSchutzpaket.checked = true;
+                                            break;
+                case 'Mediumschutzpaket': inputRadioMediumSchutzpaket.checked = true;
+                                            break;
+                case 'Premiumschutzpaket': inputRadioPremiumSchutzpaket.checked = true;
+                                            break;
+                default: break;
+            }
+            
+        }
     }
 }

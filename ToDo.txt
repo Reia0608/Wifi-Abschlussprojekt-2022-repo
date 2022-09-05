@@ -24,6 +24,8 @@
 
 10. The PWA takes too long to load the pages in-between rent-step-XXX.html pages. The service worker is caching everything every time one goes to another page!
 
+11. The PWA should start on the login page.
+
 ===== Priority 2=====
 
 0. Create a personal/kundennummer on staff/ client creation.

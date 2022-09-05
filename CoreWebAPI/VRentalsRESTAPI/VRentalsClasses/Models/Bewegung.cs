@@ -178,6 +178,9 @@ namespace VRentalsClasses.Models
         [JsonPropertyName("rueckgabezeit")]
         public DateTime? RueckgabeZeit { get; set; }
 
+        [JsonPropertyName("schutzpaket")]
+        public string? SchutzPaket { get; set; }
+
         #endregion
         //************************************************************************
         #region public methods

@@ -27,22 +27,22 @@ export default class PageRentStepThree
 
             inputButtonZurueck1.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-two.html', '_self');
+                location.hash = '#rentsteptwo';
             });
 
             inputButtonZurueck2.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-two.html', '_self');
+                location.hash = '#rentsteptwo';
             });            
 
             inputButtonWeiter1.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-four.html', '_self');
+                location.hash = '#rentstepfour';
             });
 
             inputButtonWeiter2.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-four.html', '_self');
+                location.hash = '#rentstepfour';
             });
         });
     }

@@ -19,12 +19,12 @@ export default class PageRentStepFive
 
             inputButtonZurueck.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent-step-four.html', '_self');
+                location.hash = '#rentstepfour';
             });
 
             inputButtonMieten.addEventListener('click', ()=>
             {
-                window.open('http://localhost:5500/src/rent.html', '_self');
+                location.hash = '#rentstepone';
             });
         });
     }

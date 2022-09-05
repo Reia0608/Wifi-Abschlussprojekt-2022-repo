@@ -48,6 +48,28 @@ namespace VRentalsRESTAPI.Controllers
             return Kraftfahrzeug.GetAllByAusgabenstelleId(ausgabenstelle_id);
         }
 
+        // GET: api/<AusgabenstelleController>/getall
+        [HttpGet("getallnames")]
+        public IEnumerable<string> GetAllAusgabenstelleNames()
+        {
+            return Ausgabenstelle.GetAllNames(); ;
+        }
+
+        // GET: api/<AusgabenstelleController>/getbymarkemodell/porsche/911
+        [HttpGet("getbymarkemodell/{marke}/{modell}")]
+        public IEnumerable<string> GetAusgabenstelleByMarkeAndModell(string marke, string modell)
+        {
+            List<string> result = new List<string>();
+            List<int?> tempresult = new List<int?>();
+
+            tempresult = Kraftfahrzeug.GetAusgabenstelleByMarkeAndModell(marke, modell);
+            if(tempresult.Count > 0)
+            {
+                result = Ausgabenstelle.GetByIdList(tempresult);
+            }
+            return result;
+        }
+
         // POST: api/<AusgabenstelleController>
         [HttpPost]
         public IActionResult Post([FromBody] Ausgabenstelle ausgabenstelle)

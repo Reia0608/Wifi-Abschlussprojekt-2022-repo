@@ -103,7 +103,31 @@ namespace VRentalsClasses.Models
 			return anhaengerListe;
 		}
 
-		public static int AddRemoveFromAusgabenstelle(List<int>? listToAdd, List<int>? listToRemove, int ausgabenstelle_id)
+        public static List<Anhaenger> GetByAusgabenstelleIdAndAvailability(int Ausgabenstelle_Id)
+        {
+            List<Anhaenger> anhaengerListe = new List<Anhaenger>();
+            Anhaenger anhaenger = new Anhaenger();
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ausgabenstelle_id = :asid order by marke";
+            command.Parameters.AddWithValue("asid", Ausgabenstelle_Id);
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                anhaengerListe.Add(anhaenger = new Anhaenger(reader));
+            }
+            reader.Close();
+            DBConnection.GetConnection().Close();
+            return anhaengerListe;
+        }
+
+        public static int AddRemoveFromAusgabenstelle(List<int>? listToAdd, List<int>? listToRemove, int ausgabenstelle_id)
 		{
 			int result = 0;
 			NpgsqlCommand command = new NpgsqlCommand();

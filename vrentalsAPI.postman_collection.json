@@ -1046,6 +1046,50 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Ausgabenstelle by Ausgabenstelle ID List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/25/anhaenger/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"25",
+								"anhaenger",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Ausgabenstelle Names",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/getallnames",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"getallnames"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
