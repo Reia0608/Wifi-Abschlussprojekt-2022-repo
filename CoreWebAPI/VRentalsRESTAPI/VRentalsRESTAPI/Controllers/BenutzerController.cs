@@ -201,7 +201,22 @@ namespace VRentalsRESTAPI.Controllers
 			}
 		}
 
-		[HttpDelete("logoff")]
+        // GET: api/<BenutzerController>/fahrer
+        [HttpGet("fahrer")]
+        public List<Benutzer> GetAvailableDrivers()
+        {
+            Benutzer benutzer = Benutzer.Get(this);
+            if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde))
+            {
+                return Benutzer.GetAvailableDrivers();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [HttpDelete("logoff")]
 		public IActionResult LogoffPerson()
 		{
 			Benutzer benutzer = Benutzer.Get(this);

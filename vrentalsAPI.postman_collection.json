@@ -315,6 +315,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Available Fahrer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/fahrer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"fahrer"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -676,6 +697,28 @@
 								"anhaenger",
 								"ausgabenstelle",
 								"25"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Anhaenger by Ausgabenstelle Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger/byausgabenstelle/57",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger",
+								"byausgabenstelle",
+								"57"
 							]
 						}
 					},
@@ -1086,6 +1129,28 @@
 								"api",
 								"ausgabenstelle",
 								"getallnames"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ausgabenstelle ID by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/ausgabenstelle/getidbyname/Ausgabenstelle Wien",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"ausgabenstelle",
+								"getidbyname",
+								"Ausgabenstelle Wien"
 							]
 						}
 					},

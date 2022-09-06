@@ -18,33 +18,31 @@ export default class PageRentStepTwo
             const inputButtonWeiter1 = document.querySelector('#inputButtonWeiter1');
             const inputButtonWeiter2 = document.querySelector('#inputButtonWeiter2');
 
-            // Variablen
-
-            if(localStorage.getItem('rentObject'))
-            {
-                this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
-                this.loadData();
-            }
+            this.loadOptions();
+            
             // Event Listeners
 
             inputButtonZurueck1.addEventListener('click', ()=>
             {
-
+                this.saveData();
                 location.hash = '#rentstepone';
             });
 
             inputButtonZurueck2.addEventListener('click', ()=>
             {
+                this.saveData();
                 location.hash = '#rentstepone';
             });            
 
             inputButtonWeiter1.addEventListener('click', ()=>
             {
+                this.saveData();
                 location.hash = '#rentstepthree';
             });
 
             inputButtonWeiter2.addEventListener('click', ()=>
             {
+                this.saveData();
                 location.hash = '#rentstepthree';
             });
         });
@@ -75,11 +73,21 @@ export default class PageRentStepTwo
             this.rentObject.schutzpaket = "Premiumschutzpaket";
         }
         
-        this.rentObject.mietgegenstand_liste.push(parseInt(kid));
+        if(!this.rentObject.mietgegenstandliste.includes(selectAnhaenger.options[selectAnhaenger.selectedIndex].value))
+        {
+            let newValue = selectAnhaenger.options[selectAnhaenger.selectedIndex].value;
+            this.rentObject.mietgegenstandliste.push(newValue);
+        }
+        
+        // Saving rentOBject to the local storage
+        localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
     }
 
     loadData()
     {
+        // Retrieving rentObject from the local storage
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+
         if(this.rentObject != {})
         {
             switch(this.rentObject.schutzpaket)
@@ -92,7 +100,50 @@ export default class PageRentStepTwo
                                             break;
                 default: break;
             }
-            
+
+            // WIP not the best way of doing things...
+            if(this.rentObject.mietgegenstandliste[1] != null)
+            {
+                selectAnhaenger.value = this.rentObject.mietgegenstandliste[1];
+            }
         }
+    }
+
+    loadOptions()
+    {
+        const divAnhaengerBody = document.querySelector('#divAnhaengerBody');
+
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+
+        this.app.ApiAusgabenstelleGetId((response) =>
+        {
+            let ausgabenstelle_id = response;
+            this.app.ApiAnhaengerGetByAusgabenstelle((response) =>
+            {
+                let html = `<select class="form-select col-6" aria-label="Anhaengerliste" id="selectAnhaenger"><option>Bitte wählen</option><option value="0">Keinen Anhänger</option>`;
+
+                for(let anhaenger of response)
+                {
+                    html += 
+                    `
+                    <option value="${anhaenger.anhaenger_id}">${anhaenger.marke} ${anhaenger.modell}</option>
+                    `;
+                }
+
+                html += `</select>`;
+                divAnhaengerBody.innerHTML = html;
+                if(localStorage.getItem('rentObject'))
+                {
+                    this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+                    this.loadData();
+                }
+            }, (ex) => 
+            {
+                alert(ex);
+            }, ausgabenstelle_id);
+        }, (ex) => 
+        {
+            alert(ex);
+        }, this.rentObject.abholort);
     }
 }

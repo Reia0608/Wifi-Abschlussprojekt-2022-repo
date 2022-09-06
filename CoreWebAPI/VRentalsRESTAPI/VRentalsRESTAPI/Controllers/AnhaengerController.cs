@@ -23,6 +23,13 @@ namespace VRentalsRESTAPI.Controllers
             return Anhaenger.GetList();
         }
 
+        // GET: api/<AnhaengerController>/byausgabenstelle
+        [HttpGet("byausgabenstelle/{ausgabenstelle_id}")]
+        public IEnumerable<Anhaenger> SelectByAusgabenstelle(int ausgabenstelle_id)
+        {
+            return Anhaenger.GetByAusgabenstelleIdAndAvailability(ausgabenstelle_id);
+        }
+
         // GET: api/<AnhaengerController>/5
         [HttpGet("{id}")]
         public Anhaenger Get(int id) => Anhaenger.Get(id);

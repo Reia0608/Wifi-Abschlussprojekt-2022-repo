@@ -26,6 +26,12 @@
 
 11. The PWA should start on the login page.
 
+12. Always check in the renting process if a KfZ or Anhaenger is availble for use or not.
+
+13. Internal server error when adding 2 new trailers in a row in admin mode. (related to image or kennzeichen?)
+
+14. implement a date time system where only KfZ and drivers are listed that are actually free during that time frame.
+
 ===== Priority 2=====
 
 0. Create a personal/kundennummer on staff/ client creation.
@@ -97,6 +103,8 @@ show the appropriate behaviour like checkboxAllKfz.
 15. Add is-valid/is-invalid type control to Baujahr on page-car-details.js to check if a number has been entered.
 
 16. Optimize image loading in page-cars.html.
+
+17. WIP: page-rent-step-two.js: is there a better solution? only takes the second variable in the array which is not necessarily whats needed.
 
 ===== Priority 4=====
 

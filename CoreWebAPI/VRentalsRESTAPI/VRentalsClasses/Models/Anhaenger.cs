@@ -114,7 +114,7 @@ namespace VRentalsClasses.Models
             }
             NpgsqlCommand command = new NpgsqlCommand();
             command.Connection = DBConnection.GetConnection();
-            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ausgabenstelle_id = :asid order by marke";
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where ausgabenstelle_id = :asid and gegenstandzustand = 0 order by marke";
             command.Parameters.AddWithValue("asid", Ausgabenstelle_Id);
             NpgsqlDataReader reader = command.ExecuteReader();
 

@@ -55,6 +55,13 @@ namespace VRentalsRESTAPI.Controllers
             return Ausgabenstelle.GetAllNames(); ;
         }
 
+        // GET: api/<AusgabenstelleController>/getall
+        [HttpGet("getidbyname/{ausgabenstellename}")]
+        public int? GetAusgabenstelleIdbyName(string ausgabenstellename)
+        {
+            return Ausgabenstelle.GetIdByName(ausgabenstellename); 
+        }
+
         // GET: api/<AusgabenstelleController>/getbymarkemodell/porsche/911
         [HttpGet("getbymarkemodell/{marke}/{modell}")]
         public IEnumerable<string> GetAusgabenstelleByMarkeAndModell(string marke, string modell)

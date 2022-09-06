@@ -442,6 +442,32 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+    ApiBenutzerGetFahrer(successCallback, errorCallback) 
+	{
+        $('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/fahrer', 
+		{
+			method: 'GET',
+			credentials: 'include',
+            cache: 'no-cache'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+                $('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+                $('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
 	ApiBenutzerGetFSKObject(successCallback, errorCallback, pid)
 	{
         $('body').addClass('waiting');
@@ -587,6 +613,31 @@ export default class Application
     {
         $('body').addClass('waiting');
         fetch(this.apiBaseUrl + 'ausgabenstelle', 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
+    ApiAusgabenstelleGetId(successCallback, errorCallback, ausgabenstellename)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'ausgabenstelle/getidbyname/' + ausgabenstellename, 
         {
             method: 'GET',
             credentials: 'include'
@@ -808,6 +859,34 @@ export default class Application
         .catch(errorCallback);
     }
 
+
+    // WIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ApiBilderGetAvailableFahrerList(successCallback, errorCallback, fahrerList)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bilder/fahrer/' + fahrerList, 
+        {
+            method: 'GET',
+            credentials: 'include',
+            cache: 'no-cache'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200) 
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            }
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
     ApiBilderGetSpecificKfzList(successCallback, errorCallback, kfzList)
     {
         $('body').addClass('waiting');
@@ -915,6 +994,34 @@ export default class Application
 		.then(successCallback)
 		.catch(errorCallback);
 	}
+
+    //==================================================================================
+	// API Anhaenger
+
+    ApiAnhaengerGetByAusgabenstelle(successCallback, errorCallback, ausgabenstelle_id)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'anhaenger/byausgabenstelle/' + ausgabenstelle_id, 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200) 
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            }
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
 
     //==================================================================================
 	// API Bewegung

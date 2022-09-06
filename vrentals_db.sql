@@ -58,7 +58,8 @@ CREATE TABLE rentals.tbl_users
 	hatzugfahrzeug boolean,
 	eigeneszugfahrzeugmarke character varying,
 	eigeneszugfahrzeugmodell character varying,
-	eigeneszugfahrzeugkennzeichen character varying
+	eigeneszugfahrzeugkennzeichen character varying,
+	mietpreis numeric
 	
     PRIMARY KEY (users_id)
 );

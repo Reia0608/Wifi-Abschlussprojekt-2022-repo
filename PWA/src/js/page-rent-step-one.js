@@ -39,7 +39,9 @@ export default class PageRentStepOne
                 abholzeit: null,
                 rueckgabezeit: null,
                 mietgegenstandliste: [],
-                grund: "Initalisierung..."
+                grund: "Initalisierung...",
+                schutzpaket: null,
+                braucht_fahrer: false
             };
             this.kraftfahrzeug = {};
 
@@ -113,10 +115,11 @@ export default class PageRentStepOne
         this.rentObject.abholzeit = inputTimeAbholzeit.value;
         this.rentObject.rueckgabedatum = inputDateRueckgabedatum.value;
         this.rentObject.rueckgabezeit = inputTimeRueckgabezeit.value;
+
         if(!this.rentObject.mietgegenstandliste.includes(parseInt(kid)))
         {
-            var newArray = [parseInt(kid)];
-            this.rentObject.mietgegenstandliste.push(newArray);
+            var newValue = parseInt(kid);
+            this.rentObject.mietgegenstandliste.push(newValue);
         }
 
         this.rentObject.grund = "Mietung eines KfZ";
@@ -134,7 +137,7 @@ export default class PageRentStepOne
         const inputDateRueckgabedatum = document.querySelector('#inputDateRueckgabedatum');
         const inputTimeRueckgabezeit = document.querySelector('#inputTimeRueckgabezeit');
 
-        // Retrieving renObject from the local storage
+        // Retrieving rentObject from the local storage
         this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
 
         if(this.rentObject != {})

@@ -21,7 +21,7 @@ namespace VRentalsClasses.Models
 		private const string COLUMNS_FUEHRERSCHEINKLASSE = "users_id, am, a1, a2, a, b1, b, c1, c, d1, d, be, c1e, ce, d1e, de, f";
 		//                                 0        1      2           3           4              5          6       7          8             9        10                   11                  12               
         private const string COLUMNS = "users_id, vorname, nachname, geschlecht, username, passwort, rolle, geburtsdatum, geburtsort," +
-			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer, istfahrer, status, fuehrerscheinausstellungsdatum, fuehrerscheinablaufdatum, fuehrerscheinnummer, hatzugfahrzeug, eigeneszugfahrzeugmarke, eigeneszugfahrzeugmodell, eigeneszugfahrzeugkennzeichen";
+			" registrierungstag, letzteanmeldung, benutzermerkmal, merkmalgiltbis, kundennummer, istfahrer, status, fuehrerscheinausstellungsdatum, fuehrerscheinablaufdatum, fuehrerscheinnummer, hatzugfahrzeug, eigeneszugfahrzeugmarke, eigeneszugfahrzeugmodell, eigeneszugfahrzeugkennzeichen, mietpreis";
 		private const string KONTAKT = "tbl_kontakt";
 		#endregion
 		
@@ -259,7 +259,39 @@ namespace VRentalsClasses.Models
 			return benutzerList;
 		}
 
-		public static List<Benutzer> GetList(int rolle)
+        public static List<Benutzer> GetAvailableDrivers()
+        {
+            List<Benutzer> benutzerList = new List<Benutzer>();
+            Benutzer? benutzer = new Benutzer();
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE rolle = 2 AND istfahrer = true AND status = 1 order by nachname";
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    benutzerList.Add(benutzer = new Benutzer(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return benutzerList;
+        }
+
+        public static List<Benutzer> GetList(int rolle)
 		{
 			List<Benutzer> benutzerList = new List<Benutzer>();
 			Benutzer? benutzer = new Benutzer();
@@ -436,7 +468,8 @@ namespace VRentalsClasses.Models
 			EigenesZugfahrzeugMarke = reader.IsDBNull(20) ? null : reader.GetString(20);
 			EigenesZugfahrzeugModell = reader.IsDBNull(21) ? null : reader.GetString(21);
 			EigenesZugfahrzeugKennzeichen = reader.IsDBNull(22) ? null : reader.GetString(22);
-		}
+            MietPreis = reader.IsDBNull(23) ? null : reader.GetDouble(23);
+        }
 		 
 		#endregion
 		//************************************************************************
@@ -528,12 +561,15 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("eigeneszugfahrzeugkennzeichen")]
 		public string? EigenesZugfahrzeugKennzeichen { get; set; }
 
-		#endregion
+        [JsonPropertyName("mietpreis")]
+        public double? MietPreis { get; set; }
 
-		//************************************************************************
-		#region public methods
+        #endregion
 
-		public string GetPasswordHash(string pwd)
+        //************************************************************************
+        #region public methods
+
+        public string GetPasswordHash(string pwd)
 		{
 			SHA256 mySHA256 = SHA256.Create();
 			return Convert.ToBase64String(mySHA256.ComputeHash(Encoding.UTF8.GetBytes(pwd)));
@@ -555,14 +591,14 @@ namespace VRentalsClasses.Models
             {
                 command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
                     $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
-                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk where users_id = :pid";
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
             }
             else
 			{
 				this.RegistrierungsTag = DateTime.Now;
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.UserId = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn, :if, :sta, :faud, :fabd, :fnmr, :hzf, :ezma, :ezmo, :ezk)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn, :if, :sta, :faud, :fabd, :fnmr, :hzf, :ezma, :ezmo, :ezk, :mp)";
 			}
 
 			command.Parameters.AddWithValue("pid", this.UserId);
@@ -589,9 +625,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("ezma", String.IsNullOrEmpty(this.EigenesZugfahrzeugMarke) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugMarke);
 			command.Parameters.AddWithValue("ezmo", String.IsNullOrEmpty(this.EigenesZugfahrzeugModell) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugModell);
 			command.Parameters.AddWithValue("ezk", String.IsNullOrEmpty(this.EigenesZugfahrzeugKennzeichen) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugKennzeichen);
+            command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
 
-
-			try
+            try
 			{
 				result = command.ExecuteNonQuery();
 			}
@@ -624,7 +660,7 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
 					$" passwort = :pwd, rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
 					$" , registrierungstag = :regt, letzteanmeldung = :lanm," +
-					$" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk where users_id = :pid";
+					$" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
 
 			command.Parameters.AddWithValue("pid", user_id);
 			command.Parameters.AddWithValue("vn", String.IsNullOrEmpty(this.Vorname) ? (object)DBNull.Value : (object)this.Vorname);
@@ -650,8 +686,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("ezma", String.IsNullOrEmpty(this.EigenesZugfahrzeugMarke) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugMarke);
 			command.Parameters.AddWithValue("ezmo", String.IsNullOrEmpty(this.EigenesZugfahrzeugModell) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugModell);
 			command.Parameters.AddWithValue("ezk", String.IsNullOrEmpty(this.EigenesZugfahrzeugKennzeichen) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugKennzeichen);
+            command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
 
-			try
+            try
 			{
 				result = command.ExecuteNonQuery();
 			}
@@ -684,7 +721,7 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
 					$" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
 					$" , registrierungstag = :regt, letzteanmeldung = :lanm," +
-					$" merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk where users_id = :pid";
+					$" merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
 
 			command.Parameters.AddWithValue("pid", user_id);
 			command.Parameters.AddWithValue("vn", String.IsNullOrEmpty(this.Vorname) ? (object)DBNull.Value : (object)this.Vorname);
@@ -708,8 +745,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("ezma", String.IsNullOrEmpty(this.EigenesZugfahrzeugMarke) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugMarke);
 			command.Parameters.AddWithValue("ezmo", String.IsNullOrEmpty(this.EigenesZugfahrzeugModell) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugModell);
 			command.Parameters.AddWithValue("ezk", String.IsNullOrEmpty(this.EigenesZugfahrzeugKennzeichen) ? (object)DBNull.Value : (object)this.EigenesZugfahrzeugKennzeichen);
+            command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
 
-			try
+            try
 			{
 				result = command.ExecuteNonQuery();
 			}
