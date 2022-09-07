@@ -1,3 +1,5 @@
+import Navbar from './component-navbar.js';
+
 export default class PageLogout 
 {
 	constructor(args) 
@@ -9,7 +11,7 @@ export default class PageLogout
             {
                 let navbarArgs = 
                 {
-                    app: appArgs,
+                    app: args.app,
                     loggedin: false,
                     rolle: 3,
                 };

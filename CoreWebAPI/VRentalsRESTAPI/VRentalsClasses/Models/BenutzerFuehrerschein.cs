@@ -21,7 +21,7 @@ namespace VRentalsClasses.Models
         //************************************************************************
 
         #region static methods
-        public static BenutzerFuehrerschein Get(int User_Id)
+        public static BenutzerFuehrerschein Get(int? User_Id)
         {
             BenutzerFuehrerschein benutzerFuehrerschein = new BenutzerFuehrerschein();
             if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
@@ -55,7 +55,42 @@ namespace VRentalsClasses.Models
             return benutzerFuehrerschein;
         }
 
-        public static List<string?> GetStringList(int User_Id)
+        public static List<BenutzerFuehrerschein> GetAll()
+        {
+            List<BenutzerFuehrerschein> benutzerFuehrerscheinListe = new List<BenutzerFuehrerschein>();
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE}";
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while(reader.Read())
+                {
+                    benutzerFuehrerscheinListe.Add(new BenutzerFuehrerschein(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return benutzerFuehrerscheinListe;
+        }
+
+        public static List<string?> GetStringList(int? User_Id)
         {
             List<string?> FSKStringList = new List<string?>();
             BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(User_Id);
@@ -127,6 +162,22 @@ namespace VRentalsClasses.Models
 
             return FSKStringList;
         }
+
+        public static List<string> GetAllDriversStringList()
+        {
+            List<BenutzerFuehrerschein> benutzerFuehrerscheinListe = new List<BenutzerFuehrerschein>();
+            List<string> AllDriversFSKStringList = new List<string>();
+
+            benutzerFuehrerscheinListe = BenutzerFuehrerschein.GetAll();
+
+            foreach(BenutzerFuehrerschein benutzerFuehrerschein in benutzerFuehrerscheinListe)
+            {
+                string temp = FSKListToStringConverter(BenutzerFuehrerschein.GetStringList(benutzerFuehrerschein.Users_Id));
+                AllDriversFSKStringList.Add(temp);
+            }
+            return AllDriversFSKStringList;
+        }
+
         #endregion
 
         //************************************************************************
@@ -217,5 +268,17 @@ namespace VRentalsClasses.Models
         [JsonPropertyName("f")]
         public bool? F { get; set; }
         #endregion
+
+        //************************************************************************
+
+        public static string FSKListToStringConverter(List<string> ListToConvert)
+        {
+            string result = "";
+            foreach(string item in ListToConvert)
+            {
+                result += item + " ";
+            }
+            return result;
+        }
     }
 }

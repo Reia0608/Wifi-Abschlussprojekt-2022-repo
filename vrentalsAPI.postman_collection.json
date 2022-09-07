@@ -178,7 +178,21 @@
 					"name": "Select User by ID",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/pid/12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"pid",
+								"12"
+							]
+						}
 					},
 					"response": []
 				},
@@ -219,7 +233,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[10]",
+							"raw": "[29]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -257,6 +271,35 @@
 							}
 						},
 						"url": {
+							"raw": "http://localhost:59968/api/benutzer/fsk/155",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"fsk",
+								"155"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fuehrerscheinklassen by User ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "benutzer.rolle",
+								"value": "1",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
 							"raw": "http://localhost:59968/api/benutzer/fsk/34",
 							"protocol": "http",
 							"host": [
@@ -268,28 +311,6 @@
 								"benutzer",
 								"fsk",
 								"34"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Fuehrerscheinklassen by User ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:59968/api/benutzer/fsk/12",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "59968",
-							"path": [
-								"api",
-								"benutzer",
-								"fsk",
-								"12"
 							]
 						}
 					},
@@ -322,7 +343,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:59968/api/benutzer/fahrer",
+							"raw": "http://localhost:59968/api/benutzer/availablefahrer/34_",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -331,7 +352,8 @@
 							"path": [
 								"api",
 								"benutzer",
-								"fahrer"
+								"availablefahrer",
+								"34_"
 							]
 						}
 					},
@@ -1021,7 +1043,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    41,\r\n    42,\r\n    43\r\n]\r\n",
+							"raw": "[\r\n    44,\r\n    45,\r\n    46\r\n]\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1096,7 +1118,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:59968/api/ausgabenstelle/25/anhaenger/",
+							"raw": "http://localhost:59968/api/ausgabenstelle/getbymarkemodell/Porsche/911",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1105,9 +1127,9 @@
 							"path": [
 								"api",
 								"ausgabenstelle",
-								"25",
-								"anhaenger",
-								""
+								"getbymarkemodell",
+								"Porsche",
+								"911"
 							]
 						}
 					},
@@ -1282,6 +1304,28 @@
 								"api",
 								"bilder",
 								"kfz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Bilder of All Available Fahrer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bilder/availablefahrer/34_35_",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bilder",
+								"availablefahrer",
+								"34_35_"
 							]
 						}
 					},

@@ -357,23 +357,23 @@ export default class PageCars
             {
                 if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '1')
                 {
-                    filterBy("=", dropdownItemPreis.value);
+                    this.filterBy("=", dropdownItemPreis.value);
                 }
                 else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '2')
                 {
-                    filterBy(">", dropdownItemPreis.value);
+                    this.filterBy(">", dropdownItemPreis.value);
                 }
                 else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '3')
                 {
-                    filterBy("<", dropdownItemPreis.value);
+                    this.filterBy("<", dropdownItemPreis.value);
                 }
                 else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '4')
                 {
-                    filterBy(">=", dropdownItemPreis.value);
+                    this.filterBy(">=", dropdownItemPreis.value);
                 }
                 else if(selectPreisOperator.options[selectPreisOperator.selectedIndex].value == '5')
                 {
-                    filterBy("<=", dropdownItemPreis.value);
+                    this.filterBy("<=", dropdownItemPreis.value);
                 }
                 this.activeButton.classList.remove('active');
                 this.activeButton = buttonFilterPreis;
@@ -409,7 +409,7 @@ export default class PageCars
             {    
                 buttonAusgabenstelle.addEventListener('click', ()=>
                 {
-                    filterBy("ausgabenstelle", buttonAusgabenstelle.dataset.ausgabenstelleId);
+                    this.filterBy("ausgabenstelle", buttonAusgabenstelle.dataset.ausgabenstelleId);
                     this.activeButton.classList.remove('active');
                     this.activeButton = buttonAusgabenstelle;
                     this.activeButton.classList.add('active');
@@ -424,7 +424,7 @@ export default class PageCars
                 for (let kraftfahrzeug of response) 
                 {
                     html += 
-                    `<div class="card cards" style="width: 18rem;">
+                    `<div class="card cards mt-3" style="width: 18rem;">
                         <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" id="imgBild_${iterator}">
                         <div class="card-body" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
                             <h5 class="card-title">${kraftfahrzeug.marke} ${kraftfahrzeug.modell}</h5>
@@ -494,7 +494,7 @@ export default class PageCars
                 for (let kraftfahrzeug of response) 
                 {
                     html += 
-                    `<div class="card cards" style="width: 18rem;">
+                    `<div class="card cards mt-3" style="width: 18rem;">
                         <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" id="imgBild_${iterator}">
                         <div class="card-body" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
                             <h5 class="card-title">${kraftfahrzeug.marke} ${kraftfahrzeug.modell}</h5>

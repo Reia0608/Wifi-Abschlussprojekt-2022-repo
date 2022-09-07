@@ -199,7 +199,43 @@ namespace VRentalsClasses.Models
 			return bilderListe;
 		}
 
-		public static List<Bild> GetKfzBildList(int? kraftfahrzeug_id)
+        // Returns a list of pictures from a list of driver ID's in the form of a string. Used in page-rent-step-three.js 
+        public static List<Bild> GetAllBildByAvailableFahrerList(string fahrerString)
+        {
+            string Condition = $"";
+            fahrerString = fahrerString.Remove(fahrerString.Length - 1, 1);
+            string[] fahrerList = fahrerString.Split("_");
+            List<Bild> bilderListe = new List<Bild>();
+            foreach (string fahrer_id in fahrerList)
+            {
+                if (fahrer_id.Equals(fahrerList.Last()))
+                {
+                    Condition += "users_id = " + fahrer_id;
+                }
+                else
+                {
+                    Condition += "users_id = " + fahrer_id + " OR ";
+                }
+            }
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE {Condition}"; // WIP: order by?
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                bilderListe.Add(new Bild(reader));
+            }
+            reader.Close();
+            DBConnection.GetConnection().Close();
+            return bilderListe;
+        }
+
+        public static List<Bild> GetKfzBildList(int? kraftfahrzeug_id)
 		{
 			List<Bild> bilderListe = new List<Bild>();
 

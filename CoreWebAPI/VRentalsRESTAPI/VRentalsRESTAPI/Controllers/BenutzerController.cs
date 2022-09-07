@@ -175,7 +175,7 @@ namespace VRentalsRESTAPI.Controllers
 		{
 			BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(id);
 			Benutzer benutzer = Benutzer.Get(this);
-			if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde && benutzerFuehrerschein.Users_Id == benutzer.UserId))
+			if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Kunde || benutzer?.Rolle == RollenTyp.User)
 			{
 				return BenutzerFuehrerschein.GetStringList(id);
 			}
@@ -215,6 +215,22 @@ namespace VRentalsRESTAPI.Controllers
                 return null;
             }
         }
+
+        // GET: api/<BenutzerController>/fahrer/fsk
+        [HttpGet("fahrer/fsk")]
+        public List<string> GetFSKForAllDrivers()
+        {
+            Benutzer benutzer = Benutzer.Get(this);
+            if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde))
+            {
+                return BenutzerFuehrerschein.GetAllDriversStringList();
+            }
+            else
+            {
+                return null;
+            }
+        }
+        
 
         [HttpDelete("logoff")]
 		public IActionResult LogoffPerson()

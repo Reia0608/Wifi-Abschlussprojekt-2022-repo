@@ -439,8 +439,8 @@ namespace VRentalsClasses.Models
 		#region constructors
 		public Benutzer()
 		{
-
-		}
+            Rolle = RollenTyp.Unbekannt;
+        }
 
 		public Benutzer(NpgsqlDataReader reader)
 		{
@@ -450,7 +450,7 @@ namespace VRentalsClasses.Models
 			Geschlecht = reader.IsDBNull(3) ? GeschlechtsTyp.unbekannt : (GeschlechtsTyp)reader.GetInt32(3);
 			UserName = reader.IsDBNull(4) ? null : reader.GetString(4);
 			PasswortHash = reader.IsDBNull(5) ? null : reader.GetString(5);
-			Rolle = reader.IsDBNull(6) ? RollenTyp.Kunde : (RollenTyp)reader.GetInt32(6);
+			Rolle = reader.IsDBNull(6) ? RollenTyp.Unbekannt : (RollenTyp)reader.GetInt32(6);
 			Geburtsdatum = reader.IsDBNull(7) ? null : (DateTime?)reader.GetDateTime(7);
 			GeburtsOrt = reader.IsDBNull(8) ? null : reader.GetString(8);
 			//KontaktListe = reader.IsDBNull(10) ? null : reader.GetInt32(10),

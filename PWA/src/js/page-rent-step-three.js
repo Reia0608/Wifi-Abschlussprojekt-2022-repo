@@ -56,11 +56,14 @@ export default class PageRentStepThree
                 {
                     this.rentObject.braucht_fahrer = true;
                     divRowFahrer.classList.remove("d-none");
+                    localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+                    this.loadData();
                 }
                 else
                 {
                     this.rentObject.braucht_fahrer = false;
                     divRowFahrer.classList.add("d-none");
+                    localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                 }
             });
         });
@@ -95,22 +98,30 @@ export default class PageRentStepThree
         // Retrieving rentObject from the local storage
         this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
 
-        if(this.rentObject != {})
+        divRowFahrer.classList.add("d-none");
+
+        if(this.rentObject != {} && this.rentObject.braucht_fahrer == true)
         {
+            inputCheckboxFahrer.checked = true;
+
             this.app.ApiBenutzerGetFahrer((response) => 
             {
+                let fahrerList = ''; 
                 let html = '';
                 let iterator = 1;
+
+                divRowFahrer.classList.remove("d-none");
+
                 for (let fahrer of response) 
                 {
                     html += 
                     `
-                    <div class="card cards" style="width: 18rem;">
-                        <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${fahrer.users_id}" id="imgBild_${iterator}">
-                        <div class="card-body" data-kraftfahrzeug-id="${fahrer.users_id}">
+                    <div class="card cards mt-3" style="width: 18rem;">
+                        <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-fahrer-id="${fahrer.userid}" id="imgBild_${iterator}">
+                        <div class="card-body" data-fahrer-id="${fahrer.userid}">
                             <h5 class="card-title">${fahrer.vorname} ${fahrer.nachname}</h5>
                             <p class="card-text">
-                                Führerscheinklassen: ${this.loadFSK(fahrer.users_id)}<br>
+                                <p id="pFuehrerscheinklassen" data-fahrer-id="${fahrer.userid}">Führerscheinklassen:</p><br>
                                 Mietpreis: €${fahrer.mietpreis},-<br>
                             </p>
                             <a class="btn btn-primary" id="aMieten_${iterator}">Mieten</a>
@@ -118,6 +129,7 @@ export default class PageRentStepThree
                     </div>
                     `;
                     iterator++;
+                    fahrerList += fahrer.userid.toString() + '_';
                 }
 
                 divRowFahrer.innerHTML = html;
@@ -127,16 +139,16 @@ export default class PageRentStepThree
                     let jiterator = 1;
                     for(let i = 0; i < response.length; i++)
                     {
-                        for (let kfzBild of response)
+                        for (let fahrerBild of response)
                         {
                             if(jiterator <= response.length)
                             {
                                 var imgIdentifier = "imgBild_" + jiterator.toString();
                                 var imgBild = document.getElementById(imgIdentifier);
         
-                                if(kfzBild.kraftfahrzeug_id == imgBild.dataset.kraftfahrzeugId)
+                                if(fahrerBild.users_id == imgBild.dataset.fahrerId)
                                 {
-                                    imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
+                                    imgBild.src = "data:image/jpeg;base64," + fahrerBild.bild_bytes;
                                     jiterator++;
                                 }	
                             }
@@ -145,20 +157,30 @@ export default class PageRentStepThree
                 }, (ex) => 
                 {
                     alert(ex);
-                });
+                }, fahrerList);
             }, (ex) => 
             {
                 alert(ex);
-            });
+            });     
         }
     }
 
+    // WIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GET "fahrer/fsk"
     loadFSK(users_id)
     {
-        const tbodyFahrerList = document.querySelector('#tbodyFahrerList');
+        const pFuehrerscheinklassen = document.querySelector('#pFuehrerscheinklassen');
 
         this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
 
-        
+        this.app.ApiBenutzerGetFSKList((response) => 
+        {
+            if(users_id == pFuehrerscheinklassen.dataset.fahrerId)
+            {
+                pFuehrerscheinklassen.innerHTML = "Führerscheinklassen: " + response;
+            }
+        }, (ex) => 
+        {
+            alert(ex);
+        }, users_id)
     }
 }

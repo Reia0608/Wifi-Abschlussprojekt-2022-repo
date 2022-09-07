@@ -58,6 +58,13 @@ namespace VRentalsRESTAPI.Controllers
             return Bild.GetBenutzerBildList(id);
         }
 
+        // GET: api/<BilderController>/availablefahrer/5_24_45_
+        [HttpGet("availablefahrer/{fahrerlist}")]
+        public IEnumerable<Bild> SelectAllAvailableFahrer(string fahrerlist)
+        {
+            return Bild.GetAllBildByAvailableFahrerList(fahrerlist);
+        }
+
         // GET: api/<BilderController>/5
         [HttpGet("{id}")]
         public Bild Get(int id) => Bild.Get(id);

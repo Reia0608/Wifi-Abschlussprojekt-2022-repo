@@ -73,9 +73,9 @@ export default class PageRentStepTwo
             this.rentObject.schutzpaket = "Premiumschutzpaket";
         }
         
-        if(!this.rentObject.mietgegenstandliste.includes(selectAnhaenger.options[selectAnhaenger.selectedIndex].value))
+        if(!this.rentObject.mietgegenstandliste.includes(parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value)))
         {
-            let newValue = selectAnhaenger.options[selectAnhaenger.selectedIndex].value;
+            let newValue = parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
             this.rentObject.mietgegenstandliste.push(newValue);
         }
         
@@ -104,7 +104,7 @@ export default class PageRentStepTwo
             // WIP not the best way of doing things...
             if(this.rentObject.mietgegenstandliste[1] != null)
             {
-                selectAnhaenger.value = this.rentObject.mietgegenstandliste[1];
+                selectAnhaenger.value = this.rentObject.mietgegenstandliste[1].toString();
             }
         }
     }

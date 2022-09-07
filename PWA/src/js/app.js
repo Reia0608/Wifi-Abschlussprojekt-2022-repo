@@ -494,6 +494,32 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+    ApiBenutzerGetFSKList(successCallback, errorCallback, pid)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/fsk/' + pid, 
+		{
+			method: 'GET',
+			cache: 'no-cache',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
     //==================================================================================
 	// API Kraftfahrzeug
 
@@ -859,15 +885,13 @@ export default class Application
         .catch(errorCallback);
     }
 
-
-    // WIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ApiBilderGetAvailableFahrerList(successCallback, errorCallback, fahrerList)
     {
         $('body').addClass('waiting');
-        fetch(this.apiBaseUrl + 'bilder/fahrer/' + fahrerList, 
+        fetch(this.apiBaseUrl + 'bilder/availablefahrer/' + fahrerList, 
         {
             method: 'GET',
-            credentials: 'include',
+            // credentials: 'include',
             cache: 'no-cache'
         })
         .then((response) => 
