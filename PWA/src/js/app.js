@@ -261,7 +261,7 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-    ApiBenutzerGetFSKList(successCallback, errorCallback, pid)
+    ApiBenutzerGetFSKListById(successCallback, errorCallback, pid)
 	{
         $('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/fsk/' + pid, 
@@ -383,7 +383,7 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiBenutzerFSKAdd(successCallback, errorCallback, pid ,fskList)
+	ApiBenutzerFSKAdd(successCallback, errorCallback, pid)
 	{
         $('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/fsk/' + pid,
@@ -494,10 +494,10 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-    ApiBenutzerGetFSKList(successCallback, errorCallback, pid)
+    ApiBenutzerGetFSKList(successCallback, errorCallback)
 	{
 		$('body').addClass('waiting');
-		fetch(this.apiBaseUrl + 'benutzer/fsk/' + pid, 
+		fetch(this.apiBaseUrl + 'benutzer/fahrer/fsk/', 
 		{
 			method: 'GET',
 			cache: 'no-cache',

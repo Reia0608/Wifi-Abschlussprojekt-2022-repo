@@ -68,6 +68,12 @@
 
 14. // WIP: APISchadenSetBild is not just copy pasted. Needs to be changed to fullfill its function.
 
+15. Man kann sich als firma registrieren. 
+
+16. Herr/ Frau / usw + Titel auswahl.
+
+17. Possible security problem: use sessionStorage instead of localStorage where necessary.
+
 ===== Priority 3=====
 
 1. Load image browser on-click for images on the website.

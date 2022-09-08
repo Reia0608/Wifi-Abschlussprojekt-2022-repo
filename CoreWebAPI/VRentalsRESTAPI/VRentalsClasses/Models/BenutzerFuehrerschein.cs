@@ -163,19 +163,21 @@ namespace VRentalsClasses.Models
             return FSKStringList;
         }
 
-        public static List<string> GetAllDriversStringList()
+        public static List<Fuehrerscheincouplet> GetAllDriversCoupletList()
         {
             List<BenutzerFuehrerschein> benutzerFuehrerscheinListe = new List<BenutzerFuehrerschein>();
-            List<string> AllDriversFSKStringList = new List<string>();
+            List<Fuehrerscheincouplet> AllDriversFSKCoupletList = new List<Fuehrerscheincouplet>();
 
             benutzerFuehrerscheinListe = BenutzerFuehrerschein.GetAll();
 
             foreach(BenutzerFuehrerschein benutzerFuehrerschein in benutzerFuehrerscheinListe)
             {
-                string temp = FSKListToStringConverter(BenutzerFuehrerschein.GetStringList(benutzerFuehrerschein.Users_Id));
-                AllDriversFSKStringList.Add(temp);
+                string? tempString = FSKListToStringConverter(BenutzerFuehrerschein.GetStringList(benutzerFuehrerschein.Users_Id));
+                int? tempId = benutzerFuehrerschein.Users_Id;
+                Fuehrerscheincouplet fuehrerscheincouplet = new Fuehrerscheincouplet(tempId, tempString);
+                AllDriversFSKCoupletList.Add(fuehrerscheincouplet);
             }
-            return AllDriversFSKStringList;
+            return AllDriversFSKCoupletList;
         }
 
         #endregion

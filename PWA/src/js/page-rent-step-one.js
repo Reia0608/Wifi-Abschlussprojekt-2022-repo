@@ -41,7 +41,9 @@ export default class PageRentStepOne
                 mietgegenstandliste: [],
                 grund: "Initalisierung...",
                 schutzpaket: null,
-                braucht_fahrer: false
+                braucht_fahrer: false,
+                fahrer_id: null,
+                preis: 0
             };
             this.kraftfahrzeug = {};
 
@@ -123,6 +125,8 @@ export default class PageRentStepOne
         }
 
         this.rentObject.grund = "Mietung eines KfZ";
+
+        // WIP: add price!
 
         // Saving rentOBject to the local storage
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));

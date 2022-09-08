@@ -79,6 +79,8 @@ export default class PageRentStepTwo
             this.rentObject.mietgegenstandliste.push(newValue);
         }
         
+        // WIP: add price!
+
         // Saving rentOBject to the local storage
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
     }

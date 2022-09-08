@@ -173,7 +173,6 @@ namespace VRentalsRESTAPI.Controllers
 		[HttpGet("fsk/{id}")]
 		public List<string> GetFSKByUserId(int id)
 		{
-			BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(id);
 			Benutzer benutzer = Benutzer.Get(this);
 			if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Kunde || benutzer?.Rolle == RollenTyp.User)
 			{
@@ -218,12 +217,12 @@ namespace VRentalsRESTAPI.Controllers
 
         // GET: api/<BenutzerController>/fahrer/fsk
         [HttpGet("fahrer/fsk")]
-        public List<string> GetFSKForAllDrivers()
+        public List<Fuehrerscheincouplet> GetFSKForAllDrivers()
         {
             Benutzer benutzer = Benutzer.Get(this);
             if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde))
             {
-                return BenutzerFuehrerschein.GetAllDriversStringList();
+                return BenutzerFuehrerschein.GetAllDriversCoupletList();
             }
             else
             {

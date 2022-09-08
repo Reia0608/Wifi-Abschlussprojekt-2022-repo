@@ -484,7 +484,7 @@ export default class PageProfile
 
 		if(typeof this.benutzer != "undefined")
 		{
-			this.app.ApiBenutzerGetFSKList((response) => 
+			this.app.ApiBenutzerGetFSKListById((response) => 
 			{
 				if(response != null)
 				{

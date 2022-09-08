@@ -95,45 +95,175 @@ export default class PageRentStepThree
     {
         const divRowFahrer = document.querySelector('#divRowFahrer');
 
+        // variable
+        let fahrerList = ''; 
+
         // Retrieving rentObject from the local storage
         this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
-
+        if(localStorage.getItem('fahrerList'))
+        {
+            fahrerList = localStorage.getItem('fahrerList');
+        }
+        
         divRowFahrer.classList.add("d-none");
 
         if(this.rentObject != {} && this.rentObject.braucht_fahrer == true)
         {
             inputCheckboxFahrer.checked = true;
 
-            this.app.ApiBenutzerGetFahrer((response) => 
+            if(this.rentObject.fahrer_id == null)
             {
-                let fahrerList = ''; 
-                let html = '';
-                let iterator = 1;
-
-                divRowFahrer.classList.remove("d-none");
-
-                for (let fahrer of response) 
+                this.app.ApiBenutzerGetFahrer((response) => 
                 {
-                    html += 
-                    `
-                    <div class="card cards mt-3" style="width: 18rem;">
-                        <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-fahrer-id="${fahrer.userid}" id="imgBild_${iterator}">
-                        <div class="card-body" data-fahrer-id="${fahrer.userid}">
-                            <h5 class="card-title">${fahrer.vorname} ${fahrer.nachname}</h5>
-                            <p class="card-text">
-                                <p id="pFuehrerscheinklassen" data-fahrer-id="${fahrer.userid}">Führerscheinklassen:</p><br>
-                                Mietpreis: €${fahrer.mietpreis},-<br>
-                            </p>
-                            <a class="btn btn-primary" id="aMieten_${iterator}">Mieten</a>
+                    let html = '';
+                    let iterator = 1;
+                    fahrerList = '';
+
+                    divRowFahrer.classList.remove("d-none");
+
+                    for (let fahrer of response) 
+                    {
+                        html += 
+                        `
+                        <div class="card cards mt-3" style="width: 18rem;">
+                            <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-fahrer-id="${fahrer.userid}" id="imgBild_${iterator}">
+                            <div class="card-body" data-fahrer-id="${fahrer.userid}">
+                                <h5 class="card-title">${fahrer.vorname} ${fahrer.nachname}</h5>
+                                <p class="card-text">
+                                    <p id="pFuehrerscheinklassen_${iterator}" data-fahrer-id="${fahrer.userid}">Führerscheinklassen:</p><br>
+                                    Mietpreis: €${fahrer.mietpreis},-<br>
+                                </p>
+                                <a class="btn btn-primary" id="aMietenButton" data-fahrer-id="${fahrer.userid}" >Mieten</a>
+                            </div>
                         </div>
-                    </div>
-                    `;
-                    iterator++;
-                    fahrerList += fahrer.userid.toString() + '_';
+                        `;
+
+                        iterator++;
+                        fahrerList += fahrer.userid.toString() + '_';
+                        localStorage.setItem('fahrerList', fahrerList);                    
+                    }
+
+                    divRowFahrer.innerHTML = html;
+
+                    // prepare the Fahrer Mieten buttons
+                    
+                    let aMietenButtonCollection = this.app.Main.querySelectorAll('#aMietenButton');
+                    
+                    for(let button of aMietenButtonCollection)
+                    {
+                        button.addEventListener('click', (e) =>
+                        {
+                            this.rentObject.fahrer_id = button.dataset.fahrerId;
+                            // WIP: add price!
+                            localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+                            this.loadSelection(button.dataset.fahrerId, fahrerList);
+                        });
+                    }
+
+                    // load fuehrerscheinklassen info into cards
+                    this.app.ApiBenutzerGetFSKList((response) => 
+                    {
+                        let jiterator = 1;
+                        for(let element of response)
+                        {
+                            if(jiterator <= response.length)
+                            {
+                                let pFuehrerscheinklassenIdentifier = "pFuehrerscheinklassen_" + jiterator.toString();
+                                let pFuehrerscheinklassen = document.getElementById(pFuehrerscheinklassenIdentifier);
+                
+                                if(element.fahrer_id == pFuehrerscheinklassen.dataset.fahrerId)
+                                {
+                                    pFuehrerscheinklassen.innerHTML = "Führerscheinklassen: " + element.fuehrerscheinstring;
+                                    jiterator++;
+                                }
+                            }
+                        }
+
+                        // load images into cards
+                        this.app.ApiBilderGetAvailableFahrerList((response) =>
+                        {
+                            let jiterator = 1;
+                            for(let i = 0; i < response.length; i++)
+                            {
+                                for (let fahrerBild of response)
+                                {
+                                    if(jiterator <= response.length)
+                                    {
+                                        var imgIdentifier = "imgBild_" + jiterator.toString();
+                                        var imgBild = document.getElementById(imgIdentifier);
+                
+                                        if(fahrerBild.users_id == imgBild.dataset.fahrerId)
+                                        {
+                                            imgBild.src = "data:image/jpeg;base64," + fahrerBild.bild_bytes;
+                                            jiterator++;
+                                        }	
+                                    }
+                                }
+                            }
+                        }, (ex) => 
+                        {
+                            alert(ex);
+                        }, fahrerList);        
+                    }, (ex) => 
+                    {
+                        alert(ex);
+                    });
+                }, (ex) => 
+                {
+                    alert(ex);
+                });
+            }  
+            else
+            {
+                this.loadSelection(parseInt(this.rentObject.fahrer_id), fahrerList);
+            }   
+        }
+    }
+
+    loadSelection(selection, fahrerList)
+    {
+        this.app.ApiBenutzerGetById((response) =>
+        {
+            let benutzer = response.benutzer;
+            let html = 
+            `
+            <div class="card cards mt-3" style="width: 18rem;">
+                <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-fahrer-id="${benutzer.userid}" id="imgBild_1">
+                <div class="card-body" data-fahrer-id="${benutzer.userid}">
+                    <h5 class="card-title">${benutzer.vorname} ${benutzer.nachname}</h5>
+                    <p class="card-text">
+                        <p id="pFuehrerscheinklassen" data-fahrer-id="${benutzer.userid}">Führerscheinklassen:</p><br>
+                        Mietpreis: €${benutzer.mietpreis},-<br>
+                    </p>
+                    <a class="btn btn-primary" id="aAendernButton" data-fahrer-id="${benutzer.userid}" >Ändern</a>
+                </div>
+            </div>
+            `;
+
+            divRowFahrer.innerHTML = html;
+
+            // Preparing the Aendern Button
+            const aAendernButton = document.querySelector('#aAendernButton');
+
+            aAendernButton.addEventListener('click', (e) =>
+            {
+                this.loadData();
+            })
+
+            // load fuehrerscheinklassen info into card
+            this.app.ApiBenutzerGetFSKList((response) => 
+            {
+                for(let element of response)
+                {
+                    let pFuehrerscheinklassen = document.getElementById("pFuehrerscheinklassen");
+    
+                    if(element.fahrer_id == pFuehrerscheinklassen.dataset.fahrerId)
+                    {
+                        pFuehrerscheinklassen.innerHTML = "Führerscheinklassen: " + element.fuehrerscheinstring;
+                    }
                 }
 
-                divRowFahrer.innerHTML = html;
-
+                // load images into card
                 this.app.ApiBilderGetAvailableFahrerList((response) =>
                 {
                     let jiterator = 1;
@@ -145,12 +275,15 @@ export default class PageRentStepThree
                             {
                                 var imgIdentifier = "imgBild_" + jiterator.toString();
                                 var imgBild = document.getElementById(imgIdentifier);
-        
-                                if(fahrerBild.users_id == imgBild.dataset.fahrerId)
+
+                                if(imgBild != null)
                                 {
-                                    imgBild.src = "data:image/jpeg;base64," + fahrerBild.bild_bytes;
-                                    jiterator++;
-                                }	
+                                    if(fahrerBild.users_id == imgBild.dataset.fahrerId)
+                                    {
+                                        imgBild.src = "data:image/jpeg;base64," + fahrerBild.bild_bytes;
+                                        jiterator++;
+                                    }
+                                }
                             }
                         }
                     }
@@ -158,29 +291,10 @@ export default class PageRentStepThree
                 {
                     alert(ex);
                 }, fahrerList);
-            }, (ex) => 
-            {
-                alert(ex);
-            });     
-        }
-    }
-
-    // WIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GET "fahrer/fsk"
-    loadFSK(users_id)
-    {
-        const pFuehrerscheinklassen = document.querySelector('#pFuehrerscheinklassen');
-
-        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
-
-        this.app.ApiBenutzerGetFSKList((response) => 
-        {
-            if(users_id == pFuehrerscheinklassen.dataset.fahrerId)
-            {
-                pFuehrerscheinklassen.innerHTML = "Führerscheinklassen: " + response;
-            }
+            }); 
         }, (ex) => 
         {
             alert(ex);
-        }, users_id)
+        }, selection)
     }
 }
