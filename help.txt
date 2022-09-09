@@ -304,6 +304,12 @@ https://tutorial.eyehunts.com/js/array-inside-object-javascript/
 
 https://bobbyhadz.com/blog/javascript-set-select-element-value
 
+===============================================================================
+====================== innerHTML doesn't load the element =====================
+===============================================================================
+
+https://stackoverflow.com/questions/10826756/javascript-innerhtml-not-updating-element
+
 =================================================
 ====================== TODO =====================
 =================================================

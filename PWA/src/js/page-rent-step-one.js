@@ -29,7 +29,7 @@ export default class PageRentStepOne
             //=================================
             // Initialisierung
 
-            this.rentObject = 
+            this.rentObject = // variable that constitutes the current order of the client. It gets completed throughout the rent steps, and finally gets sent to the backend part
             {
                 abholort: null,
                 gleicherRueckgabeort: false,
@@ -43,7 +43,8 @@ export default class PageRentStepOne
                 schutzpaket: null,
                 braucht_fahrer: false,
                 fahrer_id: null,
-                preis: 0
+                preis: 0,
+                allow_reload: true // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
             };
             this.kraftfahrzeug = {};
 

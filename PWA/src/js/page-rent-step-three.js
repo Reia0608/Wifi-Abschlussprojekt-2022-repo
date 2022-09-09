@@ -111,7 +111,7 @@ export default class PageRentStepThree
         {
             inputCheckboxFahrer.checked = true;
 
-            if(this.rentObject.fahrer_id == null)
+            if(this.rentObject.fahrer_id == null || this.rentObject.allow_reload == true)
             {
                 this.app.ApiBenutzerGetFahrer((response) => 
                 {
@@ -155,6 +155,7 @@ export default class PageRentStepThree
                         {
                             this.rentObject.fahrer_id = button.dataset.fahrerId;
                             // WIP: add price!
+                            this.rentObject.allow_reload = false;
                             localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                             this.loadSelection(button.dataset.fahrerId, fahrerList);
                         });
@@ -215,6 +216,7 @@ export default class PageRentStepThree
             }  
             else
             {
+                divRowFahrer.classList.remove("d-none");
                 this.loadSelection(parseInt(this.rentObject.fahrer_id), fahrerList);
             }   
         }
@@ -247,6 +249,9 @@ export default class PageRentStepThree
 
             aAendernButton.addEventListener('click', (e) =>
             {
+                this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+                this.rentObject.allow_reload = true;
+                localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                 this.loadData();
             })
 
