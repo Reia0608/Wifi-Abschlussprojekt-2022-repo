@@ -1,5 +1,6 @@
 import  "./../../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
 import "./app.js";
+import Helper from "./helper.js";
 
 
 export default class PageRentStepOne
@@ -17,6 +18,10 @@ export default class PageRentStepOne
             const inputButtonAbbrechen2 = document.querySelector('#inputButtonAbbrechen2');
             const inputButtonWeiter1 = document.querySelector('#inputButtonWeiter1');
             const inputButtonWeiter2 = document.querySelector('#inputButtonWeiter2');
+
+            const inputDateAbholdatum = document.querySelector('#inputDateAbholdatum');
+            const inputDateRueckgabedatum = document.querySelector('#inputDateRueckgabedatum');
+            const labelGesamtpreis = document.querySelector('#labelGesamtpreis');
 
             const inputCheckboxGleicherRueckgabeort = document.querySelector('#inputCheckboxGleicherRueckgabeort');
             const divRowRueckgabeort = document.querySelector('#divRowRueckgabeort');
@@ -43,9 +48,16 @@ export default class PageRentStepOne
                 schutzpaket: null,
                 braucht_fahrer: false,
                 fahrer_id: null,
-                preis: 0,
-                allow_reload: true // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
+                preis_gesamt: 0,
+                preis_kfz: 0,
+                preis_anhaenger: 0,
+                preis_fahrer: 0,
+                preis_zusatzpaket: 0,
+                allow_reload: true, // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
+                transaction_finished: false,
+                rent_finished: false
             };
+
             this.kraftfahrzeug = {};
 
             this.loadOptions();
@@ -88,6 +100,22 @@ export default class PageRentStepOne
                     divRowRueckgabeort.classList.remove("d-none");
                 }
             });
+
+            inputDateAbholdatum.addEventListener('change', (e) =>
+            {
+                if(inputDateRueckgabedatum.value != "")
+                {
+                    labelGesamtpreis.innerText = this.calculatePrice(inputDateAbholdatum.value, inputDateRueckgabedatum.value).toString() + ",- €";
+                }
+            });
+
+            inputDateRueckgabedatum.addEventListener('change', (e) =>
+            {
+                if(inputDateAbholdatum.value != "")
+                {
+                    labelGesamtpreis.innerText = this.calculatePrice(inputDateAbholdatum.value, inputDateRueckgabedatum.value).toString() + ",- €";
+                }
+            });
         });
     }
 
@@ -122,7 +150,7 @@ export default class PageRentStepOne
         if(!this.rentObject.mietgegenstandliste.includes(parseInt(kid)))
         {
             var newValue = parseInt(kid);
-            this.rentObject.mietgegenstandliste.push(newValue);
+            this.rentObject.mietgegenstandliste[0] = newValue;
         }
 
         this.rentObject.grund = "Mietung eines KfZ";
@@ -189,6 +217,10 @@ export default class PageRentStepOne
             if(this.rentObject.rueckgabezeit != null)
             {
                 inputTimeRueckgabezeit.value = this.rentObject.rueckgabezeit;
+            }
+            if(this.rentObject.preis_gesamt != 0)
+            {
+                labelGesamtpreis.innerText = this.calculatePrice(inputDateAbholdatum.value, inputDateRueckgabedatum.value).toString() + ",- €";
             }    
         }
     }
@@ -201,9 +233,14 @@ export default class PageRentStepOne
         // Initialization
         var kid = localStorage.getItem("kid");
 
+        // Retrieving rentObject from the local storage
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+
         this.app.ApiKraftfahrzeugGet((response) => 
         {
             this.kraftfahrzeug = response;
+            this.rentObject.preis_kfz = this.kraftfahrzeug.mietpreis;
+            localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 
             this.app.ApiAusgabenstelleNamesByKfz((response) =>
             {
@@ -249,5 +286,20 @@ export default class PageRentStepOne
         {
             alert(ex);
         }, kid);
+    }
+
+    calculatePrice(firstDate, lastDate)
+    {
+        // Initialization
+        this.Helper = new Helper();
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+
+        // logic
+        this.rentObject.abholdatum = firstDate;
+        this.rentObject.rueckgabedatum = lastDate;
+        this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+        localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+        console.log(this.rentObject.preis_gesamt);
+        return this.rentObject.preis_gesamt;
     }
 }

@@ -138,4 +138,49 @@ export default class Helper
             console.log("Conversion failed: status is not a string or number!");
         }
     }
+
+    // Preisberechnung
+    PriceCalculator(firstDay, lastDay, kfzPrice, paketPrice, anhaengerPrice, fahrerPrice)
+    {
+        let totalDays = this.TotalDaysCalculator(firstDay, lastDay);
+        let result = 0;
+        if(typeof paketPrice === "undefined" && typeof anhaengerPrice === "undefined" && typeof fahrerPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice);
+        }
+        else if(typeof fahrerPrice === "undefined" && typeof anhaengerPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice) + paketPrice;
+        }
+        else if(typeof fahrerPrice === "undefined" && typeof paketPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice) + (totalDays * anhaengerPrice);
+        }
+        else if(typeof fahrerPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice) + (totalDays * anhaengerPrice) + paketPrice;
+        }
+        else
+        {
+            result = (totalDays * kfzPrice) + (totalDays * anhaengerPrice) + (totalDays * fahrerPrice) + paketPrice;
+        }
+        
+        return result;
+    }
+
+    // Berechnet für wieviele Tage die Mietung stattfindet, indem es den letzten Tag vom ersten Tag abzieht, und dann von millisekunden in Tage umrechnet.
+    TotalDaysCalculator(firstDay, lastDay)
+    {
+        let difference = this.parseDate(lastDay).getTime() - this.parseDate(firstDay).getTime();
+        let totalDays = Math.ceil(difference / (1000 * 3600 * 24));
+        return totalDays;
+    }
+
+    // parse a date in yyyy-mm-dd format
+    parseDate(input) 
+    {
+        var parts = input.match(/(\d+)/g);
+        // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+        return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
+    }
 }

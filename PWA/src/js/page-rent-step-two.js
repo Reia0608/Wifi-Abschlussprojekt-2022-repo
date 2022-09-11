@@ -1,7 +1,7 @@
 
 import  "./../../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
 import "./app.js";
-
+import Helper from "./helper.js";
 
 export default class PageRentStepTwo
 {
@@ -18,32 +18,60 @@ export default class PageRentStepTwo
             const inputButtonWeiter1 = document.querySelector('#inputButtonWeiter1');
             const inputButtonWeiter2 = document.querySelector('#inputButtonWeiter2');
 
+            const labelGesamtpreis = document.querySelector('#labelGesamtpreis');
+
+            const inputRadioBasisSchutzpaket = document.querySelector('#inputRadioBasisSchutzpaket');
+            const inputRadioMediumSchutzpaket = document.querySelector('#inputRadioMediumSchutzpaket');
+            const inputRadioPremiumSchutzpaket = document.querySelector('#inputRadioPremiumSchutzpaket');
+            const selectAnhaenger = document.getElementById('selectAnhaenger');
+
             this.loadOptions();
             
             // Event Listeners
 
-            inputButtonZurueck1.addEventListener('click', ()=>
+            inputButtonZurueck1.addEventListener('click', () =>
             {
                 this.saveData();
                 location.hash = '#rentstepone';
             });
 
-            inputButtonZurueck2.addEventListener('click', ()=>
+            inputButtonZurueck2.addEventListener('click', () =>
             {
                 this.saveData();
                 location.hash = '#rentstepone';
             });            
 
-            inputButtonWeiter1.addEventListener('click', ()=>
+            inputButtonWeiter1.addEventListener('click', () =>
             {
                 this.saveData();
                 location.hash = '#rentstepthree';
             });
 
-            inputButtonWeiter2.addEventListener('click', ()=>
+            inputButtonWeiter2.addEventListener('click', () =>
             {
                 this.saveData();
                 location.hash = '#rentstepthree';
+            });
+
+            inputRadioBasisSchutzpaket.addEventListener('change', () =>
+            {
+                inputRadioMediumSchutzpaket.checked = false;
+                inputRadioPremiumSchutzpaket.checked = false;
+                labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
+            });
+
+            inputRadioMediumSchutzpaket.addEventListener('change', () =>
+            {
+                inputRadioBasisSchutzpaket.checked = false;
+                inputRadioPremiumSchutzpaket.checked = false;
+                labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
+            });
+
+            inputRadioPremiumSchutzpaket.addEventListener('change', () =>
+            {
+                inputRadioBasisSchutzpaket.checked = false;
+                inputRadioMediumSchutzpaket.checked = false;
+                labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
             });
         });
     }
@@ -76,7 +104,7 @@ export default class PageRentStepTwo
         if(!this.rentObject.mietgegenstandliste.includes(parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value)))
         {
             let newValue = parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
-            this.rentObject.mietgegenstandliste.push(newValue);
+            this.rentObject.mietgegenstandliste[1] = newValue;
         }
         
         // WIP: add price!
@@ -134,11 +162,18 @@ export default class PageRentStepTwo
 
                 html += `</select>`;
                 divAnhaengerBody.innerHTML = html;
+
                 if(localStorage.getItem('rentObject'))
                 {
                     this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
                     this.loadData();
                 }
+
+                // adding EventListener to selectAnhaenger
+                selectAnhaenger.addEventListener('change', () =>
+                {
+                    let result = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                });
             }, (ex) => 
             {
                 alert(ex);
@@ -147,5 +182,58 @@ export default class PageRentStepTwo
         {
             alert(ex);
         }, this.rentObject.abholort);
+
+        if(this.rentObject.preis_gesamt != 0)
+        {
+            labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
+        }
+    }
+
+    calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger)
+    {
+        // Initialization
+        this.Helper = new Helper();
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+
+        // logic
+
+        // WIP: Using a very quick and dirty solution. All the prices should be in the database for manipulation!
+        if(inputRadioBasisSchutzpaket.checked == true)
+        {
+            this.rentObject.preis_zusatzpaket = parseInt(inputRadioBasisSchutzpaket.name);
+        }else if(inputRadioMediumSchutzpaket.checked == true)
+        {
+            this.rentObject.preis_zusatzpaket = parseInt(inputRadioMediumSchutzpaket.name);
+        }
+        else
+        {
+            this.rentObject.preis_zusatzpaket = parseInt(inputRadioPremiumSchutzpaket.name);
+        }
+        
+        // WIP: Bad solution!!! What if the anhaenger_id = 0 or 1???
+        if(selectAnhaenger.options[selectAnhaenger.selectedIndex].value != "Bitte wählen" && selectAnhaenger.options[selectAnhaenger.selectedIndex].value != "Keinen Anhänger" && selectAnhaenger.options[selectAnhaenger.selectedIndex].value != "0") 
+        {
+            this.app.ApiAnhaengerGet((response) =>
+            {
+                this.rentObject.preis_anhaenger = response.mietpreis;
+                this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+                localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+                console.log(this.rentObject.preis_gesamt);
+                labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
+                return this.rentObject.preis_gesamt;
+            }, (ex) => 
+            {
+                alert(ex);
+            }, selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
+        }
+        else
+        {
+            this.rentObject.preis_anhaenger = 0;
+            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+            localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+            console.log(this.rentObject.preis_gesamt);
+            labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
+            return this.rentObject.preis_gesamt;
+        }   
     }
 }

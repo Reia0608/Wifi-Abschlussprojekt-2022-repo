@@ -77,7 +77,7 @@ export default class PageCarDetails
             inputMarke.value = this.kraftfahrzeug.marke;
             inputModell.value = this.kraftfahrzeug.modell;
             inputKennzeichen.value = this.kraftfahrzeug.kennzeichen;
-            inputMietpreis.value = this.kraftfahrzeug.mietpreis;
+            inputMietpreis.value = this.kraftfahrzeug.mietpreis + "/Tag";
             inputBaujahr.value = this.kraftfahrzeug.baujahr;
             spanKraftfahrzeugJahre.textContent = (currentYear - inputBaujahr.value).toString();
             if(this.kraftfahrzeug.klasse == null)

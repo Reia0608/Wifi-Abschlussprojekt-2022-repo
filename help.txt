@@ -310,6 +310,20 @@ https://bobbyhadz.com/blog/javascript-set-select-element-value
 
 https://stackoverflow.com/questions/10826756/javascript-innerhtml-not-updating-element
 
+=============================================================================
+====================== calculate days between two dates =====================
+=============================================================================
+
+https://linuxhint.com/calculate-days-between-two-dates-javascript/
+
+=======================================================
+========== JS .getTime() is not a function ============
+=======================================================
+
+https://bobbyhadz.com/blog/javascript-cannot-read-property-gettime-of-undefined
+
+https://stackoverflow.com/questions/2627650/why-javascript-gettime-is-not-a-function
+
 =================================================
 ====================== TODO =====================
 =================================================
