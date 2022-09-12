@@ -12,6 +12,7 @@ import PageRentStepTwo from './page-rent-step-two.js';
 import PageRentStepThree from './page-rent-step-three.js';
 import PageRentStepFour from './page-rent-step-four.js';
 import PageRentStepFive from './page-rent-step-five.js';
+import PageRentDone from './page-rent-done.js';
 import PageImprint from './page-imprint.js';
 import PageLogout from './page-logout.js';
 import Navbar from './component-navbar.js';
@@ -142,6 +143,9 @@ export default class Application
 			case '#rentstepfive':
 				new PageRentStepFive(args);
 				break;
+            case '#rentdone':
+                new PageRentDone(args);
+                break;
             case '#imprint':
                 new PageImprint(args);
                 break;

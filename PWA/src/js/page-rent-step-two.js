@@ -25,6 +25,8 @@ export default class PageRentStepTwo
             const inputRadioPremiumSchutzpaket = document.querySelector('#inputRadioPremiumSchutzpaket');
             const selectAnhaenger = document.getElementById('selectAnhaenger');
 
+            this.anhaengerPreisListe = [];
+
             this.loadOptions();
             
             // Event Listeners
@@ -52,27 +54,6 @@ export default class PageRentStepTwo
                 this.saveData();
                 location.hash = '#rentstepthree';
             });
-
-            inputRadioBasisSchutzpaket.addEventListener('change', () =>
-            {
-                inputRadioMediumSchutzpaket.checked = false;
-                inputRadioPremiumSchutzpaket.checked = false;
-                labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
-            });
-
-            inputRadioMediumSchutzpaket.addEventListener('change', () =>
-            {
-                inputRadioBasisSchutzpaket.checked = false;
-                inputRadioPremiumSchutzpaket.checked = false;
-                labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
-            });
-
-            inputRadioPremiumSchutzpaket.addEventListener('change', () =>
-            {
-                inputRadioBasisSchutzpaket.checked = false;
-                inputRadioMediumSchutzpaket.checked = false;
-                labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
-            });
         });
     }
 
@@ -88,17 +69,21 @@ export default class PageRentStepTwo
 
         var kid = localStorage.getItem("kid");
 
+        // WIP: Hard coded solution!
         if(inputRadioBasisSchutzpaket.checked)
         {
             this.rentObject.schutzpaket = "Basisschutzpaket";
+            this.rentObject.preis_zusatzpaket = 100;
         }
         else if(inputRadioMediumSchutzpaket.checked)
         {
             this.rentObject.schutzpaket = "Mediumschutzpaket";
+            this.rentObject.preis_zusatzpaket = 150;
         }
         else if(inputRadioPremiumSchutzpaket.checked)
         {
             this.rentObject.schutzpaket = "Premiumschutzpaket";
+            this.rentObject.preis_zusatzpaket = 250;
         }
         
         if(!this.rentObject.mietgegenstandliste.includes(parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value)))
@@ -106,13 +91,25 @@ export default class PageRentStepTwo
             let newValue = parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
             this.rentObject.mietgegenstandliste[1] = newValue;
         }
+
+        // Save the selected anhaenger price to the rentObject
+        for(let iterator = 0; iterator < this.anhaengerPreisListe.length; iterator++)
+        {
+            if(selectAnhaenger.value == iterator)
+            {
+                this.rentObject.preis_anhaenger = this.anhaengerPreisListe[iterator];
+            }
+        }
         
-        // WIP: add price!
+        // Calculate rentObject.preis_gesamt
+        this.Helper = new Helper();
+        this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
 
         // Saving rentOBject to the local storage
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
     }
 
+    // Loaded second; updates the values and selections of the page
     loadData()
     {
         // Retrieving rentObject from the local storage
@@ -131,14 +128,19 @@ export default class PageRentStepTwo
                 default: break;
             }
 
-            // WIP not the best way of doing things...
             if(this.rentObject.mietgegenstandliste[1] != null)
             {
                 selectAnhaenger.value = this.rentObject.mietgegenstandliste[1].toString();
             }
+
+            if(this.rentObject.preis_gesamt != 0)
+            {
+                labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
+            }
         }
     }
 
+    // Loaded first; loads the available options into the page
     loadOptions()
     {
         const divAnhaengerBody = document.querySelector('#divAnhaengerBody');
@@ -158,6 +160,9 @@ export default class PageRentStepTwo
                     `
                     <option value="${anhaenger.anhaenger_id}">${anhaenger.marke} ${anhaenger.modell}</option>
                     `;
+
+                    // Save the Prices of the trailers
+                    this.anhaengerPreisListe[anhaenger.anhaenger_id] = anhaenger.mietpreis;
                 }
 
                 html += `</select>`;
@@ -172,23 +177,67 @@ export default class PageRentStepTwo
                 // adding EventListener to selectAnhaenger
                 selectAnhaenger.addEventListener('change', () =>
                 {
-                    let result = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                    this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                    this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+                    this.rentObject.mietgegenstandliste[1] = parseInt(selectAnhaenger.value);
+                    localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+                });
+
+                // WIP: Putting the EventListeners here means they won't respond when ApiAnhaengerGetByAusgabenstelle fails,
+                // but they need to be here so that preis_anhaenger can be calculated correctly
+                inputRadioBasisSchutzpaket.addEventListener('change', () =>
+                {
+                    inputRadioMediumSchutzpaket.checked = false;
+                    inputRadioPremiumSchutzpaket.checked = false;
+                    this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                });
+    
+                inputRadioMediumSchutzpaket.addEventListener('change', () =>
+                {
+                    inputRadioBasisSchutzpaket.checked = false;
+                    inputRadioPremiumSchutzpaket.checked = false;
+                    this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                });
+    
+                inputRadioPremiumSchutzpaket.addEventListener('change', () =>
+                {
+                    inputRadioBasisSchutzpaket.checked = false;
+                    inputRadioMediumSchutzpaket.checked = false;
+                    this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
                 });
             }, (ex) => 
             {
                 alert(ex);
+
+                // Putting these Eventlisteners in the ErrorCallback as a precaution
+                inputRadioBasisSchutzpaket.addEventListener('change', () =>
+                {
+                    inputRadioMediumSchutzpaket.checked = false;
+                    inputRadioPremiumSchutzpaket.checked = false;
+                    this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                });
+    
+                inputRadioMediumSchutzpaket.addEventListener('change', () =>
+                {
+                    inputRadioBasisSchutzpaket.checked = false;
+                    inputRadioPremiumSchutzpaket.checked = false;
+                    this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                });
+    
+                inputRadioPremiumSchutzpaket.addEventListener('change', () =>
+                {
+                    inputRadioBasisSchutzpaket.checked = false;
+                    inputRadioMediumSchutzpaket.checked = false;
+                    this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
+                });
             }, ausgabenstelle_id);
         }, (ex) => 
         {
             alert(ex);
         }, this.rentObject.abholort);
-
-        if(this.rentObject.preis_gesamt != 0)
-        {
-            labelGesamtpreis.innerText = this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger).toString() + ",- €";
-        }
     }
 
+    // Calculates and views the preis_gesamt
     calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger)
     {
         // Initialization
@@ -210,21 +259,24 @@ export default class PageRentStepTwo
             this.rentObject.preis_zusatzpaket = parseInt(inputRadioPremiumSchutzpaket.name);
         }
         
-        // WIP: Bad solution!!! What if the anhaenger_id = 0 or 1???
-        if(selectAnhaenger.options[selectAnhaenger.selectedIndex].value != "Bitte wählen" && selectAnhaenger.options[selectAnhaenger.selectedIndex].value != "Keinen Anhänger" && selectAnhaenger.options[selectAnhaenger.selectedIndex].value != "0") 
+        // WIP: Bad solution!!! What if the anhaenger_id = 0???
+        if(selectAnhaenger.options[selectAnhaenger.selectedIndex].value != "0") 
         {
-            this.app.ApiAnhaengerGet((response) =>
+            // Search the right price for the selected Anhaenger and assign that value to rentObject
+            for(let iterator = 0; iterator < this.anhaengerPreisListe.length; iterator++)
             {
-                this.rentObject.preis_anhaenger = response.mietpreis;
-                this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
-                localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
-                console.log(this.rentObject.preis_gesamt);
-                labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
-                return this.rentObject.preis_gesamt;
-            }, (ex) => 
-            {
-                alert(ex);
-            }, selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
+                if(iterator == selectAnhaenger.value)
+                {
+                    this.rentObject.preis_anhaenger = this.anhaengerPreisListe[iterator];
+                }
+            }
+            
+            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+            
+            // Saving rentObject to local storage
+            localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+            console.log(this.rentObject.preis_gesamt);
+            labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
         }
         else
         {
@@ -233,7 +285,6 @@ export default class PageRentStepTwo
             localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
             console.log(this.rentObject.preis_gesamt);
             labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
-            return this.rentObject.preis_gesamt;
         }   
     }
 }
