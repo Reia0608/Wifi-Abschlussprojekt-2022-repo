@@ -270,7 +270,8 @@ CREATE TABLE rentals.tbl_anhaenger
 	marke character varying,
 	modell character varying,
 	mietpreis DOUBLE PRECISION,
-	ausgabenstelle_id numeric
+	ausgabenstelle_id numeric,
+	kennzeichen character varying
 );
 
 ALTER TABLE rentals.tbl_anhaenger
@@ -616,3 +617,24 @@ FROM rentals.tbl_kraftfahrzeug
 LEFT JOIN rentals.tbl_bilder USING (kraftfahrzeug_id);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.car_list TO vrentalsuser;
+
+CREATE VIEW rentals.anhaenger_list
+ AS
+ SELECT tbl_anhaenger.anhaenger_id AS aid,
+    tbl_anhaenger.mietpreis,
+    tbl_anhaenger.gegenstandzustand,
+    tbl_anhaenger.kategorie,
+    tbl_anhaenger.aktueller_standort_id,
+    tbl_anhaenger.adresse_id,
+    tbl_anhaenger.marke,
+    tbl_anhaenger.modell,
+    tbl_anhaenger.ausgabenstelle_id,
+    tbl_anhaenger.kennzeichen,
+    tbl_bilder.bild_bytes
+   FROM rentals.tbl_anhaenger
+     LEFT JOIN rentals.tbl_bilder USING (anhaenger_id);
+
+ALTER TABLE rentals.anhaenger_list
+    OWNER TO postgres;
+	
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.anhaenger_list TO vrentalsuser;

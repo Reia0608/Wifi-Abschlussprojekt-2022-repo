@@ -49,6 +49,20 @@ namespace VRentalsRESTAPI.Controllers
             return null;
         }
 
+        // GET: api/<AnhaengerController>/karten
+        [HttpGet("karten")]
+        public IEnumerable<Anhaengerkarte> SelectAllCards()
+        {
+            return Anhaengerkarte.GetList();
+        }
+
+        // GET: api/<AnhaengerController>/karte/5
+        [HttpGet("karte/{id}")]
+        public Anhaengerkarte SelectOneCard(int id)
+        {
+            return Anhaengerkarte.Get(id);
+        }
+
         // POST: api/<AnhaengerController>
         [HttpPost]
         public IActionResult Post([FromBody] Anhaenger anhaenger)

@@ -324,6 +324,12 @@ https://bobbyhadz.com/blog/javascript-cannot-read-property-gettime-of-undefined
 
 https://stackoverflow.com/questions/2627650/why-javascript-gettime-is-not-a-function
 
+==========================================
+========== invert dates in JS ============
+==========================================
+
+https://stackoverflow.com/questions/27087128/convert-dd-mm-yyyy-to-yyyy-mm-dd-format-using-javascript
+
 =================================================
 ====================== TODO =====================
 =================================================

@@ -24,9 +24,9 @@ namespace VRentalsClasses.Models
 		//************************************************************************
 		#region static methods
 
-		public static Kraftfahrzeug Get(int kraftfahrzeug_id)
+		public static Kraftfahrzeugkarte Get(int kraftfahrzeug_id)
 		{
-			Kraftfahrzeug kraftfahrzeug = null;
+			Kraftfahrzeugkarte kraftfahrzeugkarte = null;
 
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
@@ -35,17 +35,14 @@ namespace VRentalsClasses.Models
 
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS_KFZ} from {SCHEMA}.{TABLE_KFZ} where kraftfahrzeug_id = :kid";
+			command.CommandText = $"select * from {SCHEMA}.car_list where kid = :kid";
 			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 			try
 			{
 				if (reader.Read())
 				{
-					kraftfahrzeug = new Kraftfahrzeug();
-					{
-						kraftfahrzeug = new Kraftfahrzeug(reader);
-					};
+					kraftfahrzeugkarte = new Kraftfahrzeugkarte(reader);
 				}
 			}
 			catch (Exception ex)
@@ -57,7 +54,7 @@ namespace VRentalsClasses.Models
 				reader.Close();
 				DBConnection.GetConnection().Close();
 			}
-			return kraftfahrzeug;
+			return kraftfahrzeugkarte;
 		}
 
 		public static List<Kraftfahrzeugkarte> GetList()

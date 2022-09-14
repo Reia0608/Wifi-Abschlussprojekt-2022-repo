@@ -577,6 +577,31 @@ export default class Application
         .catch(errorCallback);
     }
 
+    ApiKraftfahrzeugGetCard(successCallback, errorCallback, kraftfahrzeug_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'kraftfahrzeug/karte/' + kraftfahrzeug_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
     ApiKraftfahrzeugSet(successCallback, errorCallback, kraftfahrzeug) 
     {
         $('body').addClass('waiting');
@@ -889,6 +914,30 @@ export default class Application
         .catch(errorCallback);
     }
 
+    ApiBilderGetAnhaenger(successCallback, errorCallback, anhaenger_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/anhaenger/' + anhaenger_id, 
+		{
+			method: 'GET',
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
     ApiBilderGetAvailableFahrerList(successCallback, errorCallback, fahrerList)
     {
         $('body').addClass('waiting');
@@ -963,6 +1012,30 @@ export default class Application
         .then(successCallback)
         .catch(errorCallback);
     }
+
+    ApiBilderGetKraftfahrzeug(successCallback, errorCallback, kraftfahrzeug_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/singlekfz/' + kraftfahrzeug_id, 
+		{
+			method: 'GET',
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
 
     ApiBilderGetBenutzerList(successCallback, errorCallback, users_id)
 	{
@@ -1066,6 +1139,31 @@ export default class Application
 				$('body').removeClass('waiting');
 				return response.json();
 			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+    ApiAnhaengerGetCard(successCallback, errorCallback, anhaenger_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'anhaenger/karte/' + anhaenger_id, 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
 			else
 			{
 				$('body').removeClass('waiting');

@@ -566,6 +566,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GET One Kraftfahrzeugkarte",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/kraftfahrzeug/karte/15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"kraftfahrzeug",
+								"karte",
+								"15"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -741,6 +763,49 @@
 								"anhaenger",
 								"byausgabenstelle",
 								"57"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Anhaengerkarten",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger/karten",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger",
+								"karten"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Anhaengerkarte",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/anhaenger/karte/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"anhaenger",
+								"karte",
+								"7"
 							]
 						}
 					},

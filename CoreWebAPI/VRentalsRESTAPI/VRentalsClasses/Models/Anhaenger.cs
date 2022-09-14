@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_anhaenger";
-		private const string COLUMNS = "anhaenger_id, art, gegenstandzustand, kategorie, marke, modell, mietpreis, ausgabenstelle_id";
+		private const string COLUMNS = "anhaenger_id, aktueller_standort_id, ausgaben_id, schaden_id, art, gegenstandzustand, kategorie, bilder_id, adresse_id, marke, modell, mietpreis, ausgabenstelle_id, kennzeichen";
 		#endregion
 
 		//************************************************************************
@@ -215,13 +215,19 @@ namespace VRentalsClasses.Models
 		public Anhaenger(NpgsqlDataReader reader)
 		{
 			Anhaenger_Id = reader.GetInt32(0);
-			Art = reader.IsDBNull(1) ? null : reader.GetString(1);
-			GegenstandZustand = reader.IsDBNull(2) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(2);
-			Kategorie = reader.IsDBNull(3) ? null : reader.GetString(3);
-			Marke = reader.IsDBNull(4) ? null : reader.GetString(4);
-			Modell = reader.IsDBNull(5) ? null : reader.GetString(5);
-			MietPreis = reader.IsDBNull(6) ? null : reader.GetDouble(6);
-			Ausgabenstelle_Id = reader.IsDBNull(7) ? null : reader.GetInt32(7);
+			AktuellerStandort = reader.IsDBNull(1) ? null : reader.GetInt32(1);
+            Ausgaben_Id = reader.IsDBNull(2) ? null : reader.GetInt32(2);
+            Schaden_Id = reader.IsDBNull(3) ? null : reader.GetInt32(3);
+            Art = reader.IsDBNull(4) ? null : reader.GetString(4);
+			GegenstandZustand = reader.IsDBNull(5) ? GegenstandZustandTyp.frei : (GegenstandZustandTyp)reader.GetInt32(5);
+			Kategorie = reader.IsDBNull(6) ? null : reader.GetString(6);
+			Bilder_Id = reader.IsDBNull(7) ? null : reader.GetInt32(7);
+            Adresse_Id = reader.IsDBNull(8) ? null : reader.GetInt32(8);
+            Marke = reader.IsDBNull(9) ? null : reader.GetString(9);
+			Modell = reader.IsDBNull(10) ? null : reader.GetString(10);
+			MietPreis = reader.IsDBNull(11) ? null : reader.GetDouble(11);
+			Ausgabenstelle_Id = reader.IsDBNull(12) ? null : reader.GetInt32(12);
+			Kennzeichen = reader.IsDBNull(13) ? null : reader.GetString(13);
 		}
 
 		#endregion
@@ -229,28 +235,59 @@ namespace VRentalsClasses.Models
 		#region properties
 		[JsonPropertyName("anhaenger_id")]
 		public int? Anhaenger_Id { get; set; }
-		[JsonPropertyName("art")]
+
+        [JsonPropertyName("aktueller_standort_id")]
+        public int? AktuellerStandort { get; set; }
+
+        [JsonPropertyName("ausgaben_id")]
+        public int? Ausgaben_Id { get; set; }
+
+        [JsonPropertyName("schaden_id")]
+        public int? Schaden_Id { get; set; }
+
+        [JsonPropertyName("art")]
 		public string? Art { get; set; } = "Anhänger";
+
 		[JsonPropertyName("gegenstandzustand")]
 		public GegenstandZustandTyp GegenstandZustand { get; set; }
+
 		[JsonPropertyName("kategorie")]
 		public string? Kategorie { get; set; } = "Anhänger";
-		[JsonPropertyName("marke")]
+
+        [JsonPropertyName("bilder_id")]
+        public int? Bilder_Id { get; set; }
+
+        [JsonPropertyName("adresse_id")]
+        public int? Adresse_Id { get; set; }
+
+        [JsonPropertyName("marke")]
 		public string? Marke { get; set; }
+
 		[JsonPropertyName("modell")]
 		public string? Modell { get; set; }
+
 		[JsonPropertyName("mietpreis")]
 		public double? MietPreis { get; set; }
-		[JsonIgnore]
+
+        [JsonPropertyName("ausgabenstelle_id")]
+        public int? Ausgabenstelle_Id { get; set; }
+
+        [JsonPropertyName("kennzeichen")]
+        public string? Kennzeichen { get; set; }
+
+        [JsonIgnore]
 		public List<Bild>? BildListe { get; set; }
 
         // In welchen Ausgabestellen befindet sich diese Art/ Kategorie von Anhänger?
+        [JsonIgnore]
         public List<Adresse>? AdressenListe { get; set; }
-		public int? AktuellerStandort { get; set; }
-		public List<Ausgaben>? KostenListe { get; set; }
 
-		public List<Schaden>? SchadenListe { get; set; }
-		public int? Ausgabenstelle_Id { get; set; }
+        [JsonIgnore]
+        public List<Ausgaben>? KostenListe { get; set; }
+
+        [JsonIgnore]
+        public List<Schaden>? SchadenListe { get; set; }
+		
 
 		#endregion
 
@@ -269,25 +306,31 @@ namespace VRentalsClasses.Models
 
 			if (this.Anhaenger_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set art = :art, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, mietpreis = :mp, ausgabenstelle_id = :asid where anhaenger_id = :aid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set aktueller_standort_id = :akid, ausgaben_id = :agid, schaden_id = :sid, art = :art, gegenstandzustand = :gz, kategorie = :k, bilder_id = :bid, adresse_id = :adid, marke = :ma, modell = :mo, mietpreis = :mp, ausgabenstelle_id = :asid, kennzeichen = :ken where anhaenger_id = :aid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Anhaenger_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :art, :gz, :k, :ma, :mo, :mp, :asid)";
+				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:aid, :akid, :agib, :sid, :art, :gz, :k, :bid, :adid, :ma, :mo, :mp, :asid, :ken)";
 			}
 
 			command.Parameters.AddWithValue("aid", this.Anhaenger_Id);
-			command.Parameters.AddWithValue("art", String.IsNullOrEmpty(this.Art) ? (object)DBNull.Value : (object)this.Art);
+            command.Parameters.AddWithValue("akid", this.AktuellerStandort.HasValue ? (int)this.AktuellerStandort : (object)DBNull.Value);
+            command.Parameters.AddWithValue("agid", this.Ausgaben_Id.HasValue ? (int)this.Ausgaben_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("sid", this.Schaden_Id.HasValue ? (int)this.Schaden_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("art", String.IsNullOrEmpty(this.Art) ? (object)DBNull.Value : (object)this.Art);
 			command.Parameters.AddWithValue("gz", (int)this.GegenstandZustand);
 			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
-			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
+            command.Parameters.AddWithValue("bid", this.Bilder_Id.HasValue ? (int)this.Bilder_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("adid", this.Adresse_Id.HasValue ? (int)this.Adresse_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
 			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
 			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
 			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (object)this.Ausgabenstelle_Id.Value : (object)DBNull.Value);
+            command.Parameters.AddWithValue("ken", String.IsNullOrEmpty(this.Kennzeichen) ? (object)DBNull.Value : (object)this.Kennzeichen);
 
-			try
+            try
 			{
 				result = command.ExecuteNonQuery();
 			}
@@ -312,20 +355,47 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set art = :art, gegenstandzustand = :gz, kategorie = :k, marke = :ma, modell = :mo, mietpreis = :mp, ausgabenstelle_id = :asid where anhaenger_id = :aid";
-			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
-			command.Parameters.AddWithValue("aid", id);
-			command.Parameters.AddWithValue("art", String.IsNullOrEmpty(this.Art) ? (object)DBNull.Value : (object)this.Art);
-			command.Parameters.AddWithValue("gz", (int)this.GegenstandZustand);
-			command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
-			command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
-			command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
-			command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
-			command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (object)this.Ausgabenstelle_Id.Value : (object)DBNull.Value);
+			command.CommandText = $"update {SCHEMA}.{TABLE} set aktueller_standort_id = :akid, ausgaben_id = :agid, schaden_id = :sid, art = :art, gegenstandzustand = :gz, kategorie = :k, bilder_id = :bid, adresse_id = :adid, marke = :ma, modell = :mo, mietpreis = :mp, ausgabenstelle_id = :asid, kennzeichen = :ken where anhaenger_id = :aid";
+            //WIP: WARNING! Potential security danger! User could change the id to what he wants?!
+            command.Parameters.AddWithValue("aid", this.Anhaenger_Id);
+            command.Parameters.AddWithValue("akid", this.AktuellerStandort.HasValue ? (int)this.AktuellerStandort : (object)DBNull.Value);
+            command.Parameters.AddWithValue("agid", this.Ausgaben_Id.HasValue ? (int)this.Ausgaben_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("sid", this.Schaden_Id.HasValue ? (int)this.Schaden_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("art", String.IsNullOrEmpty(this.Art) ? (object)DBNull.Value : (object)this.Art);
+            command.Parameters.AddWithValue("gz", (int)this.GegenstandZustand);
+            command.Parameters.AddWithValue("k", String.IsNullOrEmpty(this.Kategorie) ? (object)DBNull.Value : (object)this.Kategorie);
+            command.Parameters.AddWithValue("bid", this.Bilder_Id.HasValue ? (int)this.Bilder_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("adid", this.Adresse_Id.HasValue ? (int)this.Adresse_Id : (object)DBNull.Value);
+            command.Parameters.AddWithValue("ma", String.IsNullOrEmpty(this.Marke) ? (object)DBNull.Value : (object)this.Marke);
+            command.Parameters.AddWithValue("mo", String.IsNullOrEmpty(this.Modell) ? (object)DBNull.Value : (object)this.Modell);
+            command.Parameters.AddWithValue("mp", this.MietPreis.HasValue ? (double)this.MietPreis : 9999);
+            command.Parameters.AddWithValue("asid", this.Ausgabenstelle_Id.HasValue ? (object)this.Ausgabenstelle_Id.Value : (object)DBNull.Value);
+            command.Parameters.AddWithValue("ken", String.IsNullOrEmpty(this.Kennzeichen) ? (object)DBNull.Value : (object)this.Kennzeichen);
 
-			try
+            try
 			{
 				result = command.ExecuteNonQuery();
+				if(result == 1)
+				{
+                    if (this.BildListe != null && this.BildListe.Count > 0)
+                    {
+                        int iterator = 0;
+                        foreach (Bild bild in this.BildListe)
+                        {
+                            bild.Bilder_Id = this.Anhaenger_Id;
+                            iterator += bild.Save();
+                        }
+
+                        if (iterator == this.BildListe.Count)
+                        {
+                            result = 1;
+                        }
+                        else
+                        {
+                            result = -4;
+                        }
+                    }
+                }
 			}
 			catch (Exception ex)
 			{

@@ -27,8 +27,9 @@ export default class PageRentStepFive
             const labelAnhaenger = document.querySelector('#labelAnhaenger');
             const labelGesamtpreis = document.querySelector('#labelGesamtpreis');
 
+            const divRowFahrzeug = document.querySelector('#divRowFahrzeug');
+            const divRowAnhaenger = document.querySelector('#divRowAnhaenger');
             const divRowFahrer = document.querySelector('#divRowFahrer');
-            // const divRowKfz = document.querySelector('#divRowKfz');
 
             this.loadData();
 
@@ -63,19 +64,114 @@ export default class PageRentStepFive
         this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
         labelAbholort.innerText = this.rentObject.abholort;
         labelRueckgabeort.innerText = this.rentObject.rueckgabeort;
-        labelAbholdatum.innerText = this.rentObject.abholdatum;
+        // WIP: Date needs to be changed to austrian norm
+        labelAbholdatum.innerText = this.rentObject.abholdatum.split("-").reverse().join("-");
         labelAbholzeit.innerText = this.rentObject.abholzeit;
-        labelRueckgabedatum.innerText = this.rentObject.rueckgabedatum;
+        // WIP: Date needs to be changed to austrian norm
+        labelRueckgabedatum.innerText = this.rentObject.rueckgabedatum.split("-").reverse().join("-");;
         labelRueckgabezeit.innerText = this.rentObject.rueckgabezeit;
         labelSchutzpaket.innerText = this.rentObject.schutzpaket;
-        // car goes here
-        labelAnhaenger.innerText = this.rentObject.mietgegenstandliste[1];
-        // fahrer goes here
-        // payment method goes here
+        // WIP: payment method goes here
         labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
+
+        // loading Kraftfahrzeug info into a card
+        this.loadKfz();
     }
 
-    loadFahrer(selection)
+    loadKfz()
+    {
+        var kid = localStorage.getItem("kid");
+        this.app.ApiKraftfahrzeugGetCard((response) => 
+        {
+            let html = '';
+            let currentYear = new Date().getFullYear();
+            let kraftfahrzeug = response;
+
+            html += 
+            `<div class="card cards mt-3" style="width: 18rem;">
+                <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" id="imgBildFahrzeug">
+                <div class="card-body" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}">
+                    <h5 class="card-title">${kraftfahrzeug.marke} ${kraftfahrzeug.modell}</h5>
+                    <p class="card-text">
+                        Alter: ${currentYear - kraftfahrzeug.baujahr} Jahre<br>
+                        Klasse: ${kraftfahrzeug.klasse}<br>
+                        Kategorie: ${kraftfahrzeug.kategorie}<br>
+                        Mietpreis: €${kraftfahrzeug.mietpreis},-/ Tag<br>
+                    </p>
+                    <a class="btn btn-primary" id="aEinzelheitenKraftfahrzeug">Einzelheiten</a>
+                </div>
+            </div>
+            `;
+
+            divRowFahrzeug.innerHTML = html;
+
+            this.app.ApiBilderGetKraftfahrzeug((response) =>
+            {
+                let kfzBild = response;
+                if(kfzBild != null)
+                {
+                    let imgBild = document.getElementById("imgBildFahrzeug");
+                    imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
+
+                    // loading Anhaenger info into a card
+                    this.loadAnhaenger();
+                }
+            }, (ex) => 
+            {
+                alert(ex);
+            }, kid);
+        }, (ex) => 
+        {
+            alert(ex);
+        }, kid);
+    }
+
+    loadAnhaenger()
+    {
+        this.app.ApiAnhaengerGetCard((response) => 
+        {
+            let html = '';
+            let anhaenger = response;
+
+            html += 
+            `<div class="card cards mt-3" style="width: 18rem;">
+                <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-anhaenger-id="${anhaenger.anhaenger_id}" id="imgBildAnhaenger">
+                <div class="card-body" data-anhaenger-id="${anhaenger.anhaenger_id}">
+                    <h5 class="card-title">${anhaenger.marke} ${anhaenger.modell}</h5>
+                    <p class="card-text">
+                        Kategorie: ${anhaenger.kategorie}<br>
+                        Mietpreis: €${anhaenger.mietpreis},- / Tag<br>
+                    </p>
+                    <a class="btn btn-primary" id="aEinzelheitenAnhaenger">Einzelheiten</a>
+                </div>
+            </div>
+            `;
+
+            divRowAnhaenger.innerHTML = html;
+
+            // Anhänger Bild anzeigen
+            this.app.ApiBilderGetAnhaenger((response) =>
+            {
+                if(response != null && response.length > 0)
+                {
+                    let bildliste = response;
+                    let imgBild = document.getElementById("imgBildAnhaenger");
+                    imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
+
+                    // load Fahrer info into a card
+                    this.loadFahrer();
+                }
+            }, (ex) => 
+            {
+                alert(ex);
+            }, this.rentObject.mietgegenstandliste[1]);
+        }, (ex) => 
+        {
+            alert(ex);
+        }, this.rentObject.mietgegenstandliste[1]);
+    }
+
+    loadFahrer()
     {
         this.app.ApiBenutzerGetById((response) =>
         {
@@ -83,12 +179,12 @@ export default class PageRentStepFive
             let html = 
             `
             <div class="card cards mt-3" style="width: 18rem;">
-                <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-fahrer-id="${benutzer.userid}" id="imgBild">
+                <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-fahrer-id="${benutzer.userid}" id="imgBildFahrer">
                 <div class="card-body" data-fahrer-id="${benutzer.userid}">
                     <h5 class="card-title">${benutzer.vorname} ${benutzer.nachname}</h5>
                     <p class="card-text">
                         <p id="pFuehrerscheinklassen" data-fahrer-id="${benutzer.userid}">Führerscheinklassen:</p><br>
-                        Mietpreis: €${benutzer.mietpreis},-<br>
+                        Mietpreis: €${benutzer.mietpreis},-/ Tag<br>
                     </p>
                 </div>
             </div>
@@ -111,27 +207,22 @@ export default class PageRentStepFive
 
                 // load images into card
                 this.app.ApiBilderGetBenutzerList((response) =>
-                {
-                    var imgBild = document.getElementById("imgBild");
-
-                    let fahrerBild = response;
-                    
-                    if(imgBild != null)
+                {                    
+                    if(response != null && response.length > 0)
                     {
-                        if(fahrerBild.users_id == imgBild.dataset.fahrerId)
-                        {
-                            imgBild.src = "data:image/jpeg;base64," + fahrerBild.bild_bytes;
-                        }
+                        let bildliste = response;
+                        let imgBild = document.getElementById("imgBildFahrer");
+                        imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
                     }
                 }, (ex) => 
                 {
                     alert(ex);
-                }, fahrerList);
+                }, this.rentObject.fahrer_id);
             }); 
         }, (ex) => 
         {
             alert(ex);
-        }, selection)
+        }, this.rentObject.fahrer_id)
     }
 
     finalizeOrder()

@@ -55,7 +55,7 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("anhaenger/{id}")]
         public IEnumerable<Bild> SelectAllFromAnhaenger(int id)
         {
-            return Bild.GetBenutzerBildList(id);
+            return Bild.GetAnhaengerBildList(id);
         }
 
         // GET: api/<BilderController>/availablefahrer/5_24_45_

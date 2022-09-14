@@ -28,9 +28,9 @@
 
 12. Always check in the renting process if a KfZ or Anhaenger is availble for use or not.
 
-13. Internal server error when adding 2 new trailers in a row in admin mode. (related to image or kennzeichen?)
+14. Implement a date time system where only KfZ and drivers are listed that are actually free during that time frame.
 
-14. implement a date time system where only KfZ and drivers are listed that are actually free during that time frame.
+15. Implement payment methods into PWA page-rent-step-five.js.
 
 ===== Priority 2=====
 
@@ -112,6 +112,8 @@ show the appropriate behaviour like checkboxAllKfz.
 
 17. WIP: page-rent-step-two.js: is there a better solution? only takes the second variable in the array which is not necessarily whats needed.
 
+18. Do something with, or remove the Einzelheiten Buttons on the cards loaded on page-rent-step-five.js. 
+
 ===== Priority 4=====
 
 1. Create an image carousel/slider for multiple images.
@@ -123,3 +125,4 @@ show the appropriate behaviour like checkboxAllKfz.
 7. Save Registrierungstag upon registering on website, and save Letzte Anmeldung on logging onto the website.
 8. Add valid/invalid to all the forms on the website.
 9. Create a remember list for the client where he can add a personal selection of cars.
+10. Bilder_Id property in Anhaenger.cs is never used. Needs to be deleted. 
