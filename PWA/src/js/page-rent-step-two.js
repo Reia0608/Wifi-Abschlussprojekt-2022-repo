@@ -86,18 +86,21 @@ export default class PageRentStepTwo
             this.rentObject.preis_zusatzpaket = 250;
         }
         
-        if(!this.rentObject.mietgegenstandliste.includes(parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value)))
+        if(!this.rentObject.anhaenger_id == parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value) && selectAnhaenger.options[selectAnhaenger.selectedIndex].value != 0)
         {
             let newValue = parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
-            this.rentObject.mietgegenstandliste[1] = newValue;
+            this.rentObject.anhaenger_id = newValue;
         }
 
         // Save the selected anhaenger price to the rentObject
-        for(let iterator = 0; iterator < this.anhaengerPreisListe.length; iterator++)
+        if(selectAnhaenger.options[selectAnhaenger.selectedIndex].value != 0)
         {
-            if(selectAnhaenger.value == iterator)
+            for(let iterator = 0; iterator < this.anhaengerPreisListe.length; iterator++)
             {
-                this.rentObject.preis_anhaenger = this.anhaengerPreisListe[iterator];
+                if(selectAnhaenger.value == iterator)
+                {
+                    this.rentObject.preis_anhaenger = this.anhaengerPreisListe[iterator];
+                }
             }
         }
         
@@ -128,9 +131,9 @@ export default class PageRentStepTwo
                 default: break;
             }
 
-            if(this.rentObject.mietgegenstandliste[1] != null)
+            if(this.rentObject.anhaenger_id != null)
             {
-                selectAnhaenger.value = this.rentObject.mietgegenstandliste[1].toString();
+                selectAnhaenger.value = this.rentObject.anhaenger_id.toString();
             }
 
             if(this.rentObject.preis_gesamt != 0)
@@ -179,7 +182,7 @@ export default class PageRentStepTwo
                 {
                     this.calculatePrice(inputRadioBasisSchutzpaket, inputRadioMediumSchutzpaket, inputRadioPremiumSchutzpaket, selectAnhaenger);
                     this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
-                    this.rentObject.mietgegenstandliste[1] = parseInt(selectAnhaenger.value);
+                    this.rentObject.anhaenger_id = parseInt(selectAnhaenger.value);
                     localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                 });
 

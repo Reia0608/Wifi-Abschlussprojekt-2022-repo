@@ -354,13 +354,26 @@ CREATE TABLE rentals.tbl_bewegung
     bewegungsdatum date,
     beschreibung text,
     grund text,
-	mietgegenstand_id numeric,
 	abholort character varying,
 	rueckgabeort character varying,
 	abholdatum date,
 	abholzeit time with time zone,
 	rueckgabedatum date,
-	rueckgabezeit time with time zone
+	rueckgabezeit time with time zone,
+	gleicherrueckgabeort boolean SET DEFAULT false,
+	schutzpaket character varying,
+	braucht_fahrer boolean,
+	fahrer_id numeric SET DEFAULT false,
+	preis_gesamt double precision,
+	preis_kfz double precision,
+	preis_anhaenger double precision,
+	preis_fahrer double precision,
+	preis_schutzpaket double precision,
+	allow_reload boolean SET DEFAULT true,
+	transaction_finished boolean SET DEFAULT false,
+	bewegung_finished boolean SET DEFAULT false,
+	kraftfahrzeug_id numeric,
+	anhaenger_id numeric
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bewegung
@@ -519,9 +532,6 @@ ALTER TABLE rentals.tbl_mietgegenstand
 	
 ALTER TABLE rentals.tbl_mietgegenstand
 	ADD CONSTRAINT mietgegenstand_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
-
-ALTER TABLE rentals.tbl_bewegung
-	ADD CONSTRAINT bewegung_mietgegenstand_fk FOREIGN KEY (mietgegenstand_id) REFERENCES rentals.tbl_mietgegenstand (mietgegenstand_id);
 	
 ALTER TABLE rentals.tbl_users
 	ADD CONSTRAINT users_kontakt_fk FOREIGN KEY (kontakt_id) REFERENCES rentals.tbl_kontakt (kontakt_id);
@@ -561,6 +571,12 @@ ALTER TABLE rentals.tbl_fuehrerscheinklasse
 	
 ALTER TABLE rentals.tbl_fsk
 	ADD CONSTRAINT users_fsk_fk FOREIGN KEY (users_id) REFERENCES rentals.tbl_users (users_id);
+	
+ALTER TABLE rentals.tbl_bewegung
+	ADD CONSTRAINT bewegung_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
+
+ALTER TABLE rentals.tbl_bewegung
+	ADD CONSTRAINT bewegung_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
 	
 -- ##################################################################
 -- ############################# VIEWS ##############################

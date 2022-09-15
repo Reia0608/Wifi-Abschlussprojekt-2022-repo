@@ -38,15 +38,22 @@ export default class PageCarDetails
 
             buttonKfzMieten.addEventListener('click', (e) => 
             {
-                const inputMarke = document.querySelector('#inputMarke');
-                const inputModell = document.querySelector('#inputModell');
-                const inputKennzeichen = document.querySelector('#inputKennzeichen');
-                const inputMietpreis = document.querySelector('#inputMietpreis');
-                const inputBaujahr = document.querySelector('#inputBaujahr');
-                const inputKlasse = document.querySelector('#inputKlasse');
-                const inputKategorie = document.querySelector('#inputKategorie');
-
-                location.hash = '#rentstepone';
+                if(document.cookie)
+                {
+                    const inputMarke = document.querySelector('#inputMarke');
+                    const inputModell = document.querySelector('#inputModell');
+                    const inputKennzeichen = document.querySelector('#inputKennzeichen');
+                    const inputMietpreis = document.querySelector('#inputMietpreis');
+                    const inputBaujahr = document.querySelector('#inputBaujahr');
+                    const inputKlasse = document.querySelector('#inputKlasse');
+                    const inputKategorie = document.querySelector('#inputKategorie');
+    
+                    location.hash = '#rentstepone';
+                }
+                else
+                {
+                    alert("Sie müssen angemeldet sein um ein Fahrzeug mieten zu können.");
+                }
             });
 
             //-------------------------------------------------------------

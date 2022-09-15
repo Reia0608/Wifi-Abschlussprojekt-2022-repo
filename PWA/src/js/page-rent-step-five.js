@@ -114,7 +114,15 @@ export default class PageRentStepFive
                     imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
 
                     // loading Anhaenger info into a card
-                    this.loadAnhaenger();
+                    if(this.rentObject.anhaenger_id != 0)
+                    {
+                        this.loadAnhaenger();
+                    }
+                    else
+                    {
+                        divRowAnhaenger.innerHTML = "Keinen Anhänger gewählt.";
+                        this.loadFahrer();
+                    }
                 }
             }, (ex) => 
             {
@@ -164,11 +172,11 @@ export default class PageRentStepFive
             }, (ex) => 
             {
                 alert(ex);
-            }, this.rentObject.mietgegenstandliste[1]);
+            }, this.rentObject.anhaenger_id);
         }, (ex) => 
         {
             alert(ex);
-        }, this.rentObject.mietgegenstandliste[1]);
+        }, this.rentObject.anhaenger_id);
     }
 
     loadFahrer()
@@ -227,6 +235,14 @@ export default class PageRentStepFive
 
     finalizeOrder()
     {
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+        // this.rentObject.users_id = 
+        this.app.ApiRentObjectSet(() =>
+        {
 
+        }, (ex) =>
+        {
+            alert(ex);
+        }, this.rentObject)
     }
 }

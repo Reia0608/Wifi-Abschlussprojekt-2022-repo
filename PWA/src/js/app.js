@@ -1180,9 +1180,9 @@ export default class Application
     ApiRentObjectSet(successCallback, errorCallback, rentObject)
     {
         $('body').addClass('waiting');
-        fetch(this.apiBaseUrl + 'bewegung' + (rentObject.mietgegenstand_liste ? '/' + rentObject.mietgegenstand_liste : ''), 
+        fetch(this.apiBaseUrl + 'bewegung' + (rentObject.bewegung_id ? '/' + rentObject.bewegung_id : ''), 
         {
-            method: rentObject.kraftfahrzeug_id ? 'PUT' : 'POST',
+            method: rentObject.bewegung_id ? 'PUT' : 'POST',
             cache: 'no-cache',
             headers: 
             {

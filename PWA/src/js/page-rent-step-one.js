@@ -33,31 +33,9 @@ export default class PageRentStepOne
 
             //=================================
             // Initialisierung
-
-            this.rentObject = // variable that constitutes the current order of the client. It gets completed throughout the rent steps, and finally gets sent to the backend part
-            {
-                abholort: null,
-                gleicherRueckgabeort: false,
-                rueckgabeort: null,
-                abholdatum: null,
-                rueckgabedatum: null,
-                abholzeit: null,
-                rueckgabezeit: null,
-                mietgegenstandliste: [],
-                grund: "Initalisierung...",
-                schutzpaket: null,
-                braucht_fahrer: false,
-                fahrer_id: null,
-                preis_gesamt: 0,
-                preis_kfz: 0,
-                preis_anhaenger: 0,
-                preis_fahrer: 0,
-                preis_zusatzpaket: 0,
-                allow_reload: true, // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
-                transaction_finished: false,
-                rent_finished: false
-            };
-
+            this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+            this.createRentObject();
+            
             this.kraftfahrzeug = {};
 
             this.loadOptions();
@@ -134,23 +112,23 @@ export default class PageRentStepOne
         var kid = localStorage.getItem("kid");
 
         this.rentObject.abholort = selectAbholort.options[selectAbholort.selectedIndex].text;
-        if(this.rentObject.gleicherRueckgabeort == false)
+        if(this.rentObject.gleicherRueckgabeort == true)
         {
-            this.rentObject.rueckgabeort = selectRueckgabeort.options[selectRueckgabeort.selectedIndex].text;
+            this.rentObject.rueckgabeort = selectAbholort.options[selectAbholort.selectedIndex].text;
         }
         else
         {
-            this.rentObject.rueckgabeort = selectAbholort.options[selectAbholort.selectedIndex].text;
+            this.rentObject.rueckgabeort = selectRueckgabeort.options[selectRueckgabeort.selectedIndex].text;
         }
         this.rentObject.abholdatum = inputDateAbholdatum.value;
         this.rentObject.abholzeit = inputTimeAbholzeit.value;
         this.rentObject.rueckgabedatum = inputDateRueckgabedatum.value;
         this.rentObject.rueckgabezeit = inputTimeRueckgabezeit.value;
 
-        if(!this.rentObject.mietgegenstandliste.includes(parseInt(kid)))
+        if(!this.rentObject.kraftfahrzeug_id == parseInt(kid) || this.rentObject.kraftfahrzeug_id == null)
         {
-            var newValue = parseInt(kid);
-            this.rentObject.mietgegenstandliste[0] = newValue;
+            let newValue = parseInt(kid);
+            this.rentObject.kraftfahrzeug_id = newValue;
         }
 
         this.rentObject.grund = "Mietung eines KfZ";
@@ -239,6 +217,7 @@ export default class PageRentStepOne
         this.app.ApiKraftfahrzeugGet((response) => 
         {
             this.kraftfahrzeug = response;
+            this.createRentObject();
             this.rentObject.preis_kfz = this.kraftfahrzeug.mietpreis;
             localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 
@@ -301,5 +280,38 @@ export default class PageRentStepOne
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
         console.log(this.rentObject.preis_gesamt);
         return this.rentObject.preis_gesamt;
+    }
+
+    createRentObject()
+    {
+        if(this.rentObject == null)
+        {
+            this.rentObject = // variable that constitutes the current order of the client. It gets completed throughout the rent steps, and finally gets sent to the backend part
+            {
+                bewegung_id: null,
+                users_id: null,
+                abholort: null,
+                gleicherRueckgabeort: false,
+                rueckgabeort: null,
+                abholdatum: null,
+                rueckgabedatum: null,
+                abholzeit: null,
+                rueckgabezeit: null,
+                kraftfahrzeug_id: null,
+                anhaenger_id: null,
+                grund: "Initalisierung...",
+                schutzpaket: null,
+                braucht_fahrer: false,
+                fahrer_id: null,
+                preis_gesamt: 0,
+                preis_kfz: 0,
+                preis_anhaenger: 0,
+                preis_fahrer: 0,
+                preis_zusatzpaket: 0,
+                allow_reload: true, // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
+                transaction_finished: false,
+                bewegung_finished: false,
+            };
+        }
     }
 }

@@ -1399,6 +1399,91 @@
 			]
 		},
 		{
+			"name": "BewegungController",
+			"item": [
+				{
+					"name": "Get Bewegung by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bewegung/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bewegung",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new Bewegung",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"users_id\": 5,\r\n    \"beschreibung\": \"post test\",\r\n    \"gleicherrueckgabeort\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/bewegung",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bewegung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change existing Bewegung",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bewegung_id\": 10,\r\n    \"users_id\": 5,\r\n    \"beschreibung\": \"test\",\r\n    \"grund\": \"put test\",\r\n    \"gleicherrueckgabeort\": false \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/bewegung/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bewegung",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Search with Term",
 			"request": {
 				"method": "GET",

@@ -32,6 +32,8 @@
 
 15. Implement payment methods into PWA page-rent-step-five.js.
 
+16. Make sure to check all the entries on the page-rent-step- page series. Selecting "Bitte wählen" breaks the whole thing!
+
 ===== Priority 2=====
 
 0. Create a personal/kundennummer on staff/ client creation.
