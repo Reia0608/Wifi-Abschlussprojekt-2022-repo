@@ -276,7 +276,7 @@ export default class PageRentStepOne
         // logic
         this.rentObject.abholdatum = firstDate;
         this.rentObject.rueckgabedatum = lastDate;
-        this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+        this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
         console.log(this.rentObject.preis_gesamt);
         return this.rentObject.preis_gesamt;
@@ -290,16 +290,15 @@ export default class PageRentStepOne
             {
                 bewegung_id: null,
                 users_id: null,
+                beschreibung: null,
+                grund: "Initalisierung...",
                 abholort: null,
-                gleicherRueckgabeort: false,
                 rueckgabeort: null,
                 abholdatum: null,
-                rueckgabedatum: null,
                 abholzeit: null,
+                rueckgabedatum: null,
                 rueckgabezeit: null,
-                kraftfahrzeug_id: null,
-                anhaenger_id: null,
-                grund: "Initalisierung...",
+                gleicherRueckgabeort: false,
                 schutzpaket: null,
                 braucht_fahrer: false,
                 fahrer_id: null,
@@ -307,10 +306,12 @@ export default class PageRentStepOne
                 preis_kfz: 0,
                 preis_anhaenger: 0,
                 preis_fahrer: 0,
-                preis_zusatzpaket: 0,
+                preis_schutzpaket: 0,
                 allow_reload: true, // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
                 transaction_finished: false,
                 bewegung_finished: false,
+                kraftfahrzeug_id: null,
+                anhaenger_id: null,
             };
         }
     }

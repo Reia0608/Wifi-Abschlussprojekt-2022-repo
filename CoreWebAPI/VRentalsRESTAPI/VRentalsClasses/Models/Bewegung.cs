@@ -133,9 +133,9 @@ namespace VRentalsClasses.Models
 			AbholOrt = reader.IsDBNull(5) ? null : reader.GetString(5);
 			RueckgabeOrt = reader.IsDBNull(6) ? null : reader.GetString(6);
 			AbholDatum = reader.IsDBNull(7) ? null : reader.GetDateTime(7);
-			AbholZeit = reader.IsDBNull(8) ? null : reader.GetDateTime(8);
+			AbholZeit = reader.IsDBNull(8) ? null : reader.GetString(8);
 			RueckgabeDatum = reader.IsDBNull(9) ? null : reader.GetDateTime(9);
-			RueckgabeZeit = reader.IsDBNull(10) ? null : reader.GetDateTime(10);
+			RueckgabeZeit = reader.IsDBNull(10) ? null : reader.GetString(10);
             GleicherRueckgabeort = reader.GetBoolean(11);
             SchutzPaket = reader.IsDBNull(12) ? null : reader.GetString(12);
             BrauchtFahrer = reader.GetBoolean(13);
@@ -180,13 +180,13 @@ namespace VRentalsClasses.Models
         public DateTime? AbholDatum { get; set; }
 
         [JsonPropertyName("abholzeit")]
-        public DateTime? AbholZeit { get; set; }
+        public string? AbholZeit { get; set; }
 
         [JsonPropertyName("rueckgabedatum")]
         public DateTime? RueckgabeDatum { get; set; }
 
         [JsonPropertyName("rueckgabezeit")]
-        public DateTime? RueckgabeZeit { get; set; }
+        public string? RueckgabeZeit { get; set; }
 
         [JsonPropertyName("gleicherrueckgabeort")]
         public bool GleicherRueckgabeort { get; set; }
@@ -269,9 +269,9 @@ namespace VRentalsClasses.Models
             command.Parameters.AddWithValue("ao", String.IsNullOrEmpty(this.AbholOrt) ? (object)DBNull.Value : (object)this.AbholOrt);
             command.Parameters.AddWithValue("ro", String.IsNullOrEmpty(this.RueckgabeOrt) ? (object)DBNull.Value : (object)this.RueckgabeOrt);
             command.Parameters.AddWithValue("ad", this.AbholDatum.HasValue ? (object)this.AbholDatum.Value : (object)DBNull.Value);
-            command.Parameters.AddWithValue("az", this.AbholZeit.HasValue ? (object)this.AbholZeit.Value : (object)DBNull.Value);
+            command.Parameters.AddWithValue("az", String.IsNullOrEmpty(this.AbholZeit) ? (object)DBNull.Value : (object)this.AbholZeit);
             command.Parameters.AddWithValue("rd", this.RueckgabeDatum.HasValue ? (object)this.RueckgabeDatum.Value : (object)DBNull.Value);
-            command.Parameters.AddWithValue("rz", this.RueckgabeZeit.HasValue ? (object)this.RueckgabeZeit.Value : (object)DBNull.Value);
+            command.Parameters.AddWithValue("rz", String.IsNullOrEmpty(this.RueckgabeZeit) ? (object)DBNull.Value : (object)this.RueckgabeZeit);
             command.Parameters.AddWithValue("gro", this.GleicherRueckgabeort);
             command.Parameters.AddWithValue("sp", String.IsNullOrEmpty(this.SchutzPaket) ? (object)DBNull.Value : (object)this.SchutzPaket);
             command.Parameters.AddWithValue("bf", this.BrauchtFahrer);

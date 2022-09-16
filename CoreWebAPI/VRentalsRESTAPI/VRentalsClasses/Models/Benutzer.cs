@@ -93,7 +93,44 @@ namespace VRentalsClasses.Models
 			return benutzer;
 		}
 
-		public static Benutzer Get(string benutzermerkmal)
+        public static int? GetId(string BenutzerMerkmal)
+        {
+			Benutzer benutzer = new Benutzer();
+			int? Id = null;
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where benutzermerkmal = :bm";
+            command.Parameters.AddWithValue("bm", BenutzerMerkmal);
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+				if(reader.HasRows)
+				{
+                    reader.Read();
+                    benutzer = new Benutzer(reader);
+                    Id = benutzer.UserId;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return Id;
+        }
+
+        public static Benutzer Get(string benutzermerkmal)
 		{
 			Benutzer benutzer = new Benutzer();
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)

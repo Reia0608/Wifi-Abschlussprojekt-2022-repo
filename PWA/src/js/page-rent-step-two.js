@@ -73,23 +73,27 @@ export default class PageRentStepTwo
         if(inputRadioBasisSchutzpaket.checked)
         {
             this.rentObject.schutzpaket = "Basisschutzpaket";
-            this.rentObject.preis_zusatzpaket = 100;
+            this.rentObject.preis_schutzpaket = 100;
         }
         else if(inputRadioMediumSchutzpaket.checked)
         {
             this.rentObject.schutzpaket = "Mediumschutzpaket";
-            this.rentObject.preis_zusatzpaket = 150;
+            this.rentObject.preis_schutzpaket = 150;
         }
         else if(inputRadioPremiumSchutzpaket.checked)
         {
             this.rentObject.schutzpaket = "Premiumschutzpaket";
-            this.rentObject.preis_zusatzpaket = 250;
+            this.rentObject.preis_schutzpaket = 250;
         }
         
         if(!this.rentObject.anhaenger_id == parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value) && selectAnhaenger.options[selectAnhaenger.selectedIndex].value != 0)
         {
             let newValue = parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
             this.rentObject.anhaenger_id = newValue;
+        }
+        else
+        {
+            this.rentObject.anhaenger_id = null;
         }
 
         // Save the selected anhaenger price to the rentObject
@@ -106,7 +110,7 @@ export default class PageRentStepTwo
         
         // Calculate rentObject.preis_gesamt
         this.Helper = new Helper();
-        this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+        this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
 
         // Saving rentOBject to the local storage
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
@@ -252,14 +256,14 @@ export default class PageRentStepTwo
         // WIP: Using a very quick and dirty solution. All the prices should be in the database for manipulation!
         if(inputRadioBasisSchutzpaket.checked == true)
         {
-            this.rentObject.preis_zusatzpaket = parseInt(inputRadioBasisSchutzpaket.name);
+            this.rentObject.preis_schutzpaket = parseInt(inputRadioBasisSchutzpaket.name);
         }else if(inputRadioMediumSchutzpaket.checked == true)
         {
-            this.rentObject.preis_zusatzpaket = parseInt(inputRadioMediumSchutzpaket.name);
+            this.rentObject.preis_schutzpaket = parseInt(inputRadioMediumSchutzpaket.name);
         }
         else
         {
-            this.rentObject.preis_zusatzpaket = parseInt(inputRadioPremiumSchutzpaket.name);
+            this.rentObject.preis_schutzpaket = parseInt(inputRadioPremiumSchutzpaket.name);
         }
         
         // WIP: Bad solution!!! What if the anhaenger_id = 0???
@@ -274,7 +278,7 @@ export default class PageRentStepTwo
                 }
             }
             
-            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
             
             // Saving rentObject to local storage
             localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
@@ -284,7 +288,7 @@ export default class PageRentStepTwo
         else
         {
             this.rentObject.preis_anhaenger = 0;
-            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
             localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
             console.log(this.rentObject.preis_gesamt);
             labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";

@@ -114,7 +114,7 @@ export default class PageRentStepFive
                     imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
 
                     // loading Anhaenger info into a card
-                    if(this.rentObject.anhaenger_id != 0)
+                    if(this.rentObject.anhaenger_id != 0 && this.rentObject.anhaenger_id != null)
                     {
                         this.loadAnhaenger();
                     }
@@ -167,7 +167,14 @@ export default class PageRentStepFive
                     imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
 
                     // load Fahrer info into a card
-                    this.loadFahrer();
+                    if(this.rentObject.fahrer_id != null)
+                    {
+                        this.loadFahrer();
+                    }
+                    else
+                    {
+                        divRowFahrer.innerHTML = "Keine FahrerIn gewählt."
+                    }
                 }
             }, (ex) => 
             {
@@ -236,13 +243,20 @@ export default class PageRentStepFive
     finalizeOrder()
     {
         this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
-        // this.rentObject.users_id = 
-        this.app.ApiRentObjectSet(() =>
+        const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+        this.app.ApiBenutzerGetId((response) =>
         {
+            this.rentObject.users_id = response;
+            this.app.ApiRentObjectSet(() =>
+            {
 
+            }, (ex) =>
+            {
+                alert(ex);
+            }, this.rentObject);
         }, (ex) =>
         {
             alert(ex);
-        }, this.rentObject)
+        }, benutzerMerkmal);
     }
 }

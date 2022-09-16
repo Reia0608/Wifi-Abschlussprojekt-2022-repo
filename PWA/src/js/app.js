@@ -295,6 +295,30 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+    ApiBenutzerGetId(successCallback, errorCallback, benutzerMerkmal) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'benutzer/bm/' + benutzerMerkmal, 
+		{
+			method: 'GET'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
 	ApiBenutzerSet(successCallback, errorCallback, benutzer) 
 	{
         $('body').addClass('waiting');

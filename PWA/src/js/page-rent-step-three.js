@@ -248,7 +248,7 @@ export default class PageRentStepThree
             this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
             this.rentObject.preis_fahrer = benutzer.mietpreis;
             this.Helper = new Helper();
-            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+            this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
             labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
             localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 
@@ -262,7 +262,7 @@ export default class PageRentStepThree
                 this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
                 this.rentObject.allow_reload = true;
                 this.rentObject.preis_fahrer = 0;
-                this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_zusatzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+                this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
                 labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
                 localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                 this.loadData();

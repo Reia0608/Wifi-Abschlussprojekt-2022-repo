@@ -358,6 +358,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get User ID by Benutzermerkmal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/bm/0761aceb6a02496da420e37ab5059d61",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"bm",
+								"0761aceb6a02496da420e37ab5059d61"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1429,7 +1451,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"users_id\": 5,\r\n    \"beschreibung\": \"post test\",\r\n    \"gleicherrueckgabeort\": true\r\n}",
+							"raw": "{\r\n    \"users_id\": 5,\r\n    \"beschreibung\": \"post test\",\r\n    \"gleicherrueckgabeort\": true,\r\n    \"abholzeit\": \"16:58\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

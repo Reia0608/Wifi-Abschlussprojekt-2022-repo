@@ -113,19 +113,26 @@ namespace VRentalsRESTAPI.Controllers
         }
 
 
-        [HttpGet("{id}/bild")]
-		public FileStreamResult GetBild(string benutzermerkmal)
+        [HttpGet("bm/{benutzermerkmal}")]
+		public int? GetId(string benutzermerkmal)
 		{
-			Benutzer benutzer = Benutzer.Get(benutzermerkmal);
-			if (benutzer?.ProfilBild != null)
-			{
-				MemoryStream memoryStream = new MemoryStream(benutzer.ProfilBild);
-				return new FileStreamResult(memoryStream, "image/jpeg");
-			}
-			return null;
+			int? Id = Benutzer.GetId(benutzermerkmal);
+			return Id;
 		}
 
-		[HttpGet("allebenutzer/{role}")]
+        [HttpGet("{id}/bild")]
+        public FileStreamResult GetBild(string benutzermerkmal)
+        {
+            Benutzer benutzer = Benutzer.Get(benutzermerkmal);
+            if (benutzer?.ProfilBild != null)
+            {
+                MemoryStream memoryStream = new MemoryStream(benutzer.ProfilBild);
+                return new FileStreamResult(memoryStream, "image/jpeg");
+            }
+            return null;
+        }
+
+        [HttpGet("allebenutzer/{role}")]
 		public IEnumerable<Benutzer> GetUsersByRole(int role)
 		{
             Benutzer benutzer = Benutzer.Get(this);
