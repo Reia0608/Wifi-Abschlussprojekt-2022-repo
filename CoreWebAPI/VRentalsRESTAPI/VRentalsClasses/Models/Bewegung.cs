@@ -83,6 +83,41 @@ namespace VRentalsClasses.Models
             return bewegung;
         }
 
+        public static List<Bewegung> GetAllByBenutzerId(int id)
+        {
+            List<Bewegung> bewegungList = new List<Bewegung>();
+            Bewegung bewegung = new Bewegung();
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where users_id = :uid";
+            command.Parameters.AddWithValue("uid", id);
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while(reader.Read())
+                {
+                    bewegungList.Add(bewegung = new Bewegung(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return bewegungList;
+        }
+
         public static Bewegung GetByKraftfahrzeugId(int id)
         {
             Bewegung bewegung = new Bewegung();

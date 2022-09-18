@@ -1259,4 +1259,29 @@ export default class Application
         .then(successCallback)
         .catch(errorCallback);
     }
+
+    ApiRentObjectGetById(successCallback, errorCallback, user_id)
+    {  
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bewegung/user/' + user_id, 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
 }

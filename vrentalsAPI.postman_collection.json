@@ -1502,6 +1502,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Bewegung By Benutzer ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bewegung/user/66",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bewegung",
+								"user",
+								"66"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

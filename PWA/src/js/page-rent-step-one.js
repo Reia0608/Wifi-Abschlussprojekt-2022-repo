@@ -34,8 +34,13 @@ export default class PageRentStepOne
             //=================================
             // Initialisierung
             this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
-            this.createRentObject();
-            
+
+            if(this.rentObject == null && typeof(this.rentObject) === 'undefined')
+            {
+                this.Helper = new Helper();
+                this.rentObject = this.Helper.CreateRentObject();
+            }
+
             this.kraftfahrzeug = {};
 
             this.loadOptions();
@@ -182,7 +187,7 @@ export default class PageRentStepOne
 
             if(this.rentObject.abholdatum != null)
             {
-                inputDateAbholdatum.value = this.rentObject.abholdatum; 
+                inputDateAbholdatum.value = this.rentObject.abholdatum.split('T')[0]; 
             }
             if(this.rentObject.abholzeit != null)
             {
@@ -190,7 +195,7 @@ export default class PageRentStepOne
             }
             if(this.rentObject.rueckgabedatum != null)
             {
-                inputDateRueckgabedatum.value = this.rentObject.rueckgabedatum;
+                inputDateRueckgabedatum.value = this.rentObject.rueckgabedatum.split('T')[0];
             }
             if(this.rentObject.rueckgabezeit != null)
             {
@@ -217,9 +222,16 @@ export default class PageRentStepOne
         this.app.ApiKraftfahrzeugGet((response) => 
         {
             this.kraftfahrzeug = response;
-            this.createRentObject();
-            this.rentObject.preis_kfz = this.kraftfahrzeug.mietpreis;
-            localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+            if(this.rentObject == null || typeof(this.rentObject) === 'undefined')
+            {
+                this.Helper = new Helper();
+                this.rentObject = this.Helper.CreateRentObject();
+            }
+            if(this.rentObject.bewegung_id == null)
+            {
+                this.rentObject.preis_kfz = this.kraftfahrzeug.mietpreis;
+                localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+            }
 
             this.app.ApiAusgabenstelleNamesByKfz((response) =>
             {
@@ -280,39 +292,5 @@ export default class PageRentStepOne
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
         console.log(this.rentObject.preis_gesamt);
         return this.rentObject.preis_gesamt;
-    }
-
-    createRentObject()
-    {
-        if(this.rentObject == null)
-        {
-            this.rentObject = // variable that constitutes the current order of the client. It gets completed throughout the rent steps, and finally gets sent to the backend part
-            {
-                bewegung_id: null,
-                users_id: null,
-                beschreibung: null,
-                grund: "Initalisierung...",
-                abholort: null,
-                rueckgabeort: null,
-                abholdatum: null,
-                abholzeit: null,
-                rueckgabedatum: null,
-                rueckgabezeit: null,
-                gleicherRueckgabeort: false,
-                schutzpaket: null,
-                braucht_fahrer: false,
-                fahrer_id: null,
-                preis_gesamt: 0,
-                preis_kfz: 0,
-                preis_anhaenger: 0,
-                preis_fahrer: 0,
-                preis_schutzpaket: 0,
-                allow_reload: true, // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
-                transaction_finished: false,
-                bewegung_finished: false,
-                kraftfahrzeug_id: null,
-                anhaenger_id: null,
-            };
-        }
     }
 }

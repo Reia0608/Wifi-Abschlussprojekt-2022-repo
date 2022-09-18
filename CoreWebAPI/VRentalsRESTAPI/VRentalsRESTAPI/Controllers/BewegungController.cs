@@ -20,6 +20,11 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("{id}")]
         public Bewegung Get(int id) => Bewegung.Get(id);
 
+        // GET: api/<BewegungController>/user/5
+        [HttpGet("user/{id}")]
+        public IEnumerable<Bewegung> GetAllByBenutzerId(int id) => 
+            Bewegung.GetAllByBenutzerId(id);
+
         // POST: api/<BewegungController>
         [HttpPost]
         public IActionResult Post([FromBody] Bewegung bewegung)

@@ -330,6 +330,19 @@ https://stackoverflow.com/questions/2627650/why-javascript-gettime-is-not-a-func
 
 https://stackoverflow.com/questions/27087128/convert-dd-mm-yyyy-to-yyyy-mm-dd-format-using-javascript
 
+============================================
+========== DateTimeFormat in JS ============
+============================================
+
+https://stackoverflow.com/questions/60400653/does-intl-datetimeformats-datestyle-and-timestyle-use-the-format-defined
+
+=============================================
+========== Formating Dates in JS ============
+=============================================
+
+https://www.udacity.com/blog/2021/05/managing-dates-with-javascript-date-formats.html
+https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd#:~:text=The%20simplest%20way%20to%20convert,getTimezoneOffset()%20*%2060000%20))%20.
+
 =================================================
 ====================== TODO =====================
 =================================================

@@ -121,7 +121,14 @@ export default class PageRentStepFive
                     else
                     {
                         divRowAnhaenger.innerHTML = "Keinen Anhänger gewählt.";
-                        this.loadFahrer();
+                        if(this.rentObject.fahrer_id != null)
+                        {
+                            this.loadFahrer();
+                        }
+                        else
+                        {
+                            divRowFahrer.innerHTML = "Keine FahrerIn gewählt.";
+                        }
                     }
                 }
             }, (ex) => 

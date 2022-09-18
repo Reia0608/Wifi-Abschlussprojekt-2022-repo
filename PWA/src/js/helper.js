@@ -183,4 +183,39 @@ export default class Helper
         // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
         return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
     }
+
+    CreateRentObject()
+    {
+        if(this.rentObject == null)
+        {
+            this.rentObject = // variable that constitutes the current order of the client. It gets completed throughout the rent steps, and finally gets sent to the backend part
+            {
+                bewegung_id: null,
+                users_id: null,
+                beschreibung: null,
+                grund: "Initalisierung...",
+                abholort: null,
+                rueckgabeort: null,
+                abholdatum: null,
+                abholzeit: null,
+                rueckgabedatum: null,
+                rueckgabezeit: null,
+                gleicherRueckgabeort: false,
+                schutzpaket: null,
+                braucht_fahrer: false,
+                fahrer_id: null,
+                preis_gesamt: 0,
+                preis_kfz: 0,
+                preis_anhaenger: 0,
+                preis_fahrer: 0,
+                preis_schutzpaket: 0,
+                allow_reload: true, // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
+                transaction_finished: false,
+                bewegung_finished: false,
+                kraftfahrzeug_id: null,
+                anhaenger_id: null,
+            };
+            return this.rentObject;
+        }
+    }
 }
