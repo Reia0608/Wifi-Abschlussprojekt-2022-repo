@@ -138,14 +138,24 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE}"; // WIP: order by?
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				schadenList.Add(schaden = new Schaden(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
-			return schadenList;
-		}
+                while (reader.Read())
+                {
+                    schadenList.Add(schaden = new Schaden(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return schadenList;
+        }
 		#endregion
 		//************************************************************************
 		#region constructors#

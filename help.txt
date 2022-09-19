@@ -343,6 +343,12 @@ https://stackoverflow.com/questions/60400653/does-intl-datetimeformats-datestyle
 https://www.udacity.com/blog/2021/05/managing-dates-with-javascript-date-formats.html
 https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd#:~:text=The%20simplest%20way%20to%20convert,getTimezoneOffset()%20*%2060000%20))%20.
 
+==================================
+========== PWA Course ============
+==================================
+
+https://web.dev/learn/pwa/
+
 =================================================
 ====================== TODO =====================
 =================================================

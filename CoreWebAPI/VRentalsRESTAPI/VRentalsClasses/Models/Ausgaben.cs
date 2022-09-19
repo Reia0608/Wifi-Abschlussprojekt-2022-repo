@@ -70,12 +70,23 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE}"; // WIP: order by?
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				ausgabenListe.Add(ausgaben= new Ausgaben(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    ausgabenListe.Add(ausgaben = new Ausgaben(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return ausgabenListe;
 		}
 		#endregion

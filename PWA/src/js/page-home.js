@@ -95,7 +95,9 @@ export default class PageHome
 							this.rentObject.anhaenger_id = response.anhaenger_id;
 							this.rentObject.abholzeit = response.abholzeit;
 							this.rentObject.rueckgabezeit = response.rueckgabezeit;
+							this.rentObject.times_rented = response.times_rented;
 
+							localStorage.setItem('kid', this.rentObject.kraftfahrzeug_id);
 							localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 							location.hash = '#rentstepone';
 						}
@@ -103,6 +105,10 @@ export default class PageHome
 					{
 						alert(ex);
 					}, id);
+				}
+				else
+				{
+					location.hash = "#damagelog";
 				}
 			});
 		});
@@ -130,6 +136,8 @@ export default class PageHome
 				let iterator = 1;
 
 				tBodyCarList.innerHTML = '';
+
+				// WIP: causes an exception in the backend! (A command is already in progress)
 				for(let bewegung of bewegungList)
 				{
 					let brauchtAnhaenger = "Nein";
@@ -143,25 +151,19 @@ export default class PageHome
 					{
 						brauchtFahrer = "Ja";
 					}
-					this.app.ApiKraftfahrzeugGet((response) =>
-					{
-						let kraftfahrzeug = response;
-						html = 
-						`<tr data-bewegung-id="${bewegung.bewegung_id}">
-							<th scope="row">${iterator}</th>
-							<td>${kraftfahrzeug.marke}, ${kraftfahrzeug.modell}</td>
-							<td>${bewegung.preis_gesamt},-€</td>
-							<td>${dateFormatter.format(new Date(bewegung.bewegungsdatum))}</td>
-							<td>${brauchtAnhaenger}</td>
-							<td>${brauchtFahrer}</td>
-							<th scope="col"><button type="button" class="btn-outline-info btn-sm" id="buttonBewegungMieten_${bewegung.bewegung_id}"><span class="iconify me-2" data-icon="map:car-rental"></span></button></th>
-						</tr>`;
-						iterator++;
-						tBodyCarList.innerHTML += html;
-					}, (ex) =>
-					{
-						alert(ex);
-					}, bewegung.kraftfahrzeug_id);
+
+					html = 
+					`<tr data-bewegung-id="${bewegung.bewegung_id}">
+						<th scope="row">${iterator}</th>
+						<td>${bewegung.beschreibung}</td>
+						<td>${bewegung.preis_gesamt},-€</td>
+						<td>${dateFormatter.format(new Date(bewegung.rueckgabedatum))}</td>
+						<td>${brauchtAnhaenger}</td>
+						<td>${brauchtFahrer}</td>
+						<th scope="col"><button type="button" class="btn-outline-info btn-sm" id="buttonBewegungMieten_${bewegung.bewegung_id}"><span class="iconify me-2" data-icon="map:car-rental"></span></button></th>
+					</tr>`;
+					iterator++;
+					tBodyCarList.innerHTML += html;
 				}
             }, (ex) =>
             {

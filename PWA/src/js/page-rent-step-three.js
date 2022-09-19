@@ -25,6 +25,8 @@ export default class PageRentStepThree
 
             const labelGesamtpreis = document.querySelector('#labelGesamtpreis');
 
+            this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+            labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
             this.loadData();
 
             // Event Listeners
@@ -65,6 +67,11 @@ export default class PageRentStepThree
                 else
                 {
                     this.rentObject.braucht_fahrer = false;
+                    this.rentObject.preis_fahrer = 0;
+                    this.rentObject.fahrer_id = null;
+                    this.Helper = new Helper();
+                    this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
+                    labelGesamtpreis.innerText = this.rentObject.preis_gesamt.toString() + ",- €";
                     divRowFahrer.classList.add("d-none");
                     localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                 }

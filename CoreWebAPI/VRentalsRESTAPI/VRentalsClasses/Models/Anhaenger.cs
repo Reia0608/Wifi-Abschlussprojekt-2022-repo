@@ -70,12 +70,23 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} order by marke";
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				anhaengerListe.Add(anhaenger = new Anhaenger(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    anhaengerListe.Add(anhaenger = new Anhaenger(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return anhaengerListe;
 		}
 
@@ -94,12 +105,23 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("asid", Ausgabenstelle_Id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				anhaengerListe.Add(anhaenger = new Anhaenger(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    anhaengerListe.Add(anhaenger = new Anhaenger(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return anhaengerListe;
 		}
 
@@ -118,12 +140,23 @@ namespace VRentalsClasses.Models
             command.Parameters.AddWithValue("asid", Ausgabenstelle_Id);
             NpgsqlDataReader reader = command.ExecuteReader();
 
-            while (reader.Read())
-            {
-                anhaengerListe.Add(anhaenger = new Anhaenger(reader));
+			try
+			{
+                while (reader.Read())
+                {
+                    anhaengerListe.Add(anhaenger = new Anhaenger(reader));
+                }
             }
-            reader.Close();
-            DBConnection.GetConnection().Close();
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
             return anhaengerListe;
         }
 

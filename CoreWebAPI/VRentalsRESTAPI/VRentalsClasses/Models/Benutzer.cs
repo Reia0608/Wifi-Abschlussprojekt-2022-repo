@@ -433,8 +433,9 @@ namespace VRentalsClasses.Models
 			}
 			catch (Exception ex)
 			{
-				command.Connection.Close();
-				Console.WriteLine(ex.Message);
+				// WIP: need to keep an eye on this and see if it actually works as intended.
+                command.Connection.Close();
+                Console.WriteLine(ex.Message);
 			}
 
 			command.Parameters.AddWithValue("uid", UserId);

@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_bewegung";
-		private const string COLUMNS = "bewegung_id, users_id, bewegungsdatum, beschreibung, grund, abholort, rueckgabeort, abholdatum, abholzeit, rueckgabedatum, rueckgabezeit, gleicherrueckgabeort, schutzpaket, braucht_fahrer, fahrer_id, preis_gesamt, preis_kfz, preis_anhaenger, preis_fahrer, preis_schutzpaket, allow_reload, transaction_finished, bewegung_finished, kraftfahrzeug_id, anhaenger_id";
+		private const string COLUMNS = "bewegung_id, users_id, bewegungsdatum, beschreibung, grund, abholort, rueckgabeort, abholdatum, abholzeit, rueckgabedatum, rueckgabezeit, gleicherrueckgabeort, schutzpaket, braucht_fahrer, fahrer_id, preis_gesamt, preis_kfz, preis_anhaenger, preis_fahrer, preis_schutzpaket, allow_reload, transaction_finished, bewegung_finished, kraftfahrzeug_id, anhaenger_id, times_rented";
         #endregion
         //************************************************************************
         #region static methods
@@ -185,6 +185,7 @@ namespace VRentalsClasses.Models
             BewegungFinished = reader.GetBoolean(22);
             KraftfahrzeugId = reader.IsDBNull(23) ? null : reader.GetInt32(23);
             AnhaengerId = reader.IsDBNull(24) ? null : reader.GetInt32(24);
+            TimesRented = reader.IsDBNull(25) ? 0 : reader.GetInt32(25);
         }
 		#endregion
 		//************************************************************************
@@ -265,6 +266,9 @@ namespace VRentalsClasses.Models
         [JsonPropertyName("anhaenger_id")]
         public int? AnhaengerId { get; set; }
 
+        [JsonPropertyName("times_rented")]
+        public int? TimesRented { get; set; }
+
         #endregion
         //************************************************************************
         #region public methods
@@ -283,14 +287,14 @@ namespace VRentalsClasses.Models
             if (this.Bewegung_Id.HasValue)
             {
                 post = false;
-                command.CommandText = $"update {SCHEMA}.{TABLE} set users_id = :uid, beschreibung = :bes, grund = :gru, abholort = :ao, rueckgabeort = :ro, abholdatum = :ad, abholzeit = :az, rueckgabedatum = :rd, rueckgabezeit = :rz, gleicherrueckgabeort = :gro, schutzpaket = :sp, braucht_fahrer = :bf, fahrer_id = :fid, preis_gesamt = :pg, preis_kfz = :pk, preis_anhaenger = :pa, preis_fahrer = :pf, preis_schutzpaket = :ps, allow_reload = :ar, transaction_finished = :tf, bewegung_finished = :bwf, kraftfahrzeug_id = :kid, anhaenger_id = :aid where bewegung_id = :bwid";
+                command.CommandText = $"update {SCHEMA}.{TABLE} set users_id = :uid, beschreibung = :bes, grund = :gru, abholort = :ao, rueckgabeort = :ro, abholdatum = :ad, abholzeit = :az, rueckgabedatum = :rd, rueckgabezeit = :rz, gleicherrueckgabeort = :gro, schutzpaket = :sp, braucht_fahrer = :bf, fahrer_id = :fid, preis_gesamt = :pg, preis_kfz = :pk, preis_anhaenger = :pa, preis_fahrer = :pf, preis_schutzpaket = :ps, allow_reload = :ar, transaction_finished = :tf, bewegung_finished = :bwf, kraftfahrzeug_id = :kid, anhaenger_id = :aid, times_rented = :tr where bewegung_id = :bwid";
             }
             else
             {
                 this.BewegungsDatum = DateTime.Now;
                 command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
                 this.Bewegung_Id = (int)((long)command.ExecuteScalar());
-                command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bwid, :uid, :bd, :bes, :gru, :ao, :ro, :ad, :az, :rd, :rz, :gro, :sp, :bf, :fid, :pg, :pk, :pa, :pf, :ps, :ar, :tf, :bwf, :kid, :aid)";
+                command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bwid, :uid, :bd, :bes, :gru, :ao, :ro, :ad, :az, :rd, :rz, :gro, :sp, :bf, :fid, :pg, :pk, :pa, :pf, :ps, :ar, :tf, :bwf, :kid, :aid, :tr)";
             }
 
             command.Parameters.AddWithValue("bwid", this.Bewegung_Id);
@@ -321,6 +325,7 @@ namespace VRentalsClasses.Models
             command.Parameters.AddWithValue("bwf", this.BewegungFinished);
             command.Parameters.AddWithValue("kid", this.KraftfahrzeugId.HasValue ? (int)this.KraftfahrzeugId : (object)DBNull.Value);
             command.Parameters.AddWithValue("aid", this.AnhaengerId.HasValue ? (int)this.AnhaengerId : (object)DBNull.Value);
+            command.Parameters.AddWithValue("tr", this.TimesRented.HasValue ? (int)this.TimesRented : (object)DBNull.Value);
 
             try
             {

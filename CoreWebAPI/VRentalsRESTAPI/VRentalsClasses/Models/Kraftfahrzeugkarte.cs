@@ -71,12 +71,22 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select * from {SCHEMA}.car_list order by marke";
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				kraftfahrzeugkarteListe.Add(kraftfahrzeugkarte = new Kraftfahrzeugkarte(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    kraftfahrzeugkarteListe.Add(kraftfahrzeugkarte = new Kraftfahrzeugkarte(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
 
 			return kraftfahrzeugkarteListe;
 		}

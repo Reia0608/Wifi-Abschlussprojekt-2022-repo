@@ -112,12 +112,23 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("uid", users_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				bilderListe.Add(new Bild(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+			catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return bilderListe;
 		}
 
@@ -134,12 +145,22 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			reader.Read();
-			
-			kfzBild = new Bild(reader);
-			
-			reader.Close();
-			DBConnection.GetConnection().Close();
+			try
+			{
+                reader.Read();
+
+                kfzBild = new Bild(reader);
+            }
+			catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return kfzBild;
 		}
 
@@ -155,12 +176,23 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id IS NOT NULL"; // WIP: order by?
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				bilderListe.Add(new Bild(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return bilderListe;
 		}
 
@@ -190,12 +222,23 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE {Condition}"; // WIP: order by?
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				bilderListe.Add(new Bild(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return bilderListe;
 		}
 
@@ -226,12 +269,23 @@ namespace VRentalsClasses.Models
             command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE {Condition}"; // WIP: order by?
             NpgsqlDataReader reader = command.ExecuteReader();
 
-            while (reader.Read())
-            {
-                bilderListe.Add(new Bild(reader));
+			try
+			{
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
             }
-            reader.Close();
-            DBConnection.GetConnection().Close();
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
             return bilderListe;
         }
 
@@ -249,12 +303,23 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				bilderListe.Add(new Bild(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return bilderListe;
 		}
 
@@ -272,12 +337,23 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("aid", anhaenger_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				bilderListe.Add(new Bild(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return bilderListe;
 		}
 
@@ -295,12 +371,23 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE}"; // WIP: order by?
 			NpgsqlDataReader reader = command.ExecuteReader();
 
-			while (reader.Read())
+			try
 			{
-				bilderListe.Add(bild = new Bild(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    bilderListe.Add(bild = new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
 			return bilderListe;
 		}
 		#endregion

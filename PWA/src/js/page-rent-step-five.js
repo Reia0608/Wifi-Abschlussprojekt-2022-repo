@@ -254,9 +254,10 @@ export default class PageRentStepFive
         this.app.ApiBenutzerGetId((response) =>
         {
             this.rentObject.users_id = response;
+            this.rentObject.times_rented++;
             this.app.ApiRentObjectSet(() =>
             {
-
+                console.log("Data sent successfuly!");
             }, (ex) =>
             {
                 alert(ex);

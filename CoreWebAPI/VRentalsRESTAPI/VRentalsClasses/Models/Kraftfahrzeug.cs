@@ -80,6 +80,7 @@ namespace VRentalsClasses.Models
 				reader.Close();
 				DBConnection.GetConnection().Close();
 			}
+
             return kraftfahrzeug;
         }
 
@@ -97,12 +98,22 @@ namespace VRentalsClasses.Models
             command.CommandText = $"select {COLUMNS_KFZ} from {SCHEMA}.{TABLE_KFZ} order by marke";
             NpgsqlDataReader reader = command.ExecuteReader();
             
-            while (reader.Read())
-            {
-				kraftfahrzeugListe.Add(kraftfahrzeug = new Kraftfahrzeug(reader));	
+			try
+			{
+                while (reader.Read())
+                {
+                    kraftfahrzeugListe.Add(kraftfahrzeug = new Kraftfahrzeug(reader));
+                }
             }
-            reader.Close();
-            DBConnection.GetConnection().Close();
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
 
 			return kraftfahrzeugListe;
         }
@@ -121,13 +132,22 @@ namespace VRentalsClasses.Models
 			command.CommandText = $"select {COLUMNS_KFZ} from {SCHEMA}.{TABLE_KFZ} where ausgabenstelle_id = :asid order by marke";
 			command.Parameters.AddWithValue("asid", Ausgabenstelle_Id);
 			NpgsqlDataReader reader = command.ExecuteReader();
-
-			while (reader.Read())
+			try
 			{
-				kraftfahrzeugListe.Add(kraftfahrzeug = new Kraftfahrzeug(reader));
-			}
-			reader.Close();
-			DBConnection.GetConnection().Close();
+                while (reader.Read())
+                {
+                    kraftfahrzeugListe.Add(kraftfahrzeug = new Kraftfahrzeug(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+			finally
+			{
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
 
 			return kraftfahrzeugListe;
 		}

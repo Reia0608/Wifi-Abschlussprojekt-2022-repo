@@ -71,12 +71,22 @@ namespace VRentalsClasses.Models
             command.CommandText = $"select * from {SCHEMA}.anhaenger_list order by marke";
             NpgsqlDataReader reader = command.ExecuteReader();
 
-            while (reader.Read())
+            try
             {
-                anhaengerkarteListe.Add(anhaengerkarte = new Anhaengerkarte(reader));
+                while (reader.Read())
+                {
+                    anhaengerkarteListe.Add(anhaengerkarte = new Anhaengerkarte(reader));
+                }
             }
-            reader.Close();
-            DBConnection.GetConnection().Close();
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
 
             return anhaengerkarteListe;
         }

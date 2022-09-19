@@ -26,8 +26,9 @@ self.addEventListener('install', function(event)
                     "./js/logoff-manager.js",
                     "./js/profile-manager.js",
                     "./js/signup-manager.js",
-                    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",
-                    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    "service-Worker.js",
+                    // 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css',
+                    // 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'
                 ]);
             })
     )

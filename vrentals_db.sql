@@ -373,7 +373,8 @@ CREATE TABLE rentals.tbl_bewegung
 	transaction_finished boolean SET DEFAULT false,
 	bewegung_finished boolean SET DEFAULT false,
 	kraftfahrzeug_id numeric,
-	anhaenger_id numeric
+	anhaenger_id numeric,
+	times_rented numeric DEFAULT 0
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bewegung

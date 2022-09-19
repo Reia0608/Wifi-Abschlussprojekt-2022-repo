@@ -15,6 +15,7 @@ import PageRentStepFive from './page-rent-step-five.js';
 import PageRentDone from './page-rent-done.js';
 import PageImprint from './page-imprint.js';
 import PageLogout from './page-logout.js';
+import PageDamageLog from './page-damage-log.js';
 import Navbar from './component-navbar.js';
 
 export default class Application 
@@ -149,6 +150,8 @@ export default class Application
             case '#imprint':
                 new PageImprint(args);
                 break;
+            case '#damagelog':
+                new PageDamageLog(args);
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;

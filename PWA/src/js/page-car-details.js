@@ -47,7 +47,15 @@ export default class PageCarDetails
                     const inputBaujahr = document.querySelector('#inputBaujahr');
                     const inputKlasse = document.querySelector('#inputKlasse');
                     const inputKategorie = document.querySelector('#inputKategorie');
-    
+                    
+                    this.Helper = new Helper();
+                    this.rentObject = this.Helper.CreateRentObject();
+                    var preis_kfz = localStorage.getItem("preis_kfz");
+                    this.rentObject.kraftfahrzeug_id = parseInt(kid);
+                    this.rentObject.preis_kfz = parseInt(preis_kfz);
+                    this.rentObject.beschreibung = inputMarke.value + ' ' + inputModell.value;
+                    localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+
                     location.hash = '#rentstepone';
                 }
                 else
@@ -78,6 +86,7 @@ export default class PageCarDetails
         {
             let currentYear = new Date().getFullYear();
             this.kraftfahrzeug = response;
+            localStorage.setItem('preis_kfz', this.kraftfahrzeug.mietpreis); 
 
             //const bildliste = response.bildliste;
 

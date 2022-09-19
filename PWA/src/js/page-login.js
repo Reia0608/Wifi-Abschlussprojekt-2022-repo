@@ -55,7 +55,7 @@ export default class PageLogin
                             {
                                 console.log('login fetch successful!');
                                 console.log("angemeldet!");
-                                window.open('http://localhost:5500/src/index.html', '_self');
+                                location.hash = '#home';
 
                             }, (ex) => 
                             {

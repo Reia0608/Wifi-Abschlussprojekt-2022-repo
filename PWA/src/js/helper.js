@@ -214,6 +214,7 @@ export default class Helper
                 bewegung_finished: false,
                 kraftfahrzeug_id: null,
                 anhaenger_id: null,
+                times_rented: 0,
             };
             return this.rentObject;
         }
