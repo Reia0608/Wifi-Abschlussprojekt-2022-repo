@@ -76,11 +76,13 @@ export default class PageRentStepOne
                 {
                     this.rentObject.gleicherRueckgabeort = true;
                     divRowRueckgabeort.classList.add("d-none");
+                    localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                 }
                 else
                 {
                     this.rentObject.gleicherRueckgabeort = false;
                     divRowRueckgabeort.classList.remove("d-none");
+                    localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
                 }
             });
 
@@ -125,6 +127,7 @@ export default class PageRentStepOne
         {
             this.rentObject.rueckgabeort = selectRueckgabeort.options[selectRueckgabeort.selectedIndex].text;
         }
+        
         this.rentObject.abholdatum = inputDateAbholdatum.value;
         this.rentObject.abholzeit = inputTimeAbholzeit.value;
         this.rentObject.rueckgabedatum = inputDateRueckgabedatum.value;
@@ -137,8 +140,6 @@ export default class PageRentStepOne
         }
 
         this.rentObject.grund = "Mietung eines KfZ";
-
-        // WIP: add price!
 
         // Saving rentOBject to the local storage
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));

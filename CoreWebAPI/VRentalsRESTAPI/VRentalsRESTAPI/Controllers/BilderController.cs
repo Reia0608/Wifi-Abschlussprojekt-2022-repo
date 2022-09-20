@@ -69,9 +69,13 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("{id}")]
         public Bild Get(int id) => Bild.Get(id);
 
-        // GET: api/<BilderController>/kfz/5
+        // GET: api/<BilderController>/singlekfz/5
         [HttpGet("singlekfz/{id}")]
         public Bild GetBildByKfz(int id) => Bild.GetBildByKfz(id);
+
+        // GET: api/<BilderController>/singlekfz/schaden/5
+        [HttpGet("singlekfz/schaden/{id}")]
+        public IEnumerable<Bild> GetBildAllSchadenByKfz(int id) => Bild.GetBildAllSchadenByKfz(id);
 
         // POST: api/<BilderController>
         [HttpPost]

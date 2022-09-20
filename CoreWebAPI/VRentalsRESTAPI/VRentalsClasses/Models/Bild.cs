@@ -164,7 +164,39 @@ namespace VRentalsClasses.Models
 			return kfzBild;
 		}
 
-		public static List<Bild> GetAllKfzBildList()
+        public static List<Bild> GetAllKfzBildList()
+        {
+            List<Bild> bilderListe = new List<Bild>();
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id IS NOT NULL"; // WIP: order by?
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
+            return bilderListe;
+        }
+        
+        public static List<Bild> GetBildAllSchadenByKfz(int kraftfahrzeug_id)
         {
 			List<Bild> bilderListe = new List<Bild>();
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
@@ -173,7 +205,8 @@ namespace VRentalsClasses.Models
 			}
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id IS NOT NULL"; // WIP: order by?
+			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id = :kid AND schaden_id IS NOT NULL";
+			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
 			NpgsqlDataReader reader = command.ExecuteReader();
 
 			try

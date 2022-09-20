@@ -108,6 +108,7 @@ export default class PageHome
 				}
 				else
 				{
+					//var kid = localStorage.getItem("kid");
 					location.hash = "#damagelog";
 				}
 			});
@@ -163,6 +164,7 @@ export default class PageHome
 						<th scope="col"><button type="button" class="btn-outline-info btn-sm" id="buttonBewegungMieten_${bewegung.bewegung_id}"><span class="iconify me-2" data-icon="map:car-rental"></span></button></th>
 					</tr>`;
 					iterator++;
+					localStorage.setItem("kid", bewegung.kraftfahrzeug_id);
 					tBodyCarList.innerHTML += html;
 				}
             }, (ex) =>
