@@ -14,24 +14,77 @@ export default class PageDamageLog
 			const dialogSchaden = new bootstrap.Modal(modalSchadenBody);
 			const buttonModalSchadenSpeichern = args.app.Main.querySelector('#buttonModalSchadenSpeichern');
 
+			this.bildObject = {};
+
 			// Logic
 			this.loadData();
 
 			// Event listeners
-			buttonSchadenAdd.addEventListener('click', () =>
+			buttonSchadenAdd.addEventListener('click', async () =>
 			{
+				let videoPlayer = document.querySelector('#videoPlayer');
+				let buttonCapturePhoto = document.querySelector('#buttonCapturePhoto');
+				let canvas = document.querySelector('#canvas');
+				let divImagePicker = document.querySelector('#divImagePicker');
 
-			});
+				//initialize media
+				if (!('mediaDevices' in navigator)) 
+				{
+					navigator.mediaDevices = {};
+				}
 
-			//---------------------------
-			buttonSchadenNeu.addEventListener( 'click', (e) => 
-			{
+				if (!('getUserMedia' in navigator.mediaDevices)) 
+				{
+					//take advantage of older methods for special browsers
+					navigator.mediaDevices.getUserMedia = function(constraints) 
+					{
+						var getUserMedia = navigator.webkitGetUserMedia() || navigator.mozGetUserMedia;
+						if (!getUserMedia) 
+						{
+							return Promise.reject(new Error('getUserMedia is not implemented!'));
+						}
+
+						return new Promise((resolve, reject) =>
+						{
+							getUserMedia.call(navigator, constraints, resolve, reject);
+						});
+					} 
+				}
+
 				labelAnfallendeKosten.value = '';
 				selectSchadenArt.value = '0';
 				labelBeschreibung.value = '';
 				this.schaden = null;
 				labelAnfallendeKosten.classList.remove('is-invalid', 'is-valid');
 				selectSchadenArt.classList.remove('is-invalid', 'is-valid');
+
+				try
+				{
+					let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+					videoPlayer.srcObject = stream;
+				}
+				catch
+				{
+					divImagePicker.style.display = 'block';
+				}
+
+				buttonCapturePhoto.addEventListener('click', () =>
+				{
+					let image_data_url;
+					canvas.getContext('2d').drawImage(videoPlayer, 0, 0, canvas.width, videoPlayer.videoHeight / (videoPlayer.videoWidth / canvas.width));
+					videoPlayer.style.display = 'none';
+					canvas.style.display = 'block';
+					image_data_url = canvas.toDataURL('image/jpeg');
+
+					// Create the object of the photo for sending
+					this.bildObject.bild_bytes = image_data_url;
+					this.bildObject.kraftfahrzeug_id = localStorage.getItem("kid");
+
+					videoPlayer.srcObject.getVideoTracks().forEach(function(track) 
+					{
+						track.stop();
+					});
+				});
 
 				dialogSchaden.show();
 			});
@@ -82,29 +135,25 @@ export default class PageDamageLog
 					{
 						this.schaden.schaden_datum = divDateSchaden.value;
 					}
-					
-					if(!this.kraftfahrzeug)
-					{
-						this.kraftfahrzeug = null;
-						if (!this.kraftfahrzeug.schadenlist)
-						{
-							this.kraftfahrzeug.schadenlist = [];
-						} 
-					}
-					
-					this.kraftfahrzeug.schadenlist.push(this.schaden);
-					
 
-					// Update the database.
-					this.app.ApiSchadenSet(() => 
+					if (!this.schadenList)
 					{
+						this.schadenList = [];
+					} 
+
+					this.schadenList.push(this.schaden);
+					
+					// Update the database.
+					this.app.ApiSchadenSet((response) => 
+					{
+						console.log(response);
 						console.log("database was updated!");
 						if (this.bild) 
 						{
-							this.bild.schaden_id = this.schaden.schaden_id;
+							this.bildObject.schaden_id = this.schaden.schaden_id;
 							this.app.ApiSchadenSetBild(() => 
 							{
-								this.datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
+								this.loadData();
 							}, (ex) => 
 							{
 								alert(ex);
@@ -112,7 +161,7 @@ export default class PageDamageLog
 						}
 						else
 						{
-							this.datenLaden(this.kraftfahrzeug.kraftfahrzeug_id);
+							this.loadData();
 						}
 					}, (ex) => 
 					{

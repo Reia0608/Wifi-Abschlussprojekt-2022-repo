@@ -48,7 +48,7 @@ namespace VRentalsRESTAPI.Controllers
             {
                 if (schaden.Save() == 1)
                 {
-                    result = Ok();
+                    result = Ok(); 
                 }
                 else
                 {

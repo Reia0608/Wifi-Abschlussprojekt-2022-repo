@@ -225,7 +225,7 @@ namespace VRentalsClasses.Models
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Schaden_Id = (int)((long)command.ExecuteScalar());
-				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:sid, :sart, :bes, :afk, :sd, :kid, :aid)";
+                command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:sid, :sart, :bes, :afk, :sd, :kid, :aid)";
 			}
 
 			command.Parameters.AddWithValue("sid", this.Schaden_Id);

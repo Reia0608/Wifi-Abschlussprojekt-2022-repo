@@ -350,6 +350,12 @@ https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-d
 https://web.dev/learn/pwa/
 
 =================================================
+========== How to use a Camera in JS ============
+=================================================
+
+https://usefulangle.com/post/352/javascript-capture-image-from-camera
+
+=================================================
 ====================== TODO =====================
 =================================================
 
