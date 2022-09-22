@@ -39,6 +39,10 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("{id}")]
         public Schaden Get(int id) => Schaden.Get(id);
 
+        // GET: api/<SchadenController>/getid/5456654456
+        [HttpGet("getid/{foto_datum}")]
+        public int GetID(long foto_datum) => Schaden.GetID(foto_datum);
+
         // POST: api/<SchadenController>
         [HttpPost]
         public IActionResult Post([FromBody] Schaden schaden)

@@ -355,6 +355,18 @@ https://web.dev/learn/pwa/
 
 https://usefulangle.com/post/352/javascript-capture-image-from-camera
 
+===========================================================
+========== Getting a single column from reader ============
+===========================================================
+
+https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/retrieving-data-using-a-datareader
+
+==============================================
+========== Creating a pdf with JS ============
+==============================================
+
+https://www.youtube.com/watch?v=GbZa9s9Siss&ab_channel=eNeza
+
 =================================================
 ====================== TODO =====================
 =================================================

@@ -1,7 +1,7 @@
 import LoginManager from './login-manager.js';
 import PageHome from './page-home.js';
 import PageSignup from './page-signup.js';
-import Helper from './helper.js';
+//import Helper from './helper.js';
 import PageLogin from './page-login.js';
 import PageProfile from './page-profile.js';
 import PageCarsList from './page-car-list.js';
@@ -17,6 +17,7 @@ import PageImprint from './page-imprint.js';
 import PageLogout from './page-logout.js';
 import PageDamageLog from './page-damage-log.js';
 import Navbar from './component-navbar.js';
+import PageFinishRent from './page-finish-rent.js';
 
 export default class Application 
 {
@@ -152,6 +153,10 @@ export default class Application
                 break;
             case '#damagelog':
                 new PageDamageLog(args);
+                break;
+            case '#finishrent':
+                new PageFinishRent(args);
+                break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;
@@ -819,6 +824,30 @@ export default class Application
         .catch(errorCallback);
     }
 
+    ApiSchadenGetId(successCallback, errorCallback, foto_datum)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'schaden/getid/' + foto_datum, 
+        {
+            method: 'GET',
+        })
+        .then((response) => 
+        {
+            if (response.status == 200) 
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            }
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            }
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
     ApiSchadenSet(successCallback, errorCallback, schaden)
     {
         $('body').addClass('waiting');
@@ -877,8 +906,35 @@ export default class Application
         .catch(errorCallback);
     }
 
-    // WIP: ApiSchadenSetBild needs to be implemented!
-
+    ApiSchadenSetBild(successCallback, errorCallback, schaden)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'schaden', 
+		{
+			method: schaden.schaden_id ? 'PUT' : 'POST',
+			cache: 'no-cache',
+			headers: 
+			{
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(schaden)
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return successCallback();
+			}
+			else if (response.status == 204) 
+			{
+				$('body').removeClass('waiting');
+				errorCallback('Daten sind unvollständig!');
+			}
+			else throw new Error(response.status + ' ' + response.statusText);
+		})
+		.catch(errorCallback);
+	}
     //==================================================================================
 	// API Bilder
 
@@ -888,6 +944,41 @@ export default class Application
         fetch(this.apiBaseUrl + 'bilder', 
         {
             method: bild.kraftfahrzeug_id ? 'PUT' : 'POST',
+            cache: 'no-cache',
+            headers: 
+            {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bild)
+        })
+        .then((response) => 
+        {
+            if (response.status == 200) 
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            }
+            else if (response.status == 204) 
+            {
+                errorCallback('Daten sind unvollständig!');
+            }
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
+    // This should be the universal API for saving pictures
+    ApiBildSet(successCallback, errorCallback, bild)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bilder', 
+        {
+            method: bild.bilder_id ? 'PUT' : 'POST',
             cache: 'no-cache',
             headers: 
             {

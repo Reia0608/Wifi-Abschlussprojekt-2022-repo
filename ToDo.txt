@@ -1,5 +1,7 @@
 ===== Priority 1=====
 
+00. Change all the image loading code in all list pages to the PWA variant!!! 
+
 0. When trying to change the personal profile in either the Web App or the PWA, the password gets deleted in the database which prevents logging a second time.
 
 1. Make the user roles actually do something!

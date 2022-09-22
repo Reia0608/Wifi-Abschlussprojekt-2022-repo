@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.2.0",
-    "http-server": "^14.1.0"
+    "http-server": "^14.1.0",
+    "jspdf": "^2.5.1"
   },
   "devDependencies": {
     "@iconify/iconify": "^2.2.1"

@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
 		#region constants
 		private const string SCHEMA = "rentals";
 		private const string TABLE = "tbl_schaden";
-		private const string COLUMNS = "schaden_id, schadensart, beschreibung, anfallendekosten, schaden_datum, kraftfahrzeug_id, anhaenger_id";
+		private const string COLUMNS = "schaden_id, schadensart, beschreibung, anfallendekosten, schaden_datum, kraftfahrzeug_id, anhaenger_id, foto_datum, users_id";
 		#endregion
 
 		//************************************************************************
@@ -124,6 +124,38 @@ namespace VRentalsClasses.Models
 			return schadenList;
 		}
 
+		public static int GetID(long? FotoDatum)
+		{
+			int result = 0;
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select schaden_id from {SCHEMA}.{TABLE} where foto_datum = :fd";
+            command.Parameters.AddWithValue("fd", FotoDatum);
+            NpgsqlDataReader reader = command.ExecuteReader();
+            try
+            {
+                if(reader.Read())
+                {
+                    result = reader.GetInt32(0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return result;
+		}
+
 		public static List<Schaden> GetList()
 		{
 			List<Schaden> schadenList = new List<Schaden>();
@@ -156,6 +188,7 @@ namespace VRentalsClasses.Models
             }
             return schadenList;
         }
+
 		#endregion
 		//************************************************************************
 		#region constructors#
@@ -173,7 +206,9 @@ namespace VRentalsClasses.Models
 			SchadensDatum = reader.IsDBNull(4) ? null : (DateTime?)reader.GetDateTime(4);
 			Kraftfahrzeug_Id = reader.IsDBNull(5) ? null : reader.GetInt32(5);
 			Anhaenger_Id = reader.IsDBNull(6) ? null : reader.GetInt32(6);
-		}
+			FotoDatum = reader.IsDBNull(7) ? null : reader.GetInt64(7);
+			UsersId = reader.IsDBNull(8) ? null : reader.GetInt32(8);
+        }
 
 		#endregion
 		//************************************************************************
@@ -202,12 +237,18 @@ namespace VRentalsClasses.Models
 		[JsonPropertyName("anhaenger_id")]
 		public int? Anhaenger_Id { get; set; }
 
+        [JsonPropertyName("foto_datum")]
+        public long? FotoDatum { get; set; }
 
-		#endregion
-		//************************************************************************
-		#region public methods
+        [JsonPropertyName("users_id")]
+        public int? UsersId { get; set; }
 
-		public int Save()
+
+        #endregion
+        //************************************************************************
+        #region public methods
+
+        public int Save()
 		{
 			int result = -1;
 			NpgsqlCommand command = new NpgsqlCommand();
@@ -219,13 +260,13 @@ namespace VRentalsClasses.Models
 
 			if (this.Schaden_Id.HasValue)
 			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set schadensart = :sart, beschreibung = :bes, anfallendekosten = :afk, schaden_datum = :sd, kraftfahrzeug_id = :kid, anhaenger_id = :aid where schaden_id = :sid";
+				command.CommandText = $"update {SCHEMA}.{TABLE} set schadensart = :sart, beschreibung = :bes, anfallendekosten = :afk, schaden_datum = :sd, kraftfahrzeug_id = :kid, anhaenger_id = :aid, foto_datum = :fd, users_id = :uid where schaden_id = :sid";
 			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.Schaden_Id = (int)((long)command.ExecuteScalar());
-                command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:sid, :sart, :bes, :afk, :sd, :kid, :aid)";
+                command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:sid, :sart, :bes, :afk, :sd, :kid, :aid, :fd, :uid)";
 			}
 
 			command.Parameters.AddWithValue("sid", this.Schaden_Id);
@@ -235,7 +276,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("sd", !this.SchadensDatum.HasValue ? (object)DBNull.Value : (object)this.SchadensDatum.Value);
 			command.Parameters.AddWithValue("kid", this.Kraftfahrzeug_Id.HasValue ? (object)this.Kraftfahrzeug_Id.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("aid", this.Anhaenger_Id.HasValue ? (object)this.Anhaenger_Id.Value : (object)DBNull.Value);
-			try
+            command.Parameters.AddWithValue("fd", this.FotoDatum.HasValue ? (object)this.FotoDatum.Value : (object)DBNull.Value);
+            command.Parameters.AddWithValue("uid", this.UsersId.HasValue ? (object)this.UsersId.Value : (object)DBNull.Value);
+            try
 			{
 				result = command.ExecuteNonQuery();
 			}
@@ -260,7 +303,7 @@ namespace VRentalsClasses.Models
 				command.Connection.Open();
 			}
 
-			command.CommandText = $"update {SCHEMA}.{TABLE} set schadensart = :sart, beschreibung = :bes, anfallendekosten = :afk, schaden_datum = :sd, kraftfahrzeug_id = :kid, anhaenger_id = :aid where schaden_id = :sid";
+			command.CommandText = $"update {SCHEMA}.{TABLE} set schadensart = :sart, beschreibung = :bes, anfallendekosten = :afk, schaden_datum = :sd, kraftfahrzeug_id = :kid, anhaenger_id = :aid, foto_datum = :fd, users_id = :uid where schaden_id = :sid";
 			//WIP: WARNING! Potential security danger! User could change the id to what he wants?!
 			command.Parameters.AddWithValue("sid", id);
 			command.Parameters.AddWithValue("sart", String.IsNullOrEmpty(this.SchadensArt) ? (object)DBNull.Value : (object)this.SchadensArt);
@@ -269,8 +312,9 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("sd", !this.SchadensDatum.HasValue ? (object)DBNull.Value : (object)this.SchadensDatum.Value);
 			command.Parameters.AddWithValue("kid", this.Kraftfahrzeug_Id.HasValue ? (object)this.Kraftfahrzeug_Id.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("aid", this.Anhaenger_Id.HasValue ? (object)this.Anhaenger_Id.Value : (object)DBNull.Value);
-
-			try
+            command.Parameters.AddWithValue("fd", this.FotoDatum.HasValue ? (object)this.FotoDatum.Value : (object)DBNull.Value);
+            command.Parameters.AddWithValue("uid", this.UsersId.HasValue ? (object)this.UsersId.Value : (object)DBNull.Value);
+            try
 			{
 				result = command.ExecuteNonQuery();
 			}

@@ -487,7 +487,7 @@ namespace VRentalsClasses.Models
 			{
 				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where bilder_id = :bid";
 			}
-			else if (this.KraftfahrzeugId.HasValue)
+			else if (this.KraftfahrzeugId.HasValue && !(this.SchadenId.HasValue))
 			{
 				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where kraftfahrzeug_id = :kid";
 			}

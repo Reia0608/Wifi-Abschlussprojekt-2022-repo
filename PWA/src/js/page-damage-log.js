@@ -54,7 +54,11 @@ export default class PageDamageLog
 				labelAnfallendeKosten.value = '';
 				selectSchadenArt.value = '0';
 				labelBeschreibung.value = '';
-				this.schaden = null;
+				this.schaden = 
+				{
+					schaden_id: null,
+					schaden_datum: new Date()
+				};
 				labelAnfallendeKosten.classList.remove('is-invalid', 'is-valid');
 				selectSchadenArt.classList.remove('is-invalid', 'is-valid');
 
@@ -77,13 +81,15 @@ export default class PageDamageLog
 					image_data_url = canvas.toDataURL('image/jpeg');
 
 					// Create the object of the photo for sending
-					this.bildObject.bild_bytes = image_data_url;
-					this.bildObject.kraftfahrzeug_id = localStorage.getItem("kid");
+					let base64String = image_data_url.replace("data:", "").replace(/^.+,/, "");
+					this.bildObject.bild_bytes = base64String;
+					this.bildObject.kraftfahrzeug_id = parseInt(localStorage.getItem("kid"));
 
-					videoPlayer.srcObject.getVideoTracks().forEach(function(track) 
-					{
-						track.stop();
-					});
+					// Stops the cam from recording
+					// videoPlayer.srcObject.getVideoTracks().forEach(function(track) 
+					// {
+					// 	track.stop();
+					// });
 				});
 
 				dialogSchaden.show();
@@ -122,7 +128,7 @@ export default class PageDamageLog
 						};
 					}
 					schadensArtText = selectSchadenArt.options[selectSchadenArt.selectedIndex].text;
-					this.schaden.kraftfahrzeug_id = parseInt(args.kid);
+					this.schaden.kraftfahrzeug_id = parseInt(localStorage.getItem("kid"));
 					this.schaden.anfallendekosten = (labelAnfallendeKosten.value && !isNaN(labelAnfallendeKosten.value) ? parseInt(labelAnfallendeKosten.value) : 0);
 					this.schaden.schadensart = schadensArtText;
 					this.schaden.beschreibung = labelBeschreibung.value;
@@ -135,29 +141,39 @@ export default class PageDamageLog
 					{
 						this.schaden.schaden_datum = divDateSchaden.value;
 					}
+					
+					// Get the date of the "photo" to find schaden_id later on
+					this.schaden.foto_datum = Date.now();
 
 					if (!this.schadenList)
 					{
 						this.schadenList = [];
 					} 
-
-					this.schadenList.push(this.schaden);
+					
+					this.schadenList[0] = this.schaden;
 					
 					// Update the database.
 					this.app.ApiSchadenSet((response) => 
 					{
-						console.log(response);
 						console.log("database was updated!");
-						if (this.bild) 
+						if (this.bildObject) 
 						{
-							this.bildObject.schaden_id = this.schaden.schaden_id;
-							this.app.ApiSchadenSetBild(() => 
+							// Get schaden_id for the picture
+							this.app.ApiSchadenGetId((response) =>
 							{
-								this.loadData();
+								this.bildObject.schaden_id = response;
+								// update the database
+								this.app.ApiBildSet(() => 
+								{
+									this.loadData();
+								}, (ex) => 
+								{
+									alert(ex);
+								}, this.bildObject);
 							}, (ex) => 
 							{
 								alert(ex);
-							}, this.bild);
+							}, this.schaden.foto_datum);
 						}
 						else
 						{
@@ -198,7 +214,7 @@ export default class PageDamageLog
 				damageListBody.innerHTML = '';
 				for (let schaden of response) 
 				{
-					html += 
+					html = 
 					`<div class="card cards mt-3" style="width: 18rem;">
 						<img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-schaden-id="${schaden.schaden_id}" id="imgBild_${iterator}">
 						<div class="card-body" data-schaden-id="${schaden.schaden_id}">
@@ -219,17 +235,19 @@ export default class PageDamageLog
                 {
 					if(response.length > 0)
 					{
+						// jiterator here, is the total amount of times we have assigned a picture to its HTML element
 						let jiterator = 1;
-						for(let iterator = 0; iterator < response.length; iterator++)
+						for (let schadenBild of response)
 						{
-							for (let schadenBild of response)
+							// iterator-1 here, is the total number of cards we put on screen in the previous API call
+							for(let kiterator = 1; kiterator <= (iterator-1); kiterator++)
 							{
 								if(jiterator <= response.length)
 								{
-									var imgIdentifier = "imgBild_" + jiterator.toString();
+									var imgIdentifier = "imgBild_" + kiterator.toString();
 									var imgBild = document.getElementById(imgIdentifier);
 			
-									if(schadenBild.kraftfahrzeug_id == imgBild.dataset.kraftfahrzeugId)
+									if(schadenBild.schaden_id == imgBild.dataset.schadenId)
 									{
 										imgBild.src = "data:image/jpeg;base64," + schadenBild.bild_bytes;
 										jiterator++;

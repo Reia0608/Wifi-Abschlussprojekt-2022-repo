@@ -212,7 +212,9 @@ CREATE TABLE rentals.tbl_schaden
     anfallendekosten double precision,
 	schaden_datum date,
 	kraftfahrzeug_id numeric,
-	anhaenger_id numeric
+	anhaenger_id numeric,
+	foto_datum numeric,
+	users_id numeric
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_schaden
@@ -374,7 +376,8 @@ CREATE TABLE rentals.tbl_bewegung
 	bewegung_finished boolean SET DEFAULT false,
 	kraftfahrzeug_id numeric,
 	anhaenger_id numeric,
-	times_rented numeric DEFAULT 0
+	times_rented numeric DEFAULT 0,
+	preis_schaden double precision DEFAULT 0
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bewegung
