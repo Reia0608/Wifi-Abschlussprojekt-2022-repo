@@ -144,6 +144,10 @@ export default class Helper
     {
         let totalDays = this.TotalDaysCalculator(firstDay, lastDay);
         let result = 0;
+
+        this.rentObject.tage_gemietet = totalDays;
+        localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+
         if(typeof paketPrice === "undefined" && typeof anhaengerPrice === "undefined" && typeof fahrerPrice === "undefined")
         {
             result = (totalDays * kfzPrice);
@@ -215,6 +219,9 @@ export default class Helper
                 kraftfahrzeug_id: null,
                 anhaenger_id: null,
                 times_rented: 0,
+                kfz_bezeichnung: null,
+                anhaenger_bezeichnung: null,
+                tage_gemietet: 0
             };
             return this.rentObject;
         }

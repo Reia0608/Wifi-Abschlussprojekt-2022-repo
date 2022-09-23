@@ -377,7 +377,10 @@ CREATE TABLE rentals.tbl_bewegung
 	kraftfahrzeug_id numeric,
 	anhaenger_id numeric,
 	times_rented numeric DEFAULT 0,
-	preis_schaden double precision DEFAULT 0
+	preis_schaden double precision DEFAULT 0,
+	kfz_bezeichnung character varying,
+	anhaenger_bezeichnung character varying,
+	tage_gemietet numeric DEFAULT 0
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bewegung

@@ -87,6 +87,10 @@ export default class PageRentStepFive
             let currentYear = new Date().getFullYear();
             let kraftfahrzeug = response;
 
+            this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+            this.rentObject.kfz_bezeichnung = kraftfahrzeug.marke + " " + kraftfahrzeug.modell;
+            localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+
             html += 
             `<div class="card cards mt-3" style="width: 18rem;">
                 <img src="" class="card-img-top" alt="Ups! Hier ist etwas schief gelaufen!" data-kraftfahrzeug-id="${kraftfahrzeug.kraftfahrzeug_id}" id="imgBildFahrzeug">
@@ -147,6 +151,10 @@ export default class PageRentStepFive
         {
             let html = '';
             let anhaenger = response;
+
+            this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+            this.rentObject.anhaenger_bezeichnung = anhaenger.marke + " " + anhaenger.modell;
+            localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 
             html += 
             `<div class="card cards mt-3" style="width: 18rem;">

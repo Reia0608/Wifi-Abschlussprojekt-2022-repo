@@ -854,6 +854,7 @@ export default class Application
         fetch(this.apiBaseUrl + 'schaden', 
         {
             method: schaden.schaden_id ? 'PUT' : 'POST',
+            credentials: 'include',
             cache: 'no-cache',
             headers: 
             {

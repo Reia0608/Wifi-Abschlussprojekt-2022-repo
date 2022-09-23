@@ -365,7 +365,19 @@ https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/retrieving-data-u
 ========== Creating a pdf with JS ============
 ==============================================
 
-https://www.youtube.com/watch?v=GbZa9s9Siss&ab_channel=eNeza
+https://github.com/eKoopmans/html2pdf.js#options
+
+==============================================
+========== Online Invoice in HTML ============
+==============================================
+
+https://www.inv24.com/de/tpl/Rechnungsmuster/
+
+======================================================
+========== Formating Date into dd-mm-yyyy ============
+======================================================
+
+https://bobbyhadz.com/blog/javascript-format-date-dd-mm-yyyy#:~:text=To%20format%20a%20date%20as,and%20year%20of%20the%20date.
 
 =================================================
 ====================== TODO =====================

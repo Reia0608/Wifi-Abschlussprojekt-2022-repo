@@ -48,15 +48,32 @@ namespace VRentalsRESTAPI.Controllers
         public IActionResult Post([FromBody] Schaden schaden)
         {
             IActionResult result = null;
+            Benutzer benutzer = Benutzer.Get(this);
             try
             {
-                if (schaden.Save() == 1)
+                if(benutzer.Rolle == VRentalsClasses.Interfaces.RollenTyp.Kunde)
                 {
-                    result = Ok(); 
+                    schaden.UsersId = benutzer.UserId;
+                    if (schaden.Save() == 1)
+                    {
+                        result = Ok();
+                    }
+                    else
+                    {
+                        result = NoContent();
+                    }
                 }
-                else
+                else if(benutzer.Rolle == VRentalsClasses.Interfaces.RollenTyp.User)
                 {
-                    result = NoContent();
+                    // WIP: needs to be able to add the client's UserId
+                    if (schaden.Save() == 1)
+                    {
+                        result = Ok();
+                    }
+                    else
+                    {
+                        result = NoContent();
+                    }
                 }
             }
             catch (Exception ex)
