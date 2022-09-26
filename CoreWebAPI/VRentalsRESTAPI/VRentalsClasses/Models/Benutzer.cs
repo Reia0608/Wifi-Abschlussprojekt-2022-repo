@@ -242,15 +242,24 @@ namespace VRentalsClasses.Models
 					command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where lower(username) = :username";
 					command.Parameters.AddWithValue("username", userName);
 					NpgsqlDataReader reader = command.ExecuteReader();
-					reader.Read();
-					benutzer = new Benutzer(reader);
-					if (benutzer.PasswortHash != benutzer.GetPasswordHash(pwd))
+					try
 					{
-						benutzer = null;
-						throw new Exception("Passwort stimmt nicht überein!");
-					}
-					
-					reader.Close();
+                        reader.Read();
+                        benutzer = new Benutzer(reader);
+                        if (benutzer.PasswortHash != benutzer.GetPasswordHash(pwd))
+                        {
+                            benutzer = null;
+                            throw new Exception("Passwort stimmt nicht überein!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+					finally
+					{
+                        reader.Close();
+                    }
 				}
 			}
 			catch (Exception ex)
@@ -622,18 +631,31 @@ namespace VRentalsClasses.Models
 				command.Connection = DBConnection.GetConnection();
 				command.Connection.Open();
 			}
-			
-			if (!String.IsNullOrEmpty(this.Passwort)) this.PasswortHash = GetPasswordHash(this.Passwort);
+
+			if (!String.IsNullOrEmpty(this.Passwort))
+			{
+				this.PasswortHash = GetPasswordHash(this.Passwort);
+			}
 
 			if (this.UserId.HasValue)
             {
-                command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
+				if(!String.IsNullOrEmpty(this.Passwort))
+				{
+                    command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un, passwort = :pwd," +
                     $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
                     $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
+                }
+				else
+				{
+                    command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
+                    $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo, registrierungstag = :regt, letzteanmeldung = :lanm," +
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
+                }
             }
             else
 			{
 				this.RegistrierungsTag = DateTime.Now;
+				this.Rolle = RollenTyp.Kunde;
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
 				this.UserId = (int)((long)command.ExecuteScalar());
 				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:pid, :vn, :nn, :ges, :un, :pwd, :rl, :gebd, :gebo, :regt, :lanm, :bmerk, :merkgb, :kn, :if, :sta, :faud, :fabd, :fnmr, :hzf, :ezma, :ezmo, :ezk, :mp)";
@@ -644,9 +666,12 @@ namespace VRentalsClasses.Models
 			command.Parameters.AddWithValue("nn", String.IsNullOrEmpty(this.Nachname) ? (object)DBNull.Value : (object)this.Nachname);
 			command.Parameters.AddWithValue("ges", (int)this.Geschlecht);
 			command.Parameters.AddWithValue("un", String.IsNullOrEmpty(this.UserName) ? (object)DBNull.Value : (object)this.UserName);
-			command.Parameters.AddWithValue("pwd", String.IsNullOrEmpty(this.PasswortHash) ? (object)DBNull.Value : (object)this.PasswortHash);
-			//KontaktListe
-			command.Parameters.AddWithValue("rl", (int)this.Rolle);
+			if(!String.IsNullOrEmpty(this.Passwort))
+			{
+                command.Parameters.AddWithValue("pwd", String.IsNullOrEmpty(this.PasswortHash) ? (object)DBNull.Value : (object)this.PasswortHash);
+            }
+            //KontaktListe
+            command.Parameters.AddWithValue("rl", (int)this.Rolle);
 			command.Parameters.AddWithValue("gebd", this.Geburtsdatum.HasValue ? (object)this.Geburtsdatum.Value : (object)DBNull.Value);
 			command.Parameters.AddWithValue("gebo", String.IsNullOrEmpty(this.GeburtsOrt) ? (object)DBNull.Value : (object)this.GeburtsOrt);
 			command.Parameters.AddWithValue("regt", this.RegistrierungsTag.HasValue ? (object)this.RegistrierungsTag.Value : (object)DBNull.Value);
@@ -693,19 +718,28 @@ namespace VRentalsClasses.Models
 			if (!String.IsNullOrEmpty(this.Passwort))
 			{
 				this.PasswortHash = GetPasswordHash(this.Passwort);
-			}
-
-			command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
-					$" passwort = :pwd, rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
-					$" , registrierungstag = :regt, letzteanmeldung = :lanm," +
-					$" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
+                command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
+                    $" passwort = :pwd, rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
+                    $" , registrierungstag = :regt, letzteanmeldung = :lanm," +
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
+            }
+			else
+			{
+                command.CommandText = $"update {SCHEMA}.{TABLE} set vorname = :vn, nachname = :nn, geschlecht = :ges, username = :un," +
+                    $" rolle = :rl, geburtsdatum = :gebd, geburtsort = :gebo" +
+                    $" , registrierungstag = :regt, letzteanmeldung = :lanm," +
+                    $" benutzermerkmal = :bmerk, merkmalgiltbis = :merkgb, kundennummer = :kn, istfahrer = :if, status = :sta, fuehrerscheinausstellungsdatum = :faud, fuehrerscheinablaufdatum = :fabd, fuehrerscheinnummer = :fnmr, hatzugfahrzeug = :hzf, eigeneszugfahrzeugmarke = :ezma, eigeneszugfahrzeugmodell = :ezmo, eigeneszugfahrzeugkennzeichen = :ezk, mietpreis = :mp where users_id = :pid";
+            }
 
 			command.Parameters.AddWithValue("pid", user_id);
 			command.Parameters.AddWithValue("vn", String.IsNullOrEmpty(this.Vorname) ? (object)DBNull.Value : (object)this.Vorname);
 			command.Parameters.AddWithValue("nn", String.IsNullOrEmpty(this.Nachname) ? (object)DBNull.Value : (object)this.Nachname);
 			command.Parameters.AddWithValue("ges", (int)this.Geschlecht);
 			command.Parameters.AddWithValue("un", String.IsNullOrEmpty(this.UserName) ? (object)DBNull.Value : (object)this.UserName);
-            command.Parameters.AddWithValue("pwd", String.IsNullOrEmpty(this.PasswortHash) ? (object)DBNull.Value : (object)this.PasswortHash);
+            if (!String.IsNullOrEmpty(this.Passwort))
+            {
+                command.Parameters.AddWithValue("pwd", String.IsNullOrEmpty(this.PasswortHash) ? (object)DBNull.Value : (object)this.PasswortHash);
+            }
             //KontaktListe
             command.Parameters.AddWithValue("rl", (int)this.Rolle);
 			command.Parameters.AddWithValue("gebd", this.Geburtsdatum.HasValue ? (object)this.Geburtsdatum.Value : (object)DBNull.Value);

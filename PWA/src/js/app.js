@@ -45,6 +45,15 @@ export default class Application
 
 		new LoginManager(this);
 
+        if(document.cookie)
+        {
+            location.hash = '#home';
+        }
+        else
+        {
+            location.hash = '#login';
+        }
+
 		//=====================================================
 		// common events
 		// horcht auf den change des hash parts in der url
@@ -419,7 +428,7 @@ export default class Application
 		.catch(errorCallback);
 	}
 
-	ApiBenutzerFSKAdd(successCallback, errorCallback, pid)
+	ApiBenutzerFSKAdd(successCallback, errorCallback, pid, fskList)
 	{
         $('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'benutzer/fsk/' + pid,

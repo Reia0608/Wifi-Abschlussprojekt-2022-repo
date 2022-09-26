@@ -45,22 +45,7 @@ export default class PageLogin
                     {
                         if (response.success) 
                         {
-                            if(document.cookie)
-                            {
-                                var benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-                                localStorage.setItem("bm", benutzerMerkmal);
-                            }
-
-                            this.app.ApiPageInit((response) => 
-                            {
-                                console.log('login fetch successful!');
-                                console.log("angemeldet!");
-                                location.hash = '#home';
-
-                            }, (ex) => 
-                            {
-                                alert(ex);
-                            }, benutzerMerkmal);
+                            new LoginManager(this.app);
                         }
                         else 
                         {

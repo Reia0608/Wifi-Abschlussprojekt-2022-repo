@@ -211,7 +211,7 @@ export default class PageProfile
 				}, (ex) =>
 				{
 					alert(ex);
-				}, this.benutzer.userid ,selectedFSKList);
+				}, this.benutzer.userid, selectedFSKList);
 
 				dialogFuehrerschein.hide();
 			});

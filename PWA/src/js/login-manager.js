@@ -27,6 +27,9 @@ export default class LoginManager
         if (document.cookie) 
 		{
             const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+            // WIP: potential security threat?
+            localStorage.setItem("bm", benutzerMerkmal);
+            
 			if (benutzerMerkmal) 
             {
                 appArgs.ApiPageInit((response) => 

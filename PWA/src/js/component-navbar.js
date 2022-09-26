@@ -18,6 +18,10 @@ export default class Navbar
 			this.linkRegistrieren = this.target.querySelector('#linkRegistrieren');
 			this.linkImpressum = this.target.querySelector('#linkImpressum');
 
+			const buttonNavbarCollapse = this.target.querySelector('#buttonNavbarCollapse');
+			const navbarSupportedContent = this.target.querySelector('#navbarSupportedContent');
+			const bsCollapse = new bootstrap.Collapse(navbarSupportedContent, {toggle: false}); 
+
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeLink = this.linkHome;
 			
@@ -46,6 +50,12 @@ export default class Navbar
 			// {
 			// 	this.sideNavButtonKfzList.classList.add('d-none');
 			// }
+
+			// buttonNavbarCollapse.addEventListener('click', () => 
+			// { 
+			// 	bsCollapse.toggle();   
+			// }); 
+
 
 			this.linkHome.addEventListener('click', (e)=>
 			{
