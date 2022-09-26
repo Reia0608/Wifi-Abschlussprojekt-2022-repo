@@ -86,9 +86,11 @@ export default class PageRentStepTwo
             this.rentObject.preis_schutzpaket = 250;
         }
         
-        if(!this.rentObject.anhaenger_id == parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value) && selectAnhaenger.options[selectAnhaenger.selectedIndex].value != 0)
+        let tester = parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
+        if(this.rentObject.anhaenger_id == tester && tester != 0)
         {
             let newValue = parseInt(selectAnhaenger.options[selectAnhaenger.selectedIndex].value);
+            this.rentObject.anhaenger_bezeichnung = selectAnhaenger.options[selectAnhaenger.selectedIndex].text;
             this.rentObject.anhaenger_id = newValue;
         }
         else
@@ -257,7 +259,8 @@ export default class PageRentStepTwo
         if(inputRadioBasisSchutzpaket.checked == true)
         {
             this.rentObject.preis_schutzpaket = parseInt(inputRadioBasisSchutzpaket.name);
-        }else if(inputRadioMediumSchutzpaket.checked == true)
+        }
+        else if(inputRadioMediumSchutzpaket.checked == true)
         {
             this.rentObject.preis_schutzpaket = parseInt(inputRadioMediumSchutzpaket.name);
         }

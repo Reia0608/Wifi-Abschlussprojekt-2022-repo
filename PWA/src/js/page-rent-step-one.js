@@ -289,6 +289,7 @@ export default class PageRentStepOne
         // logic
         this.rentObject.abholdatum = firstDate;
         this.rentObject.rueckgabedatum = lastDate;
+        this.rentObject.tage_gemietet = this.Helper.TotalDaysCalculator(firstDate, lastDate);
         this.rentObject.preis_gesamt = this.Helper.PriceCalculator(this.rentObject.abholdatum, this.rentObject.rueckgabedatum, this.rentObject.preis_kfz, this.rentObject.preis_schutzpaket, this.rentObject.preis_anhaenger, this.rentObject.preis_fahrer);
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
         console.log(this.rentObject.preis_gesamt);

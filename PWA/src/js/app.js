@@ -848,6 +848,30 @@ export default class Application
         .catch(errorCallback);
     }
 
+    ApiSchadenGetByKraftfahrzeugIdAndUser(successCallback, errorCallback, kraftfahrzeug_id, user_id)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'schaden/getuserschadenonkraftfahrzeug/' + kraftfahrzeug_id + '/' + user_id, 
+        {
+            method: 'GET',
+        })
+        .then((response) => 
+        {
+            if (response.status == 200) 
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            }
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            }
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
     ApiSchadenSet(successCallback, errorCallback, schaden)
     {
         $('body').addClass('waiting');

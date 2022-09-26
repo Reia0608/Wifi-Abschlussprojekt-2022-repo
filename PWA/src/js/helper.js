@@ -145,6 +145,7 @@ export default class Helper
         let totalDays = this.TotalDaysCalculator(firstDay, lastDay);
         let result = 0;
 
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
         this.rentObject.tage_gemietet = totalDays;
         localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 

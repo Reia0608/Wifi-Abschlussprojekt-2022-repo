@@ -104,7 +104,10 @@ export default class PageHome
 								this.rentObject.abholzeit = response.abholzeit;
 								this.rentObject.rueckgabezeit = response.rueckgabezeit;
 								this.rentObject.times_rented = response.times_rented;
-
+								this.rentObject.tage_gemietet = response.tage_gemietet;
+								this.rentObject.kfz_bezeichnung = response.kfz_bezeichnung;
+								this.rentObject.anhaenger_bezeichnung = response.anhaenger_bezeichnung; 
+								
 								localStorage.setItem('kid', this.rentObject.kraftfahrzeug_id);
 								localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 								location.hash = '#finishrent';
@@ -180,6 +183,9 @@ export default class PageHome
 								this.rentObject.abholzeit = response.abholzeit;
 								this.rentObject.rueckgabezeit = response.rueckgabezeit;
 								this.rentObject.times_rented = response.times_rented;
+								this.rentObject.tage_gemietet = response.tage_gemietet;
+								this.rentObject.kfz_bezeichnung = response.kfz_bezeichnung;
+								this.rentObject.anhaenger_bezeichnung = response.anhaenger_bezeichnung; 
 
 								localStorage.setItem('kid', this.rentObject.kraftfahrzeug_id);
 								localStorage.setItem('rentObject', JSON.stringify(this.rentObject));

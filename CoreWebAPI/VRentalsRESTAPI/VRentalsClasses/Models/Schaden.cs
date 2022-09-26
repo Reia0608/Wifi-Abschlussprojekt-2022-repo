@@ -90,7 +90,42 @@ namespace VRentalsClasses.Models
 			return schadenList;
 		}
 
-		public static List<Schaden>? GetAnhaengerSchaden(int? anhaenger_id)
+        public static List<Schaden>? GetSchadenOnKraftfahrzeugByUser(int? kraftfahrzeug_id, int? user_id)
+        {
+            List<Schaden> schadenList = new List<Schaden>();
+            Schaden? schaden = null;
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where kraftfahrzeug_id = :kid and users_id = :uid";
+            command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
+            command.Parameters.AddWithValue("uid", user_id);
+            NpgsqlDataReader reader = command.ExecuteReader();
+            try
+            {
+                while (reader.Read())
+                {
+                    schadenList.Add(schaden = new Schaden(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return schadenList;
+        }
+        
+        public static List<Schaden>? GetAnhaengerSchaden(int? anhaenger_id)
 		{
 			List<Schaden> schadenList = new List<Schaden>();
 			Schaden? schaden = null;

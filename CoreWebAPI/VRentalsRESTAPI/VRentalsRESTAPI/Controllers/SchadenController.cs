@@ -43,6 +43,10 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("getid/{foto_datum}")]
         public int GetID(long foto_datum) => Schaden.GetID(foto_datum);
 
+        // GET: api/<SchadenController>/getuserschadenonkraftfahrzeug/5/55
+        [HttpGet("getuserschadenonkraftfahrzeug/{kraftfahrzeug_id}/{user_id}")]
+        public IEnumerable<Schaden> GetSchadenOnKraftfahrzeugByUser(int kraftfahrzeug_id, int user_id) => Schaden.GetSchadenOnKraftfahrzeugByUser(kraftfahrzeug_id, user_id);
+
         // POST: api/<SchadenController>
         [HttpPost]
         public IActionResult Post([FromBody] Schaden schaden)

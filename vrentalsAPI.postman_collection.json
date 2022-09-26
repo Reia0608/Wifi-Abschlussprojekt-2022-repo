@@ -958,6 +958,29 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Select All Schaden caused By User on Kraftfahrzeug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/schaden/getuserschadenonkraftfahrzeug/5/66",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"schaden",
+								"getuserschadenonkraftfahrzeug",
+								"5",
+								"66"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
