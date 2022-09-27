@@ -1,0 +1,60 @@
+<div class="container">
+	<div class="row mt-2">
+		<div class="col-12 d-md-block">
+			<button type="button" class="btn btn-outline-dark" id="buttonPreviousMonth">
+				<span class="iconify me-2" data-icon="mdi-chevron-double-left"></span>
+			</button>
+			<button type="button" class="btn btn-outline-dark" id="buttonCurrvMon" style="width: 10rem;">
+				<span id="spanButtonCurrentMonthText"></span>
+			</button>
+			<button type="button" class="btn btn-outline-dark" id="buttonNextMonth">
+				<span class="iconify ms-2" data-icon="mdi-chevron-double-right"></span>
+			</button>
+		</div>
+	</div>
+	<div class="row mt-2">
+		<div class="col-12">
+			<div class="table-responsive d-md-block">
+				<table class="table calendar-table" id="tableMonth">
+					<thead>
+						<tr>
+							<th style="width:14.28%;">Mo</th>
+							<th style="width:14.28%;">Di</th>
+							<th style="width:14.28%;">Mi</th>
+							<th style="width:14.28%;">Do</th>
+							<th style="width:14.28%;">Fr</th>
+							<th style="width:14.28%;">Sa</th>
+							<th style="width:14.28%;">So</th>
+						</tr>
+					</thead>
+					<tbody>
+		
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-3">
+		<h3>Termine</h3>
+	</div>
+	<div class="row mt-2">
+		<div class="col-12">
+			<div class="table-responsive d-md-block">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Abholort</th>
+							<th scope="col">Abholtermin</th>
+							<th scope="col">Abschlusstermin</th>
+							<th scope="col">Rückgabeort</th>
+						</tr>
+					</thead>
+					<tbody class="clickable" id="appointmentsBody">
+		
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

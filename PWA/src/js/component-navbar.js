@@ -11,6 +11,7 @@ export default class Navbar
 			this.target = args.app.Header;
 
             this.linkHome = this.target.querySelector('#linkHome');
+			this.linkTermine = this.target.querySelector('#linkTermine');
 			this.linkAnmelden = this.target.querySelector('#linkAnmelden');
 			this.linkProfil = this.target.querySelector('#linkProfil');
 			this.linkUnsereKFZ = this.target.querySelector('#linkUnsereKFZ');
@@ -18,15 +19,26 @@ export default class Navbar
 			this.linkRegistrieren = this.target.querySelector('#linkRegistrieren');
 			this.linkImpressum = this.target.querySelector('#linkImpressum');
 
-			const buttonNavbarCollapse = this.target.querySelector('#buttonNavbarCollapse');
-			const navbarSupportedContent = this.target.querySelector('#navbarSupportedContent');
-			const bsCollapse = new bootstrap.Collapse(navbarSupportedContent, {toggle: false}); 
+			//const buttonNavbarCollapse = this.target.querySelector('#buttonNavbarCollapse');
+			//const navbarSupportedContent = this.target.querySelector('#navbarSupportedContent');
+			//const bsCollapse = new bootstrap.Collapse(navbarSupportedContent, {toggle: false}); 
 
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeLink = this.linkHome;
 			
-			if(args.loggedin)
+			if(args.loggedin && args.rolle == 2)
 			{
+				this.linkHome.classList.add('d-none');
+				this.linkTermine.classList.remove('d-none');
+				this.linkProfil.classList.remove('d-none');
+				this.linkAnmelden.classList.add('d-none');
+				this.linkAbmelden.classList.remove('d-none');
+                this.linkRegistrieren.classList.add('d-none');
+			}
+			else if(args.loggedin && args.rolle == 0)
+			{
+				this.linkHome.classList.remove('d-none');
+				this.linkTermine.classList.add('d-none');
 				this.linkProfil.classList.remove('d-none');
 				this.linkAnmelden.classList.add('d-none');
 				this.linkAbmelden.classList.remove('d-none');
@@ -34,6 +46,8 @@ export default class Navbar
 			}
 			else
 			{
+				this.linkHome.classList.add('d-none');
+				this.linkTermine.classList.add('d-none');
 				this.linkProfil.classList.add('d-none');
 				this.linkAnmelden.classList.remove('d-none');
 				this.linkAbmelden.classList.add('d-none');
@@ -66,6 +80,17 @@ export default class Navbar
 					activeLink = this.linkHome;
 				}
                 location.hash = '#home';
+			});
+
+			this.linkTermine.addEventListener('click', (e)=>
+			{
+				if(activeLink != this.linkTermine)
+				{
+					this.linkTermine.classList.add("active");
+					activeLink.classList.remove("active");
+					activeLink = this.linkTermine;
+				}
+                location.hash = '#calendar';
 			});
 
             if(this.linkAnmelden)

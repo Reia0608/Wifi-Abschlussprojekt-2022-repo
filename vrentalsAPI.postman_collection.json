@@ -1547,6 +1547,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Bewegung by Fahrer ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bewegung/fahrer/105",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bewegung",
+								"fahrer",
+								"105"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

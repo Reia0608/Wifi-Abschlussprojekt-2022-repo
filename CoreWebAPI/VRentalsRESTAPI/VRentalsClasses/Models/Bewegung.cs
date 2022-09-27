@@ -118,6 +118,41 @@ namespace VRentalsClasses.Models
             return bewegungList;
         }
 
+        public static List<Bewegung> GetAllByFahrerId(int id)
+        {
+            List<Bewegung> bewegungList = new List<Bewegung>();
+            Bewegung bewegung = new Bewegung();
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE fahrer_id = :fid ORDER BY abholdatum ASC";
+            command.Parameters.AddWithValue("fid", id);
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    bewegungList.Add(bewegung = new Bewegung(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return bewegungList;
+        }
+
         public static Bewegung GetByKraftfahrzeugId(int id)
         {
             Bewegung bewegung = new Bewegung();

@@ -18,6 +18,8 @@ import PageLogout from './page-logout.js';
 import PageDamageLog from './page-damage-log.js';
 import Navbar from './component-navbar.js';
 import PageFinishRent from './page-finish-rent.js';
+import PageDriverAppointments from './page-driver-appointments.js';
+import PageTransactionDetails from './page-transaction-details.js';
 
 export default class Application 
 {
@@ -165,6 +167,12 @@ export default class Application
                 break;
             case '#finishrent':
                 new PageFinishRent(args);
+                break;
+            case '#calendar':
+                new PageDriverAppointments(args);
+                break;
+            case '#transactiondetails':
+                new PageTransactionDetails(args);
                 break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
@@ -1417,6 +1425,31 @@ export default class Application
     {  
         $('body').addClass('waiting');
         fetch(this.apiBaseUrl + 'bewegung/user/' + user_id, 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
+    ApiRentObjectGetByFahrerId(successCallback, errorCallback, fahrer_id)
+    {  
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bewegung/fahrer/' + fahrer_id, 
         {
             method: 'GET',
             credentials: 'include'

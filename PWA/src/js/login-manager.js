@@ -49,7 +49,15 @@ export default class LoginManager
                     //         break;
                     // }
                     appArgs.Navbar = new Navbar(navbarArgs);
-                    if (!location.hash) location.hash = '#main';
+                    if (!location.hash && navbarArgs.rolle == 0) 
+                    {
+                        location.hash = '#home';
+                    }
+                    else if(!location.hash && navbarArgs.rolle == 2)
+                    {
+                        location.hash ='#calendar';
+                    }
+                    
                     appArgs.Navigate(location.hash);
                     console.log("angemeldet!");
                 }, (ex) => 
