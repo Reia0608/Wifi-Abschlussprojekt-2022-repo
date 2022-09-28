@@ -49,11 +49,15 @@ export default class LoginManager
                     //         break;
                     // }
                     appArgs.Navbar = new Navbar(navbarArgs);
-                    if (!location.hash && navbarArgs.rolle == 0) 
+                    if(!location.hash)
+                    {
+                        location.hash = '#login';
+                    }
+                    else if(location.hash == '#login' && navbarArgs.rolle == 0) 
                     {
                         location.hash = '#home';
                     }
-                    else if(!location.hash && navbarArgs.rolle == 2)
+                    else if(location.hash == '#login' && navbarArgs.rolle == 2)
                     {
                         location.hash ='#calendar';
                     }

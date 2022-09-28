@@ -139,7 +139,7 @@ export default class Helper
         }
     }
 
-    // Preisberechnung
+    // Preisberechnung per Tag
     PriceCalculator(firstDay, lastDay, kfzPrice, paketPrice, anhaengerPrice, fahrerPrice)
     {
         let totalDays = this.TotalDaysCalculator(firstDay, lastDay);
@@ -168,6 +168,63 @@ export default class Helper
         else
         {
             result = (totalDays * kfzPrice) + (totalDays * anhaengerPrice) + (totalDays * fahrerPrice) + paketPrice;
+        }
+        
+        return result;
+    }
+
+    // Preisberechnung per Kilometer
+    KmPriceCalculator(kfzPrice, paketPrice, anhaengerPrice, fahrerPrice, schadenPrice, kmStart, kmEnde)
+    {
+        // Initialisierung
+        let result = 0;
+        let kmTotal = kmEnde - kmStart;
+
+        if(schadenPrice == 0)
+        {
+            if(typeof paketPrice === "undefined" && typeof anhaengerPrice === "undefined" && typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice);
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof anhaengerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + paketPrice;
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof paketPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice);
+            }
+            else if(typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + paketPrice;
+            }
+            else
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + (kmTotal * fahrerPrice) + paketPrice;
+            }
+        }
+        else
+        {    
+            if(typeof paketPrice === "undefined" && typeof anhaengerPrice === "undefined" && typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + schadenPrice;
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof anhaengerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + paketPrice + schadenPrice;
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof paketPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + schadenPrice;
+            }
+            else if(typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + paketPrice + schadenPrice;
+            }
+            else
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + (kmTotal * fahrerPrice) + paketPrice + schadenPrice;
+            }
         }
         
         return result;
@@ -222,7 +279,11 @@ export default class Helper
                 times_rented: 0,
                 kfz_bezeichnung: null,
                 anhaenger_bezeichnung: null,
-                tage_gemietet: 0
+                tage_gemietet: 0,
+                start_km_stand: 0,
+                ende_km_stand: 0,
+                zeit_start: null,
+                zeit_ende: null,
             };
             return this.rentObject;
         }

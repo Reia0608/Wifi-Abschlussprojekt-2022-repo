@@ -211,75 +211,79 @@ export default class PageHome
 		// Intilialisierung
 		const tBodyCarList = document.querySelector('#tBodyCarList');
 		const hGemieteteFahrzeuge = document.querySelector('#hGemieteteFahrzeuge');
-		const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
 		const dateFormatter = new Intl.DateTimeFormat('de-AT', 
         {
             dateStyle: 'short'
         });
 
-		hGemieteteFahrzeuge.innerHTML = 'Liste der gemieteten Fahrzeuge:<tr>';
+		if(document.cookie)
+		{
+			const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
 
-        this.app.ApiBenutzerGetId((response) =>
-        {
-            let benutzer_id = response;
-            this.app.ApiRentObjectGetById((response) =>
-            {
-				let bewegungList = response;
-				let iterator = 1;
+			hGemieteteFahrzeuge.innerHTML = 'Liste der gemieteten Fahrzeuge:<tr>';
 
-				tBodyCarList.innerHTML = '';
-
-				for(let bewegung of bewegungList)
+			this.app.ApiBenutzerGetId((response) =>
+			{
+				let benutzer_id = response;
+				this.app.ApiRentObjectGetById((response) =>
 				{
-					let brauchtAnhaenger = "Nein";
-					let brauchtFahrer = "Nein";
-					let html = '';
-					if(bewegung.anhaenger_id != null)
-					{
-						brauchtAnhaenger = "Ja";
-					}
-					if(bewegung.fahrer_id != null)
-					{
-						brauchtFahrer = "Ja";
-					}
-					if(bewegung.bewegung_finished == false)
-					{
-						html = 
-						`<tr data-bewegung-id="${bewegung.bewegung_id}">
-							<th scope="row">${iterator}</th>
-							<th scope="col"><button type="button" class="btn-outline-info btn-sm" id="buttonBewegungBeenden_${bewegung.bewegung_id}"><span class="iconify" data-icon="ant-design:file-done-outlined" style="font-size: 2rem;"></span></button></th>
-							<td>${bewegung.beschreibung}</td>
-							<td>${bewegung.preis_gesamt},-€</td>
-							<td>${dateFormatter.format(new Date(bewegung.rueckgabedatum))}</td>
-							<td>${brauchtAnhaenger}</td>
-							<td>${brauchtFahrer}</td>
-						</tr>`;
-					}
-					else
-					{
-						html = 
-						`<tr data-bewegung-id="${bewegung.bewegung_id}">
-							<th scope="row">${iterator}</th>
-							<th scope="col"><button type="button" class="btn-outline-info btn-sm" id="buttonBewegungMieten_${bewegung.bewegung_id}"><span class="iconify me-2" data-icon="map:car-rental" style="font-size: 2rem;"></span></button></th>
-							<td>${bewegung.beschreibung}</td>
-							<td>${bewegung.preis_gesamt},-€</td>
-							<td>${dateFormatter.format(new Date(bewegung.rueckgabedatum))}</td>
-							<td>${brauchtAnhaenger}</td>
-							<td>${brauchtFahrer}</td>
-						</tr>`;
-					}
+					let bewegungList = response;
+					let iterator = 1;
 
-					iterator++;
-					localStorage.setItem("kid", bewegung.kraftfahrzeug_id);
-					tBodyCarList.innerHTML += html;
-				}
-            }, (ex) =>
-            {
-                alert(ex);
-            }, benutzer_id);
-        }, (ex) =>
-        {
-            alert(ex);
-        }, benutzerMerkmal);
+					tBodyCarList.innerHTML = '';
+
+					for(let bewegung of bewegungList)
+					{
+						let brauchtAnhaenger = "Nein";
+						let brauchtFahrer = "Nein";
+						let html = '';
+						if(bewegung.anhaenger_id != null)
+						{
+							brauchtAnhaenger = "Ja";
+						}
+						if(bewegung.fahrer_id != null)
+						{
+							brauchtFahrer = "Ja";
+						}
+						if(bewegung.bewegung_finished == false)
+						{
+							html = 
+							`<tr data-bewegung-id="${bewegung.bewegung_id}">
+								<th scope="row">${iterator}</th>
+								<th scope="col"><button type="button" class="btn-outline-info btn-sm" id="buttonBewegungBeenden_${bewegung.bewegung_id}"><span class="iconify" data-icon="ant-design:file-done-outlined" style="font-size: 2rem;"></span></button></th>
+								<td>${bewegung.beschreibung}</td>
+								<td>${bewegung.preis_gesamt},-€</td>
+								<td>${dateFormatter.format(new Date(bewegung.rueckgabedatum))}</td>
+								<td>${brauchtAnhaenger}</td>
+								<td>${brauchtFahrer}</td>
+							</tr>`;
+						}
+						else
+						{
+							html = 
+							`<tr data-bewegung-id="${bewegung.bewegung_id}">
+								<th scope="row">${iterator}</th>
+								<th scope="col"><button type="button" class="btn-outline-info btn-sm" id="buttonBewegungMieten_${bewegung.bewegung_id}"><span class="iconify me-2" data-icon="map:car-rental" style="font-size: 2rem;"></span></button></th>
+								<td>${bewegung.beschreibung}</td>
+								<td>${bewegung.preis_gesamt},-€</td>
+								<td>${dateFormatter.format(new Date(bewegung.rueckgabedatum))}</td>
+								<td>${brauchtAnhaenger}</td>
+								<td>${brauchtFahrer}</td>
+							</tr>`;
+						}
+
+						iterator++;
+						localStorage.setItem("kid", bewegung.kraftfahrzeug_id);
+						tBodyCarList.innerHTML += html;
+					}
+				}, (ex) =>
+				{
+					alert(ex);
+				}, benutzer_id);
+			}, (ex) =>
+			{
+				alert(ex);
+			}, benutzerMerkmal);
+		}	
 	}
 }

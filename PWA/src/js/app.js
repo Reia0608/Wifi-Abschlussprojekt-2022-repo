@@ -20,6 +20,9 @@ import Navbar from './component-navbar.js';
 import PageFinishRent from './page-finish-rent.js';
 import PageDriverAppointments from './page-driver-appointments.js';
 import PageTransactionDetails from './page-transaction-details.js';
+import PageTerminStart from './page-termin-start.js';
+import PageTerminRunning from './page-termin-running.js';
+import PageTerminDone from './page-termin-done.js';
 
 export default class Application 
 {
@@ -46,15 +49,6 @@ export default class Application
         }
 
 		new LoginManager(this);
-
-        if(document.cookie)
-        {
-            location.hash = '#home';
-        }
-        else
-        {
-            location.hash = '#login';
-        }
 
 		//=====================================================
 		// common events
@@ -173,6 +167,15 @@ export default class Application
                 break;
             case '#transactiondetails':
                 new PageTransactionDetails(args);
+                break;
+            case '#terminstart':
+                new PageTerminStart(args);
+                break;
+            case '#terminrunning':
+                new PageTerminRunning(args);
+                break;
+            case '#termindone':
+                new PageTerminDone(args);
                 break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'

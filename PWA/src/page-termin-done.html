@@ -1,0 +1,107 @@
+<div class="container">
+    <div class="row mt-3">
+		<div class="col-12 border-bottom">
+			<h2 class="">Termin ist fertig!</h2>
+		</div>
+	</div>
+	<div class="row mt-2 py-3 border-bottom">
+		<!-- ... -->
+	</div>
+	<div class="row mt-3">
+		<div class="col-lg-6 mt-3">
+			<div class="row ">
+				<div class="col-4 text-end">Termin</div>
+				<div class="col-6">
+					<div class="col-sm-9 text-secondary" id="divTermin"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Ort</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divOrt"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Beschreibung</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divBeschreibung"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Auftragsende</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divAuftragsende"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Abstellort</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divAbstellort"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Letzter Kilometerstand des Fahrzeugs</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divLetzterKm"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Anfangs-kilometerstand</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divKmStart"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Anfangs-Uhrzeit</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divZeitStart"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Abschluss-kilometerstand</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divKmEnde"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Abschluss-Uhrzeit</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divZeitEnde"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Zu Zahlen</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divZuZahlen"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <button class="btn btn-primary" id="buttonQRCode">QR Code</button>
+                </div>
+            </div>
+		</div>
+	</div> <!-- /.row -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr id="trSchadenHeader">
+                        <th scope="col">Schadensliste</th>
+                    </tr>
+                </thead>
+                <thead class="thead-dark">
+                <tr id="trSchadenHeader">
+                    <th scope="col">#</th>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Art des Schadens</th>
+                    <th scope="col">Beschreibung</th>
+                </tr>
+                </thead>
+                <tbody class="clickable" id="tableSchadenList">
+                    <!-- inhalt der Tabelle-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

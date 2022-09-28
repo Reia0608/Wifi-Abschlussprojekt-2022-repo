@@ -73,7 +73,7 @@ namespace VRentalsRESTAPI.Controllers
                 {
                     if (bewegung.Save() == 1)
                     {
-                        result = Ok(bewegung);
+                        result = Ok();
                     }
                     else
                     {

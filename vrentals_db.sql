@@ -130,7 +130,8 @@ CREATE TABLE rentals.tbl_kraftfahrzeug
 	ausgabenstelle_id numeric,
 	kennzeichen character varying,
 	baujahr numeric,
-	klasse character varying
+	klasse character varying,
+	km_stand numeric
 	-- bilder liste
 	-- standortliste
 	--aktuellerstandort
@@ -380,7 +381,11 @@ CREATE TABLE rentals.tbl_bewegung
 	preis_schaden double precision DEFAULT 0,
 	kfz_bezeichnung character varying,
 	anhaenger_bezeichnung character varying,
-	tage_gemietet numeric DEFAULT 0
+	tage_gemietet numeric DEFAULT 0,
+	start_km_stand numeric DEFAULT 0,
+	ende_km_stand numeric DEFAULT 0,
+	zeit_start TYPE timestamp with time zone,
+	zeit_ende TYPE timestamp with time zone
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_bewegung

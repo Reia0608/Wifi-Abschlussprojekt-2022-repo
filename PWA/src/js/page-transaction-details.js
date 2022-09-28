@@ -38,6 +38,7 @@ export default class PageTransactionDetails
             const tableSchadenList = document.querySelector('#tableSchadenList');
             const divKraftfahrzeug = document.querySelector('#divKraftfahrzeug');
             const divAnhaenger = document.querySelector('#divAnhaenger');
+            const buttonTerminStart = document.querySelector('#buttonTerminStart');
 
 			// Initialisierung
 			var kfzbild = {};
@@ -47,6 +48,17 @@ export default class PageTransactionDetails
 				let bewegung_id = parseInt(args.bid);
 				this.datenLaden(bewegung_id);
 			}
+
+            // Event Listeners
+            buttonTerminStart.addEventListener('click', () =>
+            {
+                if(args.bid)
+                {
+                    let bewegung_id = parseInt(args.bid);
+                    window.open('#terminstart?bid=' + bewegung_id, '_self');
+                }
+                
+            });
 		}); // LoadHTML
 	} // constructor
 
