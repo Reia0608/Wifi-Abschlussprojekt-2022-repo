@@ -393,6 +393,16 @@ https://github.com/GoogleChrome/samples/issues/466
 ===========================================
 
 https://dev.to/scotchbright/jspdf-qr-code-tutorial-code-samples-how-to-generate-a-pdf-with-a-qrcode-using-the-jspdf-qrcode-js-library-2hld
+https://www.youtube.com/watch?v=oR_u2TbHwC8&ab_channel=TraversyMedia
+
+=======================================
+========== QR Code scanner ============
+=======================================
+
+https://blog.minhazav.dev/HTML5-QR-Code-scanning-launched-v1.0.1/
+
+I downloaded html5-qrcode.min.js manually from the website, put it into the node_modules folder, and added
+it via <script src=""></script> on the index.html page.
 
 =================================================
 ====================== TODO =====================

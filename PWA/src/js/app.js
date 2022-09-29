@@ -23,6 +23,7 @@ import PageTransactionDetails from './page-transaction-details.js';
 import PageTerminStart from './page-termin-start.js';
 import PageTerminRunning from './page-termin-running.js';
 import PageTerminDone from './page-termin-done.js';
+import PageScanner from './page-scanner.js';
 
 export default class Application 
 {
@@ -177,6 +178,8 @@ export default class Application
             case '#termindone':
                 new PageTerminDone(args);
                 break;
+            case '#scanner':
+                new PageScanner(args);
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
 				break;

@@ -54,6 +54,7 @@ export default class PageDamageLog
 				labelAnfallendeKosten.value = '';
 				selectSchadenArt.value = '0';
 				labelBeschreibung.value = '';
+								
 				this.schaden = 
 				{
 					schaden_id: null,
@@ -119,72 +120,84 @@ export default class PageDamageLog
 
 				if (saveOk) 
 				{
-					if (!this.schaden) 
+					if(document.cookie)
 					{
-						this.schaden = 
-						{
-							schaden_id: null,
-							schaden_datum: new Date()
-						};
-					}
-					schadensArtText = selectSchadenArt.options[selectSchadenArt.selectedIndex].text;
-					this.schaden.kraftfahrzeug_id = parseInt(localStorage.getItem("kid"));
-					this.schaden.anfallendekosten = (labelAnfallendeKosten.value && !isNaN(labelAnfallendeKosten.value) ? parseInt(labelAnfallendeKosten.value) : 0);
-					this.schaden.schadensart = schadensArtText;
-					this.schaden.beschreibung = labelBeschreibung.value;
+						const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
 
-					if(divDateSchaden.value == "")
-					{
-						this.schaden.schaden_datum = null;
-					}
-					else
-					{
-						this.schaden.schaden_datum = divDateSchaden.value;
-					}
-					
-					// Get the date of the "photo" to find schaden_id later on
-					this.schaden.foto_datum = Date.now();
-
-					if (!this.schadenList)
-					{
-						this.schadenList = [];
-					} 
-					
-					this.schadenList[0] = this.schaden;
-					
-					// Update the database.
-					this.app.ApiSchadenSet((response) => 
-					{
-						console.log("database was updated!");
-						if (this.bildObject) 
+						this.app.ApiBenutzerGetId((response) =>
 						{
-							// Get schaden_id for the picture
-							this.app.ApiSchadenGetId((response) =>
+							if (!this.schaden) 
 							{
-								this.bildObject.schaden_id = response;
-								// update the database
-								this.app.ApiBildSet(() => 
+								this.schaden = 
+								{
+									schaden_id: null,
+									schaden_datum: new Date()
+								};
+							}
+							schadensArtText = selectSchadenArt.options[selectSchadenArt.selectedIndex].text;
+							this.schaden.kraftfahrzeug_id = parseInt(localStorage.getItem("kid"));
+							this.schaden.anfallendekosten = (labelAnfallendeKosten.value && !isNaN(labelAnfallendeKosten.value) ? parseInt(labelAnfallendeKosten.value) : 0);
+							this.schaden.schadensart = schadensArtText;
+							this.schaden.beschreibung = labelBeschreibung.value;
+							this.schaden.users_id = response;
+
+							if(divDateSchaden.value == "")
+							{
+								this.schaden.schaden_datum = null;
+							}
+							else
+							{
+								this.schaden.schaden_datum = divDateSchaden.value;
+							}
+							
+							// Get the date of the "photo" to find schaden_id later on
+							this.schaden.foto_datum = Date.now();
+
+							if (!this.schadenList)
+							{
+								this.schadenList = [];
+							} 
+					
+							this.schadenList[0] = this.schaden;
+					
+							// Update the database.
+							this.app.ApiSchadenSet((response) => 
+							{
+								console.log("database was updated!");
+								if (this.bildObject) 
+								{
+									// Get schaden_id for the picture
+									this.app.ApiSchadenGetId((response) =>
+									{
+										this.bildObject.schaden_id = response;
+										// update the database
+										this.app.ApiBildSet(() => 
+										{
+											this.loadData();
+										}, (ex) => 
+										{
+											alert(ex);
+										}, this.bildObject);
+									}, (ex) => 
+									{
+										alert(ex);
+									}, this.schaden.foto_datum);
+								}
+								else
 								{
 									this.loadData();
-								}, (ex) => 
-								{
-									alert(ex);
-								}, this.bildObject);
+								}
 							}, (ex) => 
 							{
 								alert(ex);
-							}, this.schaden.foto_datum);
-						}
-						else
-						{
-							this.loadData();
-						}
-					}, (ex) => 
-					{
-						alert(ex);
-					}, this.schaden);
+							}, this.schaden);
 
-					dialogSchaden.hide();
+							dialogSchaden.hide();
+						}, (ex) =>
+						{
+							alert(ex);
+						}, benutzerMerkmal);
+					}
 				}
 			});
 		});

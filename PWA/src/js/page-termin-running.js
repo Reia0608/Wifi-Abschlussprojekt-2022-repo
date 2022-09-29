@@ -42,6 +42,7 @@ export default class PageTerminRunning
                             {
                                 if(response)
                                 {
+                                    let preisSchaden = 0;
                                     this.Helper = new Helper();
                                     this.rentObject = this.Helper.CreateRentObject();
     
@@ -60,7 +61,7 @@ export default class PageTerminRunning
                                     this.rentObject.schutzpaket = response.schutzpaket;
                                     this.rentObject.braucht_fahrer = response.braucht_fahrer;
                                     this.rentObject.fahrer_id = response.fahrer_id;
-                                    this.rentObject.preis_gesamt = response.preis_gesamt;
+                                    this.rentObject.preis_gesamt = this.Helper.KmPriceCalculator(response.preis_kfz, response.preis_schutzpaket, response.preis_anhaenger, response.preis_fahrer, preisSchaden, response.start_km_stand, inputKmEnde.value);
                                     this.rentObject.preis_kfz = response.preis_kfz;
                                     this.rentObject.preis_anhaenger = response.preis_anhaenger;
                                     this.rentObject.preis_fahrer = response.preis_fahrer;
@@ -78,7 +79,7 @@ export default class PageTerminRunning
                                     this.rentObject.zeit_start = response.zeit_start;
                                     this.rentObject.ende_km_stand = inputKmEnde.value;
                                     this.rentObject.zeit_ende = new Date().toISOString();
-    
+                                    
                                     // Updating the database
                                     this.app.ApiRentObjectSet(() =>
                                     {

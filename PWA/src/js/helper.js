@@ -288,4 +288,18 @@ export default class Helper
             return this.rentObject;
         }
     }
+
+    // QR Code generator
+    QRCodeGenerator(qrcode, element, value)
+    {
+        if(qrcode === undefined)
+        {
+            qrcode = new QRCode(element, value);
+        }
+        else
+        {
+            qrcode.clear();
+            qrcode.makeCode(value);
+        }
+    }
 }

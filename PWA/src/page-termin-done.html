@@ -82,26 +82,77 @@
             </div>
 		</div>
 	</div> <!-- /.row -->
-    <div class="row mt-3">
+    <div class="row">
         <div class="col-12">
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr id="trSchadenHeader">
-                        <th scope="col">Schadensliste</th>
-                    </tr>
-                </thead>
-                <thead class="thead-dark">
-                <tr id="trSchadenHeader">
-                    <th scope="col">#</th>
-                    <th scope="col">Datum</th>
-                    <th scope="col">Art des Schadens</th>
-                    <th scope="col">Beschreibung</th>
-                </tr>
-                </thead>
-                <tbody class="clickable" id="tableSchadenList">
-                    <!-- inhalt der Tabelle-->
-                </tbody>
-            </table>
+            <h1>Schadensliste</h1>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <button type="button" class="btn btn-sm" id="buttonSchadenAdd"><span class="iconify" data-icon="akar-icons:circle-plus"></span>Schaden hinzufügen</button>
+    </div>
+    <div class="row mt-3" id="damageListBody">
+        <p>Es ist ein Fehler beim Laden der Schadenliste passiert! Bitte stellen Sie sicher, dass Sie online sind.</p>
+    </div>
+	<div class="modal fade" id="modalSchadenBody" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">KfZ Schaden</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container text-center">
+                        <div class="row">
+                        <video id="videoPlayer" autoplay></video>
+                        <canvas id="canvas" width="160px" height="120px" style="display: none"></canvas>
+                    </div>
+                    <div class="row mt-3">
+                        <button class="btn btn-primary" id="buttonCapturePhoto">Foto Machen</button>
+                        <div id="divImagePicker" style="display: none">
+                            <h6>Wählen Sie ein Foto</h6>
+                            <input type="file" accept="image/*" id="image-picker">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <label for="labelAnfallendeKosten">Anfallende Kosten</label><span class="iconify ms-2" data-icon="mdi-asterisk"></span>
+                            <input type="text" class="form-control" id="labelAnfallendeKosten" />
+                            <div class="valid-feedback">Ok!</div>
+                            <div class="invalid-feedback">Keine Nr. oder falsches Format!</div>														
+                        </div>
+                        <div class="col-6">
+                            <label for="selectSchadenArt">Art des Schadens</label>
+                            <select name="selectSchadenArt" id="selectSchadenArt" class="form-select">
+                                <option value="0">Unbekannt</option>
+                                <option value="1">Blechschaden</option>
+                                <option value="2">Glasbruch</option>
+                                <option value="3">Marderschaden</option>
+                                <option value="4">Lackschaden</option>
+                                <option value="5">Parkschaden</option>
+                                <option value="6">Frostschaden</option>
+                                <option value="7">Totalschaden</option>
+                                <option value="8">Sonstiger Schaden</option>
+                            </select>
+                            <div class="valid-feedback">Ok!</div>
+                            <div class="invalid-feedback">Unbekannt ist nicht erlaubt!</div>														
+                    </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label for="labelBeschreibung">Beschreibung</label>
+                            <textarea class="form-control" id="labelBeschreibung" row="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-4 text-end">Datum des Schadens</div>
+                        <div class="col-4"><input type="date" class="form-control form-control-sm" id="divDateSchaden" /></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="buttonModalSchadenSpeichern">Speichern</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

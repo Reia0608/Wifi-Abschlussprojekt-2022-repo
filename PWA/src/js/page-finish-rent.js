@@ -1,4 +1,5 @@
 import "./app.js";
+import Helper from "./helper.js";
 
 export default class PageFinishRent
 {
@@ -9,6 +10,9 @@ export default class PageFinishRent
 		{
 			// Intilialisierung
 			const buttonPdf = document.querySelector('#buttonPdf');
+			const buttonGenerateQRCode = document.querySelector('#buttonGenerateQRCode');
+			const buttonScanQRCode = document.querySelector('#buttonScanQRCode');
+			const divQrCodeTarget = document.querySelector('#divQrCodeTarget');
 
 			// Logic
 			this.loadData();
@@ -39,6 +43,21 @@ export default class PageFinishRent
 					alert(ex);
 				}, this.rentObject);
 			});
+
+			buttonGenerateQRCode.addEventListener('click', () =>
+			{
+				// Initialisierung
+				let qrcode = undefined;
+				this.Helper = new Helper();
+
+				// logic
+				this.Helper.QRCodeGenerator(qrcode, document.getElementById('divQrCodeTarget'), 'http://localhost:5500/src/index.html#finishrent');
+			});
+
+			buttonScanQRCode.addEventListener('click', () =>
+			{
+				location.hash = '#scanner';
+			});
 		});
 	}
 
@@ -46,161 +65,190 @@ export default class PageFinishRent
 	loadData()
 	{
 		// Initialisierung
-		const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-
-		// logic
-		this.app.ApiBenutzerGet((response) =>
+		this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+		
+		if(document.cookie)
 		{
-			if(response.success)
+			const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+			// logic
+			this.app.ApiBenutzerGet((response) =>
 			{
-				// Initialisierung
-				const tableEmpfaengerDaten = document.querySelector('#tableEmpfaengerDaten');
-				const tableRechnungInhalt = document.querySelector('#tableRechnungInhalt');
-				const tableRechnungGesamt = document.querySelector('#tableRechnungGesamt');
-
-				this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
-				this.benutzer = response.benutzer;
-				this.benutzer.userid = response.benutzer.userid;
-
-				// Obere Daten ausfüllen
-				let today = new Date().toLocaleDateString('de-AT');
-				let deadline = this.addDays(new Date(), 14).toLocaleDateString('de-AT');
-				let html = `<tr>
-							<td valign='top' width='35%' style='font-size:12px;'> <strong>${this.benutzer.vorname} ${this.benutzer.nachname}</strong><br /> 
-								[Adresse]<br />
-								[Adresse] <br/>StNr.: [Steuernummer]<br />USt-IdNr.: [Umsatzteuer ID]<br />
-							</td>
-							<td valign='top' width='35%'>
-							</td>
-							<td valign='top' width='30%' style='font-size:12px;'>Rechnungsdatum: ${today}<br/>
-								Fälligkeitsdatum: ${deadline} <br/>
-							</td>
-							</tr>`;
-
-				tableEmpfaengerDaten.innerHTML = html;
-
-				// Mittlere Daten ausfüllen
-				html = `<tr>
-
-						<td width='35%' bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Beschreibung </strong></td>
-						<td bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Tage</strong></td>
-						<td bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Preis/Tag</strong></td>
-						<td bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Gesamt</strong></td>
-				
-						</tr>
-						<tr style="display:none;"><td colspan="*"><tr>`;
-
-				// Used to set up the page nicely
-				let numberOfEntries = 0;
-				if(this.rentObject.preis_kfz != 0)
+				if(response.benutzer.rolle == 0)
 				{
-					let total = this.rentObject.tage_gemietet * this.rentObject.preis_kfz;
-					html += `<td valign='top' style='font-size:12px;'>Fahrzeug ${this.rentObject.kfz_bezeichnung}</td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.tage_gemietet}</td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.preis_kfz}</td>
-					<td valign='top' style='font-size:12px;'>${total}</td>
-		
-					</tr>`;
-					numberOfEntries++;
+					buttonGenerateQRCode.classList.add('d-none');
+					divQrCodeTarget.classList.add('d-none');
+					buttonScanQRCode.classList.remove('d-none');
 				}
-				if(this.rentObject.preis_anhaenger != 0)
+				else if(response.benutzer.rolle == 2)
 				{
-					let total = this.rentObject.tage_gemietet * this.rentObject.preis_anhaenger;
-					html += `<td valign='top' style='font-size:12px;'>Anhänger ${this.rentObject.anhaenger_bezeichnung}</td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.tage_gemietet}</td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.preis_anhaenger}</td>
-					<td valign='top' style='font-size:12px;'>${total}</td>
-		
-					</tr>`;
-					numberOfEntries++;
+					buttonGenerateQRCode.classList.remove('d-none');
+					divQrCodeTarget.classList.remove('d-none');
+					buttonScanQRCode.classList.add('d-none');
 				}
-				if(this.rentObject.preis_fahrer != 0)
+				else if(response.benutzer.rolle == 1)
 				{
-					let total = this.rentObject.tage_gemietet * this.rentObject.preis_fahrer;
-					html += `<td valign='top' style='font-size:12px;'>FahrerIn</td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.tage_gemietet}</td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.preis_fahrer}</td>
-					<td valign='top' style='font-size:12px;'>${total}</td>
-		
-					</tr>`;
-					numberOfEntries++;
+					buttonGenerateQRCode.classList.remove('d-none');
+					divQrCodeTarget.classList.remove('d-none');
+					buttonScanQRCode.classList.remove('d-none');
 				}
-				if(this.rentObject.preis_schutzpaket != 0)
-				{
-					html += `<td valign='top' style='font-size:12px;'>${this.rentObject.schutzpaket}</td>
-					<td valign='top' style='font-size:12px;'></td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.preis_schutzpaket}</td>
-					<td valign='top' style='font-size:12px;'>${this.rentObject.preis_schutzpaket}</td>
-		
-					</tr>`;
-					numberOfEntries++;
-				} 
 
-				// Schäden an das Kraftfahrzeug hinzufügen
-				let gesamtSchaden = 0;
-				this.app.ApiSchadenGetByKraftfahrzeugIdAndUser((response) =>
+				this.app.ApiBenutzerGetById((response) =>
 				{
-					if(response.length > 0 && response != null)
+					if(response.success)
 					{
-						for(let schadenentry of response)
+						// Initialisierung
+						const tableEmpfaengerDaten = document.querySelector('#tableEmpfaengerDaten');
+						const tableRechnungInhalt = document.querySelector('#tableRechnungInhalt');
+						const tableRechnungGesamt = document.querySelector('#tableRechnungGesamt');
+	
+						
+						this.benutzer = response.benutzer;
+						this.benutzer.userid = response.benutzer.userid;
+	
+						// Obere Daten ausfüllen
+						let today = new Date().toLocaleDateString('de-AT');
+						let deadline = this.addDays(new Date(), 14).toLocaleDateString('de-AT');
+						let html = `<tr>
+									<td valign='top' width='35%' style='font-size:12px;'> <strong>${this.benutzer.vorname} ${this.benutzer.nachname}</strong><br /> 
+										[Adresse]<br />
+										[Adresse] <br/>StNr.: [Steuernummer]<br />USt-IdNr.: [Umsatzteuer ID]<br />
+									</td>
+									<td valign='top' width='35%'>
+									</td>
+									<td valign='top' width='30%' style='font-size:12px;'>Rechnungsdatum: ${today}<br/>
+										Fälligkeitsdatum: ${deadline} <br/>
+									</td>
+									</tr>`;
+	
+						tableEmpfaengerDaten.innerHTML = html;
+	
+						// Mittlere Daten ausfüllen
+						html = `<tr>
+	
+								<td width='35%' bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Beschreibung </strong></td>
+								<td bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Km</strong></td>
+								<td bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Preis/Km</strong></td>
+								<td bordercolor='#ccc' bgcolor='#f2f2f2' style='font-size:12px;'><strong>Gesamt</strong></td>
+						
+								</tr>
+								<tr style="display:none;"><td colspan="*"><tr>`;
+	
+						// Used to set up the page nicely
+						let numberOfEntries = 0;
+						if(this.rentObject.preis_kfz != 0)
 						{
-							html += `<td valign='top' style='font-size:12px;'>${schadenentry.schadensart}</td>
-							<td valign='top' style='font-size:12px;'></td>
-							<td valign='top' style='font-size:12px;'>${schadenentry.anfallendekosten}</td>
-							<td valign='top' style='font-size:12px;'>${schadenentry.anfallendekosten}</td>
+							let total = this.rentObject.tage_gemietet * this.rentObject.preis_kfz;
+							html += `<td valign='top' style='font-size:12px;'>Fahrzeug ${this.rentObject.kfz_bezeichnung}</td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.ende_km_stand - this.rentObject.start_km_stand}</td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.preis_kfz}</td>
+							<td valign='top' style='font-size:12px;'>${total}</td>
 				
 							</tr>`;
 							numberOfEntries++;
-							gesamtSchaden += schadenentry.anfallendekosten;
 						}
+						if(this.rentObject.preis_anhaenger != 0)
+						{
+							let total = this.rentObject.tage_gemietet * this.rentObject.preis_anhaenger;
+							html += `<td valign='top' style='font-size:12px;'>Anhänger ${this.rentObject.anhaenger_bezeichnung}</td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.ende_km_stand - this.rentObject.start_km_stand}</td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.preis_anhaenger}</td>
+							<td valign='top' style='font-size:12px;'>${total}</td>
+				
+							</tr>`;
+							numberOfEntries++;
+						}
+						if(this.rentObject.preis_fahrer != 0)
+						{
+							let total = this.rentObject.tage_gemietet * this.rentObject.preis_fahrer;
+							html += `<td valign='top' style='font-size:12px;'>FahrerIn</td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.ende_km_stand - this.rentObject.start_km_stand}</td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.preis_fahrer}</td>
+							<td valign='top' style='font-size:12px;'>${total}</td>
+				
+							</tr>`;
+							numberOfEntries++;
+						}
+						if(this.rentObject.preis_schutzpaket != 0)
+						{
+							html += `<td valign='top' style='font-size:12px;'>${this.rentObject.schutzpaket}</td>
+							<td valign='top' style='font-size:12px;'></td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.preis_schutzpaket}</td>
+							<td valign='top' style='font-size:12px;'>${this.rentObject.preis_schutzpaket}</td>
+				
+							</tr>`;
+							numberOfEntries++;
+						} 
+	
+						// Schäden an das Kraftfahrzeug hinzufügen
+						let gesamtSchaden = 0;
+						this.app.ApiSchadenGetByKraftfahrzeugIdAndUser((response) =>
+						{
+							if(response.length > 0 && response != null)
+							{
+								for(let schadenentry of response)
+								{
+									html += `<td valign='top' style='font-size:12px;'>${schadenentry.schadensart}</td>
+									<td valign='top' style='font-size:12px;'></td>
+									<td valign='top' style='font-size:12px;'>${schadenentry.anfallendekosten}</td>
+									<td valign='top' style='font-size:12px;'>${schadenentry.anfallendekosten}</td>
+						
+									</tr>`;
+									numberOfEntries++;
+									gesamtSchaden += schadenentry.anfallendekosten;
+								}
+							}
+	
+							for(let iterator = 0; iterator < (20-numberOfEntries); iterator++)
+							{
+								html += `<tr><td valign='top' style='font-size:12px;'>&nbsp;</td>
+								<td valign='top' style='font-size:12px;'>&nbsp;</td>
+								<td valign='top' style='font-size:12px;'>&nbsp;</td>
+								<td valign='top' style='font-size:12px;'>&nbsp;</td></tr>`;
+							}
+			
+							html += `</td></tr>`;
+							tableRechnungInhalt.innerHTML = html;
+			
+							// Untere Daten ausfüllen
+							this.rentObject.preis_gesamt = this.rentObject.preis_gesamt + gesamtSchaden;
+							let umsatzsteuer = ((this.rentObject.preis_gesamt * 20)/100); 
+							html = `<tr>
+								<td style='font-size:12px;width:50%;'><strong> </strong></td>
+								<td><table width='100%' cellspacing='0' cellpadding='2' border='0'>
+							<tr>
+								<td align='right' style='font-size:12px;' >Gesamt</td>
+								<td  align='right' style='font-size:12px;'>${this.rentObject.preis_gesamt - umsatzsteuer} €<td>
+							</tr>
+							<tr>
+								<td  align='right' style='font-size:12px;'>USt.(20%)</td>
+								<td  align='right' style='font-size:12px;'>${umsatzsteuer} €</td>
+							</tr>
+							<tr>
+				
+								<td  align='right' style='font-size:12px;'><b>Gesamtpreis</b></td>
+								<td  align='right' style='font-size:12px;'><b>${this.rentObject.preis_gesamt},00 €</b></td>
+							</tr>`;
+							
+							tableRechnungGesamt.innerHTML = html;
+							localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+						}, (ex) => 
+						{
+							alert(ex);
+						}, this.rentObject.kraftfahrzeug_id, this.rentObject.users_id);
 					}
-
-					for(let iterator = 0; iterator < (20-numberOfEntries); iterator++)
+					else
 					{
-						html += `<tr><td valign='top' style='font-size:12px;'>&nbsp;</td>
-						<td valign='top' style='font-size:12px;'>&nbsp;</td>
-						<td valign='top' style='font-size:12px;'>&nbsp;</td>
-						<td valign='top' style='font-size:12px;'>&nbsp;</td></tr>`;
+						alert(response.message);
 					}
-	
-					html += `</td></tr>`;
-					tableRechnungInhalt.innerHTML = html;
-	
-					// Untere Daten ausfüllen
-					this.rentObject.preis_gesamt = this.rentObject.preis_gesamt + gesamtSchaden;
-					let umsatzsteuer = ((this.rentObject.preis_gesamt * 20)/100); 
-					html = `<tr>
-						<td style='font-size:12px;width:50%;'><strong> </strong></td>
-						<td><table width='100%' cellspacing='0' cellpadding='2' border='0'>
-					<tr>
-						<td align='right' style='font-size:12px;' >Gesamt</td>
-						<td  align='right' style='font-size:12px;'>${this.rentObject.preis_gesamt - umsatzsteuer} €<td>
-					</tr>
-					<tr>
-						<td  align='right' style='font-size:12px;'>USt.(20%)</td>
-						<td  align='right' style='font-size:12px;'>${umsatzsteuer} €</td>
-					</tr>
-					<tr>
-		
-						<td  align='right' style='font-size:12px;'><b>Gesamtpreis</b></td>
-						<td  align='right' style='font-size:12px;'><b>${this.rentObject.preis_gesamt},00 €</b></td>
-					</tr>`;
-					
-					tableRechnungGesamt.innerHTML = html;
-					localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
 				}, (ex) => 
 				{
 					alert(ex);
-				}, this.rentObject.kraftfahrzeug_id, this.rentObject.users_id);
-			}
-			else
+				},  this.rentObject.users_id);
+			}, (ex) =>
 			{
-				alert(response.message);
-			}
-		}, (ex) => 
-		{
-			alert(ex);
-		},  benutzerMerkmal);
+				alert(ex);
+			}, benutzerMerkmal);
+		}		
 	}
 
 	addDays(date, days) 

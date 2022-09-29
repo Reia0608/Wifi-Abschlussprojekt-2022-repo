@@ -80,8 +80,14 @@ export default class LoginManager
 		{
 			navbarArgs.loggedin = false;
 			this.Navbar = new Navbar(navbarArgs);
-			if (location.hash) appArgs.Navigate(location.hash);
-			else appArgs.Navigate('#main');
+			if (location.hash) 
+            {
+                appArgs.Navigate(location.hash);
+            }
+			else
+            {
+                appArgs.Navigate('#main');
+            } 
 		}
 
         //======================================================================
