@@ -126,7 +126,7 @@ namespace VRentalsRESTAPI.Controllers
             IActionResult result = null;
             try
             {
-                if (schaden.Delete() == 1)
+                if (schaden.Delete() >= 1)
                 {
                     result = Ok();
                 }

@@ -11,7 +11,7 @@ namespace VRentalsRESTAPI.Controllers
 	{
 		[HttpGet("init")]
 		public dynamic InitPage(string bm)
-		{
+{
 			return new
 			{
 				benutzer = Benutzer.Get(bm)

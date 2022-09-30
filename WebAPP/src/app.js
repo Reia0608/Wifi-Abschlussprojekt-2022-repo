@@ -1502,12 +1502,12 @@ export default class Application
 			if (response.status == 200) 
 			{
 				$('body').removeClass('waiting');
-				return response.json();
+				console.log('Daten wurden erfolgreich geschickt!');
 			}
 			else if (response.status == 204) 
 			{
 				$('body').removeClass('waiting');
-				errorCallback('Daten sind unvollständig!');
+				console.log('Daten sind unvollständig!');
 			}
 			else
 			{

@@ -438,29 +438,34 @@ export default class PageCars
 				carListBody.innerHTML = html;
 
 				this.app.ApiBilderGetAllKfzList((response) =>
-				{
-					let jiterator = 1;
-					for(let i = 0; i < response.length; i++)
+                {
+                    if(response.length > 0)
 					{
+						// jiterator here, is the total amount of times we have assigned a picture to its HTML element
+						let jiterator = 1;
 						for (let kfzBild of response)
 						{
-							if(jiterator <= response.length)
+							// iterator-1 here, is the total number of cards we put on screen in the previous API call
+							for(let kiterator = 1; kiterator <= (iterator-1); kiterator++)
 							{
-								var imgIdentifier = "imgBild_" + jiterator.toString();
-								var imgBild = document.getElementById(imgIdentifier);
-		
-								if(kfzBild.kraftfahrzeug_id == imgBild.dataset.kraftfahrzeugId)
+								if(jiterator <= response.length)
 								{
-									imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
-									jiterator++;
-								}	
+									var imgIdentifier = "imgBild_" + kiterator.toString();
+									var imgBild = document.getElementById(imgIdentifier);
+			
+									if(kfzBild.kraftfahrzeug_id == imgBild.dataset.kraftfahrzeugId)
+									{
+										imgBild.src = "data:image/jpeg;base64," + kfzBild.bild_bytes;
+										jiterator++;
+									}	
+								}
 							}
 						}
 					}
-				}, (ex) => 
-				{
-					alert(ex);
-				});
+                }, (ex) => 
+                {
+                    alert(ex);
+                });
 			}, (ex) => 
 			{
 				alert(ex);

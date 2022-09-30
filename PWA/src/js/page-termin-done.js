@@ -92,7 +92,7 @@ export default class PageTerminDone
                                 console.log("database updated!");
                                 localStorage.setItem('kid', this.rentObject.kraftfahrzeug_id);
 								localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
-								location.hash = '#finishrent';
+								window.open('#finishrent?bid=' + this.rentObject.bewegung_id, '_self');
                             }, (ex) =>
                             {
                                 alert(ex);
@@ -168,7 +168,6 @@ export default class PageTerminDone
 					// Create the object of the photo for sending
 					let base64String = image_data_url.replace("data:", "").replace(/^.+,/, "");
 					this.bildObject.bild_bytes = base64String;
-					this.bildObject.kraftfahrzeug_id = parseInt(localStorage.getItem("kid"));
 
 					// Stops the cam from recording
 					// videoPlayer.srcObject.getVideoTracks().forEach(function(track) 
@@ -274,6 +273,15 @@ export default class PageTerminDone
                                     {
                                         if(args.bid)
                                         {
+											// Stops the cam from recording
+											if(videoPlayer)
+											{
+												videoPlayer.srcObject.getVideoTracks().forEach(function(track) 
+												{
+													track.stop();
+												});
+											}
+
                                             let bewegung_id = parseInt(args.bid);
                                             this.datenLaden(bewegung_id);
                                         }

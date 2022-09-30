@@ -42,7 +42,7 @@ export default class PageScanner
                         html5QrCode.stop().then(ignore => 
                         {
                             // QR Code scanning is stopped.
-                            console.log("QR Code scanning stopped.");
+                            //console.log("QR Code scanning stopped.");
                         }).catch(err => 
                         {
                             // Stop failed, handle it.
@@ -75,7 +75,8 @@ export default class PageScanner
 				this.Helper = new Helper();
 
 				// logic
-				this.Helper.QRCodeGenerator(qrcode, document.getElementById('divQrCodeTarget'), 'http://localhost:5500/src/index.html#finishrent');
+                let url = 'http://localhost:5500/src/index.html#finishrent?bid=' + args.bewegung_id;
+				this.Helper.QRCodeGenerator(qrcode, document.getElementById('divQrCodeTarget'), url);
 			});
 
             buttonStopScanning.addEventListener('click', () =>

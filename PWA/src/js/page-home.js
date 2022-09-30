@@ -110,7 +110,14 @@ export default class PageHome
 								
 								localStorage.setItem('kid', this.rentObject.kraftfahrzeug_id);
 								localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
-								location.hash = '#finishrent';
+								if(brauchtFahrer)
+								{
+									window.open('#scanner?bid=' + response.bewegung_id, '_self');
+								}
+								else
+								{
+									location.hash = '#finishrent';
+								}
 							}
 						}, (ex) => 
 						{

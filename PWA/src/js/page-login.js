@@ -46,30 +46,6 @@ export default class PageLogin
                         if (response.success) 
                         {
                             new LoginManager(this.app);
-
-                            // Go to the homepage after login
-                            if(document.cookie)
-                            {
-                                const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
-                                this.app.ApiBenutzerGet((response) =>
-                                {
-                                    if(response.benutzer.rolle == 0)
-                                    {
-                                        location.hash = '#home';
-                                    }
-                                    else if(response.benutzer.rolle == 2)
-                                    {
-                                        location.hash = '#terminstart';
-                                    }
-                                }, (ex) =>
-                                {
-                    
-                                }, benutzerMerkmal);
-                            }
-                            else
-                            {
-                                location.hash = '#login';
-                            }
                         }
                         else 
                         {

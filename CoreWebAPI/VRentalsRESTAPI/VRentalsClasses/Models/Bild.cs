@@ -487,10 +487,6 @@ namespace VRentalsClasses.Models
 			{
 				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, kraftfahrzeug_id = :kid, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where bilder_id = :bid";
 			}
-			else if (this.KraftfahrzeugId.HasValue && !(this.SchadenId.HasValue))
-			{
-				command.CommandText = $"update {SCHEMA}.{TABLE} set bild_bytes = :bbs, bild_url = :url, anhaenger_id = :aid, users_id = :uid, schaden_id = :sid where kraftfahrzeug_id = :kid";
-			}
 			else
 			{
 				command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
@@ -498,10 +494,7 @@ namespace VRentalsClasses.Models
 				command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:bid, :bbs, :url, :kid, :aid, :uid, :sid)";
 			}
 
-			if(this.Bilder_Id != null)
-            {
-				command.Parameters.AddWithValue("bid", this.Bilder_Id);
-			}
+			command.Parameters.AddWithValue("bid", this.Bilder_Id);
 			command.Parameters.AddWithValue("bbs", this.BildBytes == null ? (object)DBNull.Value : this.BildBytes);
 			command.Parameters.AddWithValue("url", String.IsNullOrEmpty(this.Bild_Url) ? (object)DBNull.Value : (object)this.Bild_Url);
 			command.Parameters.AddWithValue("kid", this.KraftfahrzeugId.HasValue ? (object)this.KraftfahrzeugId.Value : (object)DBNull.Value);

@@ -13,7 +13,8 @@ namespace VRentalsClasses.Models
 		//************************************************************************
 		#region constants
 		private const string SCHEMA = "rentals";
-		private const string TABLE = "tbl_schaden";
+        private const string TABLE_BILDER = "tbl_bilder";
+        private const string TABLE = "tbl_schaden";
 		private const string COLUMNS = "schaden_id, schadensart, beschreibung, anfallendekosten, schaden_datum, kraftfahrzeug_id, anhaenger_id, foto_datum, users_id";
 		#endregion
 
@@ -367,7 +368,35 @@ namespace VRentalsClasses.Models
 		public int Delete()
 		{
 			int result = -1;
-			NpgsqlCommand command = new NpgsqlCommand();
+
+            NpgsqlCommand command = new NpgsqlCommand();
+
+            try
+            {
+                if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+                {
+                    command.Connection = DBConnection.GetConnection();
+                    command.Connection.Open();
+                }
+
+                command.CommandText = $"delete from {SCHEMA}.{TABLE_BILDER} where schaden_id = :sid;";
+                command.Parameters.AddWithValue("sid", this.Schaden_Id);
+                try
+                {
+                    result += command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
 				command.Connection = DBConnection.GetConnection();
