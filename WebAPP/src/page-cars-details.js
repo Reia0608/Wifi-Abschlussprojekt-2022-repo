@@ -24,6 +24,9 @@ export default class PageCarsDetails
 			const imgBild = this.app.Main.querySelector('#imgBild');
 			const spanKraftfahrzeugJahre = this.app.Main.querySelector('#spanKraftfahrzeugJahre');
 			
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#carsdetails");
+
 			// Initialisierung
 			var kfzbild = {};
 

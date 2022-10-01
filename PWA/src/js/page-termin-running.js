@@ -20,6 +20,9 @@ export default class PageTerminRunning
             const inputKmEnde = document.querySelector('#inputKmEnde');
             const buttonTerminAbschliessen = document.querySelector('#buttonTerminAbschliessen');
 
+            // Hiding the ID for security
+            history.replaceState({}, null, "./index.html#terminrunning");
+
 			// Initialisierung
 			var kfzbild = {};
 

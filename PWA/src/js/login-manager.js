@@ -86,7 +86,7 @@ export default class LoginManager
             }
 			else
             {
-                appArgs.Navigate('#main');
+                appArgs.Navigate('#login');
             } 
 		}
 

@@ -347,7 +347,15 @@ namespace VRentalsClasses.Models
 			}
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where rolle = :rl order by vorname, vorname";
+			if(rolle == 2)
+			{
+                command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where rolle = :rl OR rolle = 4 order by vorname, vorname";
+            }
+			else
+			{
+                command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} where rolle = :rl order by vorname, vorname";
+            }
+			
 			command.Parameters.AddWithValue("rl", rolle);
 			NpgsqlDataReader reader = command.ExecuteReader();
 

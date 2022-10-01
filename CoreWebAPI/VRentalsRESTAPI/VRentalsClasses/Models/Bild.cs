@@ -199,17 +199,62 @@ namespace VRentalsClasses.Models
         public static List<Bild> GetBildAllSchadenByKfz(int kraftfahrzeug_id)
         {
 			List<Bild> bilderListe = new List<Bild>();
-			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+			List<int> schadenListe = new List<int>();
+            string Condition = $"";
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT schaden_id FROM {SCHEMA}.tbl_schaden WHERE kraftfahrzeug_id = :kid";
+            command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    schadenListe.Add(reader.GetInt32(0));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+			finally 
+			{
+				reader?.Close();
+			}
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
 			{
 				DBConnection.GetConnection().Open();
 			}
-			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE kraftfahrzeug_id = :kid AND schaden_id IS NOT NULL";
-			command.Parameters.AddWithValue("kid", kraftfahrzeug_id);
-			NpgsqlDataReader reader = command.ExecuteReader();
 
-			try
+			command.Parameters.Clear();
+			command.Connection = DBConnection.GetConnection();
+			command.CommandText = $"";
+
+            foreach (int schaden_id in schadenListe)
+			{
+                if (schaden_id.Equals(schadenListe.Last()))
+                {
+                    Condition += "schaden_id = " + schaden_id;
+                }
+                else
+                {
+                    Condition += "schaden_id = " + schaden_id + " OR ";
+                }
+                
+            }
+
+            command.CommandText += $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE {Condition};";
+            reader = command.ExecuteReader();
+
+            try
 			{
                 while (reader.Read())
                 {

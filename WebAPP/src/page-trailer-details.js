@@ -23,6 +23,9 @@ export default class PageTrailerDetails
 			const divDateSchaden = args.app.Main.querySelector('#divDateSchaden');
 			const imgBild = this.app.Main.querySelector('#imgBild');
 			
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#trailerdetails");
+
 			// Initialisierung
 			var anhaengerbild = {};
 

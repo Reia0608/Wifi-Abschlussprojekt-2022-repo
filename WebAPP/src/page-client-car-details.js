@@ -16,6 +16,9 @@ export default class PageClientCarDetails
 			const imgBild = this.app.Main.querySelector('#imgBild');
 			const divKraftfahrzeugJahre = this.app.Main.querySelector('#divKraftfahrzeugJahre');
 			
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#clientcardetails");
+
 			// Initialisierung
 			var kfzbild = {};
 

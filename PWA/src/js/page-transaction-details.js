@@ -40,6 +40,9 @@ export default class PageTransactionDetails
             const divAnhaenger = document.querySelector('#divAnhaenger');
             const buttonTerminStart = document.querySelector('#buttonTerminStart');
 
+            // Hiding the ID for security
+            history.replaceState({}, null, "./index.html#transactiondetails");
+
 			// Initialisierung
 			var kfzbild = {};
 

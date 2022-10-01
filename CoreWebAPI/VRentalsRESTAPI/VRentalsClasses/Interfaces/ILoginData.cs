@@ -6,6 +6,7 @@ namespace VRentalsClasses.Interfaces
 		Admin = 1,
 		User = 2,
 		Unbekannt = 3,
+		Office = 4,
 	}
 
 	public interface ILoginData

@@ -22,6 +22,9 @@ export default class PageAusgabenstellenDetails
 			this.checkboxAllKfz = this.app.Main.querySelector('#checkboxAllKfz');
 			this.checkboxAllAnhaenger = this.app.Main.querySelector('#checkboxAllAnhaenger');
 
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#issuingofficedetails");
+
 			if(args.asid)
 			{
 				var ausgabenstelle_id = parseInt(args.asid);

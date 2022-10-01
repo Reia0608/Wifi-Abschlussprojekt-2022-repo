@@ -12,6 +12,10 @@ export default class PageScanner
             const buttonGenerateQRCode = document.querySelector('#buttonGenerateQRCode');
             const divQrCodeTarget = document.querySelector('#divQrCodeTarget');
             const buttonStopScanning = document.querySelector('#buttonStopScanning');
+            const buttonQRCodeAbbrechen = document.querySelector('#buttonQRCodeAbbrechen');
+
+            // Hiding the ID for security
+            history.replaceState({}, null, "./index.html#scanner");
 
             // Create instance of the object. The only argument is the "id" of HTML element created above.
             const html5QrCode = new Html5Qrcode("reader");
@@ -42,7 +46,7 @@ export default class PageScanner
                         html5QrCode.stop().then(ignore => 
                         {
                             // QR Code scanning is stopped.
-                            //console.log("QR Code scanning stopped.");
+                            console.log("QR Code scanning stopped.");
                         }).catch(err => 
                         {
                             // Stop failed, handle it.
@@ -54,7 +58,7 @@ export default class PageScanner
                     errorMessage => 
                     {
                         // parse error, ideally ignore it. For example:
-                        console.log(`QR Code no longer in front of camera.`);
+                        //console.log(`QR Code no longer in front of camera.`);
                     })
                     .catch(err => 
                     {
@@ -75,7 +79,7 @@ export default class PageScanner
 				this.Helper = new Helper();
 
 				// logic
-                let url = 'http://localhost:5500/src/index.html#finishrent?bid=' + args.bewegung_id;
+                let url = 'http://localhost:5500/src/index.html#finishrent?bid=' + args.bid;
 				this.Helper.QRCodeGenerator(qrcode, document.getElementById('divQrCodeTarget'), url);
 			});
 
@@ -90,6 +94,20 @@ export default class PageScanner
                     // Stop failed, handle it.
                     console.log("Unable to stop scanning.");
                 });
+            });
+
+            buttonQRCodeAbbrechen.addEventListener('click', () =>
+            {
+                html5QrCode.stop().then(ignore => 
+                    {
+                        // QR Code scanning is stopped.
+                        console.log("QR Code scanning stopped.");
+                    }).catch(err => 
+                    {
+                        // Stop failed, handle it.
+                        console.log("Unable to stop scanning.");
+                    });
+                    location.hash = '#home';
             });
 		});
 	}

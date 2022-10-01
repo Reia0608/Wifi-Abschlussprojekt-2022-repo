@@ -14,6 +14,9 @@ export default class PageFinishRent
 			const buttonScanQRCode = document.querySelector('#buttonScanQRCode');
 			const divQrCodeTarget = document.querySelector('#divQrCodeTarget');
 
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#finishrent");
+
 			// Logic
 			if(args.bid)
 			{
@@ -27,7 +30,7 @@ export default class PageFinishRent
 				var opt = 
 				{
 					margin:       20,
-					filename:     'Rechnung.pdf',
+					filename:     'VRentals_Rechnung.pdf',
 					image:        { type: 'jpeg', quality: 0.98 },
 					html2canvas:  { scale: 2 },
 					jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -41,6 +44,34 @@ export default class PageFinishRent
 				this.app.ApiRentObjectSet(() =>
 				{
 					console.log("Data sent successfuly!");
+
+					if(document.cookie)
+					{
+						const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+
+						// Send the user back to their respective home page
+						if(confirm("Möchten Sie zur Anfangsseite zurück?"))
+						{
+							this.app.ApiBenutzerGet((response) =>
+							{
+								if(response.benutzer.rolle == 0)
+								{
+									location.hash = '#home';
+								}
+								else if(response.benutzer.rolle == 2)
+								{
+									location.hash = '#calendar';
+								}
+								else if(response.benutzer.rolle == 1)
+								{
+									location.hash = '#home';
+								}
+							}, (ex) =>
+							{
+								alert(ex);
+							}, benutzerMerkmal);
+						}
+					}
 				}, (ex) =>
 				{
 					alert(ex);

@@ -28,6 +28,10 @@ export default class PageTerminDone
 			const buttonSchadenAdd = document.querySelector('#buttonSchadenAdd');
 			const dialogSchaden = new bootstrap.Modal(modalSchadenBody);
 			const buttonModalSchadenSpeichern = args.app.Main.querySelector('#buttonModalSchadenSpeichern');
+			const buttonModalSchadenAbbrechen = args.app.Main.querySelector('#buttonModalSchadenAbbrechen');
+
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#termindone");
 
 			this.bildObject = {};
 
@@ -182,6 +186,7 @@ export default class PageTerminDone
 			//---------------------------
 			buttonModalSchadenSpeichern.addEventListener('click', (e) => 
 			{
+				this.stopVideo();
 				let schadensArtText = "Unbekannt";
 				let saveOk = true;
 				labelAnfallendeKosten.classList.remove('is-invalid', 'is-valid');
@@ -299,6 +304,11 @@ export default class PageTerminDone
                         }, args.bid);
                     } 
 				}
+			});
+
+			buttonModalSchadenAbbrechen.addEventListener('click', () =>
+			{
+				this.stopVideo();
 			});
 		}); // LoadHTML
 	} // constructor
@@ -425,5 +435,12 @@ export default class PageTerminDone
 		{
 			alert(ex);
 		}, kraftfahrzeug_id);
+	}
+
+	// Stops the Video player from recording
+	stopVideo()
+	{
+		videoPlayer.pause();
+		videoPlayer.currentTime = 0;
 	}
 }

@@ -24,6 +24,7 @@ export default class PageStaffList
 			const dropdownItemKunde = this.app.Main.querySelector('#dropdownItemKunde');
 			const dropdownItemUser = this.app.Main.querySelector('#dropdownItemUser');
 			const dropdownItemAdmin = this.app.Main.querySelector('#dropdownItemAdmin');
+			const dropdownItemOffice = this.app.Main.querySelector('#dropdownItemOffice');
 			const dropdownItemAM = this.app.Main.querySelector('#dropdownItemAM');
 			const dropdownItemA1 = this.app.Main.querySelector('#dropdownItemA1');
 			const dropdownItemA2 = this.app.Main.querySelector('#dropdownItemA1');
@@ -53,7 +54,7 @@ export default class PageStaffList
 
 			buttonPersonalNeu.addEventListener('click', ()=>
 			{
-				window.open('#staffdetails', '_self');
+				window.open('#clientdetails', '_self');
 			});
 
 			// ListGroupElement-click
@@ -171,6 +172,16 @@ export default class PageStaffList
 			dropdownItemAdmin.addEventListener('click', ()=>
 			{
 				this.filterBy("rolle", "Admin");
+				this.activeButton.classList.remove('active');
+				this.activeButton = buttonFilterRecht;
+				this.activeButton.classList.add('active');
+			});
+
+			// Button Filter-Recht-Office-click
+
+			dropdownItemOffice.addEventListener('click', ()=>
+			{
+				this.filterBy("rolle", "Office");
 				this.activeButton.classList.remove('active');
 				this.activeButton = buttonFilterRecht;
 				this.activeButton.classList.add('active');

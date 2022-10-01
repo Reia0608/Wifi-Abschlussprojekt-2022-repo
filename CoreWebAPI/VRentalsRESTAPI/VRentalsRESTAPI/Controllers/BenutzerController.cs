@@ -376,7 +376,6 @@ namespace VRentalsRESTAPI.Controllers
 			{
 				if (benutzer.Save() == 1) result = Ok();
 				else result = new StatusCodeResult(StatusCodes.Status204NoContent);
-
 			}
 			catch (Exception ex)
 			{

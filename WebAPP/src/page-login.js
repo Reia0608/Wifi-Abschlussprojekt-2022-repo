@@ -17,6 +17,9 @@ export default class PageLogin
 			const buttonRegister = this.app.Main.querySelector('#buttonRegister');
 			const buttonLogin = document.getElementById('buttonLogin');
 
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#login");
+
 			//this.app.Sidebar.Display = false;
 
 			// if(args.benutzer)

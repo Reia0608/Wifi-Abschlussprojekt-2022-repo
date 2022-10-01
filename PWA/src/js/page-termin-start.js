@@ -20,6 +20,9 @@ export default class PageTerminStart
             const inputKmStart = document.querySelector('#inputKmStart');
             const buttonTerminStart = document.querySelector('#buttonTerminStart');
 
+            // Hiding the ID for security
+            history.replaceState({}, null, "./index.html#terminstart");
+
 			// Initialisierung
 			var kfzbild = {};
 

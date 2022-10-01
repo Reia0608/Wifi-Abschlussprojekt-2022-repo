@@ -27,12 +27,15 @@ export default class PageProfile
 			const inputFuehrerscheinnummer = this.app.Main.querySelector('#inputFuehrerscheinnummer');
 			const collapseFuehrerschein = this.app.Main.querySelector('#collapseFuehrerschein');
 			const checkboxSwitchHatZugfahrzeug = document.querySelector('#checkboxSwitchHatZugfahrzeug');
+			const inputMietpreis = this.app.Main.querySelector('#inputMietpreis');
 			const inputMarke = document.querySelector('#inputMarke');
 			const inputModell = document.querySelector('#inputModell');
 			const inputKennzeichen = document.querySelector('#inputKennzeichen');
 			
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			 
+			// Hiding the ID for security
+			history.replaceState({}, null, "./index.html#pageprofile");
 
             // Initialisierung
 			var benutzerBild = {};
@@ -268,7 +271,15 @@ export default class PageProfile
 					let saveOk = true;
 					if(benutzerMerkmal)
 					{
-						this.benutzer.rolle = parseInt(new Helper().RolleConverter(inputRolle.value));
+						if(typeof parseInt(inputRolle.value) === 'number')
+						{
+							this.benutzer.rolle = parseInt(inputRolle.value);
+						}
+						else
+						{
+							this.benutzer.rolle = new Helper().RolleConverter(parseInt(inputRolle.value));
+						}
+						
 						this.benutzer.username = inputBenutzername.value;
 						this.benutzer.vorname = inputVorname.value;
 						this.benutzer.nachname = inputNachname.value;
@@ -277,6 +288,19 @@ export default class PageProfile
 							this.benutzer.geburtsdatum = inputDateGeburtsdatum.value;
 						}
 						this.benutzer.geburtsort = inputGeburtsort.value;
+
+						if(inputMietpreis.value === NaN)
+						{
+							this.benutzer.mietpreis = 0;
+						}
+						else if(inputMietpreis.value == "")
+						{
+							this.benutzer.mietpreis = 0;
+						}
+						else
+						{
+							this.benutzer.mietpreis = parseInt(inputMietpreis.value);
+						}
 						
 						if(checkboxSwitchIstFahrer.checked)
 						{
@@ -418,6 +442,7 @@ export default class PageProfile
                 inputNachname.value = this.benutzer.nachname;
                 inputDateGeburtsdatum.value = new Date(this.benutzer.geburtsdatum).toLocaleDateString('en-CA');
                 inputGeburtsort.value = this.benutzer.geburtsort;
+				inputMietpreis.value = this.benutzer.mietpreis;
 
 				if(this.benutzer.istfahrer)
 				{
