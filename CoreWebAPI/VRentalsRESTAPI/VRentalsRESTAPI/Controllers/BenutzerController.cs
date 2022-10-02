@@ -18,13 +18,16 @@ namespace VRentalsRESTAPI.Controllers
 		[HttpGet()]
 		public IEnumerable<Benutzer> SelectAll()
 		{
-            //Benutzer benutzer = Benutzer.Get(this);
-            //         if (benutzer?.Rolle == RollenTyp.Admin)
-            //         {
-            return Benutzer.GetList();
-            //} 
-            //return null;
-        }
+			Benutzer benutzer = Benutzer.Get(this);
+			if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Office)
+			{
+				return Benutzer.GetList();
+			}
+			else
+			{
+                return null;
+            }
+		}
 
 		[HttpGet("search/{suchbegriff}")]
 		public List<Benutzer> SearchBenutzer(string suchbegriff)
@@ -136,7 +139,7 @@ namespace VRentalsRESTAPI.Controllers
 		public IEnumerable<Benutzer> GetUsersByRole(int role)
 		{
             Benutzer benutzer = Benutzer.Get(this);
-            if (benutzer?.Rolle == RollenTyp.Admin)
+            if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Office)
             {
                 return Benutzer.GetList(role);
 			} 
@@ -151,7 +154,7 @@ namespace VRentalsRESTAPI.Controllers
 		public IEnumerable<Personal> GetAllStaff()
 		{
 			Benutzer benutzer = Benutzer.Get(this);
-			if (benutzer?.Rolle == RollenTyp.Admin)
+			if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Office )	
 			{
 				return Personal.GetStaffList();
 			}
@@ -166,7 +169,7 @@ namespace VRentalsRESTAPI.Controllers
 		public IEnumerable<Personal> GetStaffFilteredBy(string by, string value)
 		{
 			Benutzer benutzer = Benutzer.Get(this);
-			if (benutzer?.Rolle == RollenTyp.Admin)
+			if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Office)
 			{
 				return Personal.FilterBy(by, value);
 			}
@@ -181,7 +184,7 @@ namespace VRentalsRESTAPI.Controllers
 		public List<string> GetFSKByUserId(int id)
 		{
 			Benutzer benutzer = Benutzer.Get(this);
-			if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Kunde || benutzer?.Rolle == RollenTyp.User)
+			if (benutzer?.Rolle == RollenTyp.Admin || benutzer?.Rolle == RollenTyp.Kunde || benutzer?.Rolle == RollenTyp.User || benutzer?.Rolle == RollenTyp.Office)
 			{
 				return BenutzerFuehrerschein.GetStringList(id);
 			}
@@ -197,7 +200,7 @@ namespace VRentalsRESTAPI.Controllers
 		{
 			BenutzerFuehrerschein benutzerFuehrerschein = BenutzerFuehrerschein.Get(id);
 			Benutzer benutzer = Benutzer.Get(this);
-			if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde && benutzer?.UserId == benutzerFuehrerschein.Users_Id))
+			if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde && benutzer?.UserId == benutzerFuehrerschein.Users_Id) || benutzer?.Rolle == RollenTyp.Office)
 			{
 				return BenutzerFuehrerschein.Get(id);
 			}
@@ -212,7 +215,7 @@ namespace VRentalsRESTAPI.Controllers
         public List<Benutzer> GetAvailableDrivers()
         {
             Benutzer benutzer = Benutzer.Get(this);
-            if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde))
+            if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde) || benutzer?.Rolle == RollenTyp.Office)
             {
                 return Benutzer.GetAvailableDrivers();
             }
@@ -227,7 +230,7 @@ namespace VRentalsRESTAPI.Controllers
         public List<Fuehrerscheincouplet> GetFSKForAllDrivers()
         {
             Benutzer benutzer = Benutzer.Get(this);
-            if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde))
+            if (benutzer?.Rolle == RollenTyp.Admin || (benutzer?.Rolle == RollenTyp.Kunde) || benutzer?.Rolle == RollenTyp.Office )
             {
                 return BenutzerFuehrerschein.GetAllDriversCoupletList();
             }
@@ -236,7 +239,15 @@ namespace VRentalsRESTAPI.Controllers
                 return null;
             }
         }
-        
+
+        // GET: api/<BenutzerController>/specific/12_5_4_
+        [HttpGet("specific/{benutzerlist}")]
+        public IEnumerable<Benutzer> GetAllBenutzerBySpecificList(string benutzerlist)
+        {
+			// WIP: add security
+            return Benutzer.GetAllBenutzerBySpecificList(benutzerlist);
+        }
+
 
         [HttpDelete("logoff")]
 		public IActionResult LogoffPerson()

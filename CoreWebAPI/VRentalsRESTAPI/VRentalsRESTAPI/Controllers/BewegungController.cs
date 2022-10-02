@@ -16,6 +16,10 @@ namespace VRentalsRESTAPI.Controllers
     [ApiController]
     public class BewegungController : Controller
     {
+        // GET: api/<BewegungController>
+        [HttpGet]
+        public List<Bewegung> SelectAll() => Bewegung.Get();
+
         // GET: api/<BewegungController>/5
         [HttpGet("{id}")]
         public Bewegung Get(int id) => Bewegung.Get(id);
@@ -33,6 +37,18 @@ namespace VRentalsRESTAPI.Controllers
         {
             return Bewegung.GetAllByFahrerId(id);
         }
+
+        // GET: api/<BewegungController>/today
+        [HttpGet("today")]
+        public IEnumerable<Bewegung> GetToday() => Bewegung.GetToday();
+
+        // GET: api/<BewegungController>/today
+        [HttpGet("finished")]
+        public IEnumerable<Bewegung> GetFinished() => Bewegung.GetFinished();
+
+        // GET: api/<BewegungController>/today
+        [HttpGet("open")]
+        public IEnumerable<Bewegung> GetOpen() => Bewegung.GetOpen();
 
         // POST: api/<BewegungController>
         [HttpPost]

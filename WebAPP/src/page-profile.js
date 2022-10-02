@@ -271,13 +271,13 @@ export default class PageProfile
 					let saveOk = true;
 					if(benutzerMerkmal)
 					{
-						if(typeof parseInt(inputRolle.value) === 'number')
+						if(typeof inputRolle.value === 'number')
 						{
 							this.benutzer.rolle = parseInt(inputRolle.value);
 						}
 						else
 						{
-							this.benutzer.rolle = new Helper().RolleConverter(parseInt(inputRolle.value));
+							this.benutzer.rolle = new Helper().RolleConverter(inputRolle.value);
 						}
 						
 						this.benutzer.username = inputBenutzername.value;

@@ -195,7 +195,39 @@ namespace VRentalsClasses.Models
 
             return bilderListe;
         }
-        
+
+        public static List<Bild> GetAllAnhaengerBildList()
+        {
+            List<Bild> bilderListe = new List<Bild>();
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE anhaenger_id IS NOT NULL"; // WIP: order by?
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
+            return bilderListe;
+        }
+
         public static List<Bild> GetBildAllSchadenByKfz(int kraftfahrzeug_id)
         {
 			List<Bild> bilderListe = new List<Bild>();
@@ -319,6 +351,52 @@ namespace VRentalsClasses.Models
 
 			return bilderListe;
 		}
+
+        public static List<Bild> GetAllBildBySpecificAnhaengerList(string anhaengerString)
+        {
+            string Condition = $"";
+            anhaengerString = anhaengerString.Remove(anhaengerString.Length - 1, 1);
+            string[] anhaengerList = anhaengerString.Split("_");
+            List<Bild> bilderListe = new List<Bild>();
+            foreach (string anhaenger_id in anhaengerList)
+            {
+                if (anhaenger_id.Equals(anhaengerList.Last()))
+                {
+                    Condition += "anhaenger_id = " + anhaenger_id;
+                }
+                else
+                {
+                    Condition += "anhaenger_id = " + anhaenger_id + " OR ";
+                }
+            }
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE {Condition}"; // WIP: order by?
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    bilderListe.Add(new Bild(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
+            return bilderListe;
+        }
 
         // Returns a list of pictures from a list of driver ID's in the form of a string. Used in page-rent-step-three.js 
         public static List<Bild> GetAllBildByAvailableFahrerList(string fahrerString)

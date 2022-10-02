@@ -1,0 +1,253 @@
+<div class="container">
+    <div class="row mt-3">
+		<div class="col-12 border-bottom">
+			<h2 class="">Auftragsdaten</h2>
+		</div>
+	</div>
+	<div class="row mt-2 py-3 border-bottom">
+		<!-- ... -->
+	</div>
+	<div class="row mt-3">
+		<div class="col-lg-6 mt-3">
+            <div class="row mt-3">
+				<div class="col-4 text-end">Beschreibung</div>
+				<div class="col-8">
+					<input type="text" class="form-control form-control-sm" id="inputBeschreibung"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Abholort</div>
+                <div class="col-8" id="divAbholortBody">
+                    <select class="form-select col-6" aria-label="Default select example" id="selectAbholort">
+                        <option selected>Bitte wählen</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+			</div>
+            <div class="row mt-3" id="divRowRueckgabeort">
+                <div class="col-4 text-end">Rückgabeort</div>
+                <div class="col-8" id="divRueckgabeortBody">
+                    <select class="form-select" aria-label="Default select example" id="selectRueckgabeort">
+                        <option selected>Bitte wählen</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4 text-end">Abholdatum</div>
+                <div class="col-8"><input type="date" class="form-control form-control-sm" id="inputDateAbholdatum" /></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4 text-end">Abholzeit</div>
+                <div class="col-8"><input type="time" class="form-control form-control-sm" id="inputTimeAbholzeit" /></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4 text-end">Rückgabedatum</div>
+                <div class="col-8"><input type="date" class="form-control form-control-sm" id="inputDateRueckgabedatum" /></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4 text-end">Rückgabezeit</div>
+                <div class="col-8"><input type="time" class="form-control form-control-sm" id="inputTimeRueckgabezeit" /></div>
+            </div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Gesamtpreis</div>
+				<div class="col-8">
+					<div class="input-group input-group-sm">
+						<div class="form-control-sm" id="divGesamtpreis"></div>
+						<span class="input-group-text">€</span>
+                        <div class="col-2 text-end mr-2">Kilometer</div>
+                        <input type="text" class="form-control form-control-sm" id="inputKilometer" />
+                        <span class="input-group-text">Km</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> <!-- /.row -->
+    <div class="row mt-3">
+		<div class="col-12 border-bottom">
+			<h2 class="">KundIn Daten</h2>
+		</div>
+	</div>
+	<div class="row mt-2 py-3 border-bottom">
+		<!-- ... -->
+	</div>
+	<div class="row mt-3">
+		<div class="col-lg-6 mt-3">
+			<img src="./../media/LeerBild.jpg" type="file" alt="Bild konnte nicht geladen werden!" width="500px" id="imgKunde">
+		</div>
+		<div class="col-lg-6 mt-3">
+			<div class="row">
+				<div class="col-4 text-end">Vorname</div>
+				<div class="col-6">
+					<input type="text" class="col-sm-9" id="inputVorname">
+				</div>
+			</div>
+            <div class="row mt-3">
+                <div class="col-4 text-end">Nachname</div>
+                <div class="col-6">
+                    <input type="text" class="col-sm-9" id="inputNachname">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4 text-end">Details</div>
+                <div class="col-6">
+                    <button class="btn btn-primary" id="buttonClientDetails">Zu den KundInnendetails</button>
+                </div>
+            </div>
+		</div>
+	</div> <!-- /.row -->
+	<div class="row mt-3">
+		<div class="col-12 border-bottom">
+			<h2 class="">KfZ Daten</h2>
+		</div>
+	</div>
+	<div class="row mt-2 py-3 border-bottom">
+		<!-- ... -->
+	</div>
+	<div class="row mt-3" id="divKraftfahrzeug">
+		<div class="col-lg-6">
+			<img src="./../media/LeerBild.jpg" type="file" alt="Bild konnte nicht geladen werden!" width="500px" id="imgKraftfahrzeug">
+		</div>
+		<div class="col-lg-6 mt-3">
+			<div class="row ">
+				<div class="col-4 text-end">Marke</div>
+				<div class="col-6">
+					<div class="col-sm-9 text-secondary" id="divMarkeKraftfahrzeug"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Modell</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divModellKraftfahrzeug"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Kennzeichen</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divKennzeichenKraftfahrzeug"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Mietpreis</div>
+				<div class="col-8">
+					<div class="input-group input-group-sm">
+						<div class="form-control-sm" id="divMietpreisKraftfahrzeug"></div>
+						<span class="input-group-text">€</span>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Klasse</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divKlasseKraftfahrzeug"></div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-4 text-end">Kategorie</div>
+				<div class="col-8">
+					<div class="col-sm-9 text-secondary" id="divKategorieKraftfahrzeug"></div>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">Details</div>
+				<div class="col-8">
+					<button class="btn btn-primary" id="buttonKraftfahrzeugDetails">Zu den KFZ Details</button>
+				</div>
+			</div>
+            <div class="row mt-3">
+				<div class="col-4 text-end">KFZ ändern</div>
+				<div class="col-8">
+					<button class="btn btn-primary" id="buttonKraftfahrzeugAendern">Zu den KFZ</button>
+				</div>
+			</div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr id="trSchadenHeader">
+                                <th scope="col">Schadensliste</th>
+                            </tr>
+                        </thead>
+                        <thead class="thead-dark">
+                        <tr id="trSchadenHeader">
+                            <th scope="col">#</th>
+                            <th scope="col">Datum</th>
+                            <th scope="col">Art des Schadens</th>
+                            <th scope="col">Beschreibung</th>
+                        </tr>
+                        </thead>
+                        <tbody class="clickable" id="tableSchadenList">
+                            <!-- inhalt der Tabelle-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+		</div>
+        <div class="row mt-3">
+            <div class="col-12 border-bottom">
+                <h2 class="">Anhänger Daten</h2>
+            </div>
+        </div>
+        <div class="row mt-2 py-3 border-bottom">
+            <!-- ... -->
+        </div>
+        <div class="row mt-3" id="divAnhaenger">
+            <div class="col-lg-6">
+                <img src="./../media/LeerBild.jpg" type="file" alt="Bild konnte nicht geladen werden!" width="500px" id="imgAnhaenger">
+            </div>
+            <div class="col-lg-6 mt-3">
+                <div class="row ">
+                    <div class="col-4 text-end">Marke</div>
+                    <div class="col-6">
+                        <div class="col-sm-9 text-secondary" id="divMarkeAnhaenger"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4 text-end">Modell</div>
+                    <div class="col-8">
+                        <div class="col-sm-9 text-secondary" id="divModellAnhaenger"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4 text-end">Kennzeichen</div>
+                    <div class="col-8">
+                        <div class="col-sm-9 text-secondary" id="divKennzeichenAnhaenger"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4 text-end">Mietpreis</div>
+                    <div class="col-8">
+                        <div class="input-group input-group-sm">
+                            <div class="form-control-sm" id="divMietpreisAnhaenger"></div>
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4 text-end">Kategorie</div>
+                    <div class="col-8">
+                        <div class="col-sm-9 text-secondary" id="divKategorieAnhaenger"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4 text-end">Anhänger ändern</div>
+                    <div class="col-8">
+                        <button class="btn btn-primary" id="buttonAnhaengerAendern">Zu den Anhängern</button>
+                    </div>
+                </div>
+            </div>
+	</div> <!-- /.row -->
+	<div class="row mt-5">
+		<div class="col-12">
+            
+		</div>
+	</div>
+	<nav class="navbar fixed-bottom navbar-light bg-dark bottom-nav">
+		<button type="button" class="btn btn-outline-light" bottom="5rem" id="buttonBewegungSpeichern"><span class="iconify me-2" data-icon="mdi-content-save"></span>Speichern</button>
+		<button type="button" class="btn btn-outline-light" bottom="5rem" id="buttonBewegungAbbrechen"><span class="iconify me-2" data-icon="ic:outline-cancel"></span>Abbrechen</button>
+	</nav>
+</div>

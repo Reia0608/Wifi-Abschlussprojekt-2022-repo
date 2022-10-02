@@ -15,8 +15,9 @@ export default class Sidebar
 			this.sideNavButtonHome = this.target.querySelector('#sideNavButtonHome');
 			this.sideNavButtonSearch = this.target.querySelector('#sideNavButtonSearch');
 			this.sideNavButtonProfile = this.target.querySelector('#sideNavButtonProfile');
-			this.sideNavButtonKfzList = this.target.querySelector('#sideNavButtonKfzList');
+			this.sideNavButtonVerwaltungList = this.target.querySelector('#sideNavButtonVerwaltungList');
 			this.sideNavButtonCarList = this.target.querySelector('#sideNavButtonCarList');
+			this.sideNavButtonBewegungList = this.target.querySelector('#sideNavButtonBewegungList');
 
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
@@ -36,11 +37,18 @@ export default class Sidebar
 
 			if(args.rolle == 1)
 			{
-				this.sideNavButtonKfzList.classList.remove('d-none');
+				this.sideNavButtonVerwaltungList.classList.remove('d-none');
+				this.sideNavButtonBewegungList.classList.remove('d-none');
+			}
+			else if(args.rolle == 4)
+			{
+				this.sideNavButtonVerwaltungList.classList.add('d-none');
+				this.sideNavButtonBewegungList.classList.remove('d-none');
 			}
 			else
 			{
-				this.sideNavButtonKfzList.classList.add('d-none');
+				this.sideNavButtonVerwaltungList.classList.add('d-none');
+				this.sideNavButtonBewegungList.classList.add('d-none');
 			}
 
 			this.sideNavButtonHome.addEventListener('click', (e)=>
@@ -77,14 +85,14 @@ export default class Sidebar
 			});
 
 			
-			this.sideNavButtonKfzList.addEventListener('click', (e)=>
+			this.sideNavButtonVerwaltungList.addEventListener('click', (e)=>
 			{
 				location.hash = '#carlist';
-				if(activeSideNavButton != this.sideNavButtonKfzList)
+				if(activeSideNavButton != this.sideNavButtonVerwaltungList)
 				{
-					this.sideNavButtonKfzList.classList.add("active");
+					this.sideNavButtonVerwaltungList.classList.add("active");
 					activeSideNavButton.classList.remove("active");
-					activeSideNavButton = this.sideNavButtonKfzList;
+					activeSideNavButton = this.sideNavButtonVerwaltungList;
 				}
 			});
 
@@ -96,6 +104,17 @@ export default class Sidebar
 					this.sideNavButtonCarList.classList.add("active");
 					activeSideNavButton.classList.remove("active");
 					activeSideNavButton = this.sideNavButtonCarList;
+				}
+			});
+
+			sideNavButtonBewegungList.addEventListener('click', (e)=>
+			{
+				location.hash = '#transactions';
+				if(activeSideNavButton != this.sideNavButtonBewegungList)
+				{
+					this.sideNavButtonBewegungList.classList.add("active");
+					activeSideNavButton.classList.remove("active");
+					activeSideNavButton = this.sideNavButtonBewegungList;
 				}
 			});
 

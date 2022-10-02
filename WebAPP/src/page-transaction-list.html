@@ -1,0 +1,35 @@
+<div class="container">
+    <button type="button" class="btn btn-outline-dark btn-sm" color="#0d6efd" id="buttonBewegungNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neue Bewegung</button>
+    <button type="button" class="btn btn-outline-dark btn-sm" color="#0d6efd" id="buttonBewegungLoeschen"><span class="iconify me-2" data-icon="cil:trash"></span>Gewählte Bewegungen löschen</button>
+    <ul class="nav nav-tabs mt-5">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#transactions">Alle Bewegungen</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#transactionstoday">Heutige Bewegungen</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#transactionsfinished">Erledigte Bewegungen</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#transactionsnew">Offene Bewegungen</a>
+        </li>
+    </ul>
+	<table class="table table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Nachname</th>
+            <th scope="col">Fahrzeug</th>
+            <th scope="col">Anhänger</th>
+            <th scope="col">Fahrer</th>
+            <th scope="col">Datum</th>
+            <th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+          </tr>
+        </thead>
+        <tbody class="clickable" id="tbodyTransactionList">
+         
+        </tbody>
+      </table>
+</div>

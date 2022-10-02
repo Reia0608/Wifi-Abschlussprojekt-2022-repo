@@ -488,6 +488,33 @@ GRANT USAGE ON rentals.tbl_fsk_seq TO vrentalsuser;
 GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_fsk TO vrentalsuser;
 
 -- #########################################################################
+-- ######################### tbl_wartungstermin ############################
+-- #########################################################################
+
+CREATE TABLE rentals.tbl_wartungstermin
+(
+    wartungstermin_id numeric NOT NULL,
+    datum date,
+    uhrzeit character varying,
+    kraftfahrzeug_id numeric,
+    kosten numeric,
+    erledigt boolean DEFAULT false,
+	werkstatt character varying,
+	bezahlt boolean DEFAULT false
+);
+
+ALTER TABLE IF EXISTS rentals.tbl_wartungstermin
+    OWNER to postgres;
+
+ALTER TABLE rentals.tbl_wartungstermin
+	ADD CONSTRAINT wartungstermin_pk PRIMARY KEY (wartungstermin_id);
+	
+CREATE SEQUENCE rentals.tbl_wartungstermin_seq START WITH 1 INCREMENT BY 1;
+GRANT USAGE ON rentals.tbl_wartungstermin_seq TO vrentalsuser;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON rentals.tbl_wartungstermin TO vrentalsuser;
+	
+-- #########################################################################
 -- ############################# FOREIGN KEYS ##############################
 -- #########################################################################
 
@@ -589,6 +616,9 @@ ALTER TABLE rentals.tbl_bewegung
 
 ALTER TABLE rentals.tbl_bewegung
 	ADD CONSTRAINT bewegung_anhaenger_fk FOREIGN KEY (anhaenger_id) REFERENCES rentals.tbl_anhaenger (anhaenger_id);
+	
+-- ALTER TABLE rentals.tbl_wartungstermin
+--	ADD CONSTRAINT wartungstermin_kraftfahrzeug_fk FOREIGN KEY (kraftfahrzeug_id) REFERENCES rentals.tbl_kraftfahrzeug (kraftfahrzeug_id);
 	
 -- ##################################################################
 -- ############################# VIEWS ##############################

@@ -160,6 +160,81 @@ namespace VRentalsClasses.Models
             return anhaengerListe;
         }
 
+        public static List<Anhaenger> FilterBy(string by, string value)
+        {
+            List<Anhaenger> anhaengerList = new List<Anhaenger>();
+            Anhaenger? anhaenger = new Anhaenger();
+            string Condition = "";
+
+            if (by == "alter")
+            {
+                int currentYear = DateTime.Now.Year;
+                bool success = false;
+                int Baujahr = 0;
+                success = Int32.TryParse(value, out Baujahr);
+                Baujahr = currentYear - Baujahr;
+                Condition = $"WHERE baujahr = {Baujahr}";
+            }
+            else if (by == "klasse")
+            {
+                Condition = $"WHERE {by} = '{value}'";
+            }
+            else if (by == "kategorie")
+            {
+                if (value == "SUV_Gelaendewagen")
+                {
+                    Condition = $"WHERE {by} = 'SUV/ Geländewagen'";
+                }
+                else if (value == "Van_Kleinbus")
+                {
+                    Condition = $"WHERE {by} = 'Van/ Kleinbus'";
+                }
+                else
+                {
+                    Condition = $"WHERE {by} = '{value}'";
+                }
+            }
+            else if (by == "ausgabenstelle")
+            {
+                Condition = $"WHERE ausgabenstelle_id = {value}";
+            }
+            else if (by == "=" || by == "<" || by == ">" || by == "<=" || by == ">=")
+            {
+                Condition = $"WHERE mietpreis {by} {value}";
+            }
+            else
+            {
+                Condition = $"WHERE {by} = '{value}'";
+            }
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} {Condition} order by marke";
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    anhaengerList.Add(anhaenger = new Anhaenger(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return anhaengerList;
+        }
+
         public static int AddRemoveFromAusgabenstelle(List<int>? listToAdd, List<int>? listToRemove, int ausgabenstelle_id)
 		{
 			int result = 0;

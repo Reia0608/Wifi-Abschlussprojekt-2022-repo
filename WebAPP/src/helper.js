@@ -86,6 +86,10 @@ export default class Helper
 				case 'Admin': return 1;
 				case 'User': return 2;
 				case 'Office': return 4;
+				case '0': return 0;
+				case '1': return 1;
+				case '2': return 2;
+				case '4': return 4;
 				default: return 3;
 			}
 		}
@@ -139,4 +143,179 @@ export default class Helper
 			console.log("Conversion failed: status is not a string or number!");
 		}
 	}
+
+	StringToArrayConverter(originalString)
+	{
+		// Remove the last character
+		let slicedString = originalString.slice(0, originalString.length - 1);
+		// Split the string parts and put them into an array  
+		let resultArray = slicedString.split("_");
+		// Remove duplicates from array
+		resultArray = resultArray.filter((item, index) => resultArray.indexOf(item) === index);
+		return resultArray;
+	}
+
+	// Preisberechnung per Tag
+    PriceCalculator(firstDay, lastDay, kfzPrice, paketPrice, anhaengerPrice, fahrerPrice)
+    {
+        let totalDays = this.TotalDaysCalculator(firstDay, lastDay);
+        let result = 0;
+
+        this.rentObject = JSON.parse(localStorage.getItem('rentObject'));
+        this.rentObject.tage_gemietet = totalDays;
+        localStorage.setItem('rentObject', JSON.stringify(this.rentObject));
+
+        if(typeof paketPrice === "undefined" && typeof anhaengerPrice === "undefined" && typeof fahrerPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice);
+        }
+        else if(typeof fahrerPrice === "undefined" && typeof anhaengerPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice) + paketPrice;
+        }
+        else if(typeof fahrerPrice === "undefined" && typeof paketPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice) + (totalDays * anhaengerPrice);
+        }
+        else if(typeof fahrerPrice === "undefined")
+        {
+            result = (totalDays * kfzPrice) + (totalDays * anhaengerPrice) + paketPrice;
+        }
+        else
+        {
+            result = (totalDays * kfzPrice) + (totalDays * anhaengerPrice) + (totalDays * fahrerPrice) + paketPrice;
+        }
+        
+        return result;
+    }
+
+    // Preisberechnung per Kilometer
+    KmPriceCalculator(kfzPrice, paketPrice, anhaengerPrice, fahrerPrice, schadenPrice, kmStart, kmEnde)
+    {
+        // Initialisierung
+        let result = 0;
+        let kmTotal = kmEnde - kmStart;
+
+        if(schadenPrice == 0)
+        {
+            if(typeof paketPrice === "undefined" && typeof anhaengerPrice === "undefined" && typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice);
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof anhaengerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + paketPrice;
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof paketPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice);
+            }
+            else if(typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + paketPrice;
+            }
+            else
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + (kmTotal * fahrerPrice) + paketPrice;
+            }
+        }
+        else
+        {    
+            if(typeof paketPrice === "undefined" && typeof anhaengerPrice === "undefined" && typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + schadenPrice;
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof anhaengerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + paketPrice + schadenPrice;
+            }
+            else if(typeof fahrerPrice === "undefined" && typeof paketPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + schadenPrice;
+            }
+            else if(typeof fahrerPrice === "undefined")
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + paketPrice + schadenPrice;
+            }
+            else
+            {
+                result = (kmTotal * kfzPrice) + (kmTotal * anhaengerPrice) + (kmTotal * fahrerPrice) + paketPrice + schadenPrice;
+            }
+        }
+        
+        return result;
+    }
+
+    // Berechnet für wieviele Tage die Mietung stattfindet, indem es den letzten Tag vom ersten Tag abzieht, und dann von millisekunden in Tage umrechnet.
+    TotalDaysCalculator(firstDay, lastDay)
+    {
+        let difference = this.parseDate(lastDay).getTime() - this.parseDate(firstDay).getTime();
+        let totalDays = Math.ceil(difference / (1000 * 3600 * 24));
+        return totalDays;
+    }
+
+    // parse a date in yyyy-mm-dd format
+    parseDate(input) 
+    {
+        var parts = input.match(/(\d+)/g);
+        // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+        return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
+    }
+
+    CreateRentObject()
+    {
+        if(this.rentObject == null)
+        {
+            this.rentObject = // variable that constitutes the current order of the client. It gets completed throughout the rent steps, and finally gets sent to the backend part
+            {
+                bewegung_id: null,
+                users_id: null,
+                beschreibung: null,
+                grund: "Initalisierung...",
+                abholort: null,
+                rueckgabeort: null,
+                abholdatum: null,
+                abholzeit: null,
+                rueckgabedatum: null,
+                rueckgabezeit: null,
+                gleicherRueckgabeort: false,
+                schutzpaket: null,
+                braucht_fahrer: false,
+                fahrer_id: null,
+                preis_gesamt: 0,
+                preis_kfz: 0,
+                preis_anhaenger: 0,
+                preis_fahrer: 0,
+                preis_schutzpaket: 0,
+                allow_reload: true, // variable to check if the aAendernButton on page-rent-step-three.js is active or not, so the data can be loaded anew
+                transaction_finished: false,
+                bewegung_finished: false,
+                kraftfahrzeug_id: null,
+                anhaenger_id: null,
+                times_rented: 0,
+                kfz_bezeichnung: null,
+                anhaenger_bezeichnung: null,
+                tage_gemietet: 0,
+                start_km_stand: 0,
+                ende_km_stand: 0,
+                zeit_start: null,
+                zeit_ende: null,
+            };
+            return this.rentObject;
+        }
+    }
+
+    // QR Code generator
+    QRCodeGenerator(qrcode, element, value)
+    {
+        if(qrcode === undefined)
+        {
+            qrcode = new QRCode(element, value);
+        }
+        else
+        {
+            qrcode.clear();
+            qrcode.makeCode(value);
+        }
+    }
 }

@@ -404,6 +404,38 @@ https://blog.minhazav.dev/HTML5-QR-Code-scanning-launched-v1.0.1/
 I downloaded html5-qrcode.min.js manually from the website, put it into the node_modules folder, and added
 it via <script src=""></script> on the index.html page.
 
+=====================================================
+========== Hide parameters passed in URL ============
+=====================================================
+
+https://stackoverflow.com/questions/13650408/hide-variables-passed-in-url
+
+===========================================================
+========== Remove duplicates in an array in C# ============
+===========================================================
+
+https://stackoverflow.com/questions/9673/how-do-i-remove-duplicates-from-a-c-sharp-array
+
+===================================
+========== C# DateOnly ============
+===================================
+
+https://stackoverflow.com/questions/69798302/datetime-now-equivalent-for-timeonly-and-dateonly
+https://stackoverflow.com/questions/798121/date-vs-datetime
+https://learn.microsoft.com/en-us/dotnet/api/system.dateonly.tostring?view=net-6.0
+
+==================================================
+========== PostgreSQL time comparison ============
+==================================================
+
+https://popsql.com/learn-sql/postgresql/how-to-query-date-and-time-in-postgresql
+
+===================================================================
+========== Remove duplicates in an array in Javascript ============
+===================================================================
+
+https://www.geeksforgeeks.org/how-to-remove-duplicate-elements-from-javascript-array/#:~:text=Use%20the%20filter()%20method,by%20simply%20adjusting%20our%20condition.
+
 =================================================
 ====================== TODO =====================
 =================================================

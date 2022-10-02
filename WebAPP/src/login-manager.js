@@ -65,13 +65,27 @@ export default class LoginManager
                         case 2:
                             bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + new Helper().RolleConverter(response.benutzer.rolle) + ')';
                             break;
+						case 4:
+							bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname + ' (' + new Helper().RolleConverter(response.benutzer.rolle) + ')';
+							break;
                         default:
                             bannerArgs.userName = response.benutzer.nachname + ' ' + response.benutzer.vorname;
                             break;
                     }
                     appArgs.Sidebar = new Sidebar(sidebarArgs);
                     appArgs.Banner = new Banner(bannerArgs)
-                    if (!location.hash) location.hash = '#main';
+					// if(response.benutzer.rolle == 4)
+					// {
+					// 	location.hash = '#transactionstoday';
+					// }
+					// else
+					// {
+					// 	if (!location.hash) 
+					// 	{
+					// 		location.hash = '#main';
+					// 	}
+					// }
+
                     appArgs.Navigate(location.hash);
                     console.log("angemeldet!");
 

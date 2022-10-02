@@ -49,6 +49,13 @@ namespace VRentalsRESTAPI.Controllers
             return null;
         }
 
+        // GET: api/<BenutzerController>/filter/klasse/unbekannt
+        [HttpGet("filter/{by}/{value}")]
+        public IEnumerable<Anhaenger> FilteredBy(string by, string value)
+        {
+            return Anhaenger.FilterBy(by, value);
+        }
+
         // GET: api/<AnhaengerController>/karten
         [HttpGet("karten")]
         public IEnumerable<Anhaengerkarte> SelectAllCards()

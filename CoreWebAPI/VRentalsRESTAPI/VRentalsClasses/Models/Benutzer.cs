@@ -378,7 +378,57 @@ namespace VRentalsClasses.Models
 			return benutzerList;
 		}
 
-		public static bool CheckBenutzer(string toCheck)
+        // Gets a specific list of benutzer by using a string made out of user ID's seperated by a "_".
+		// Used in the WebAPP, file page-transaction-list.js
+        public static List<Benutzer> GetAllBenutzerBySpecificList(string benutzerString)
+        {
+            List<Benutzer> benutzerListe = new List<Benutzer>();
+            string Condition = $"";
+            benutzerString = benutzerString.Remove(benutzerString.Length - 1, 1);
+            string[] benutzerList = benutzerString.Split("_");
+			benutzerList = Benutzer.RemoveDuplicates(benutzerList);
+            
+            foreach (string benutzer_id in benutzerList)
+            {
+                if (benutzer_id.Equals(benutzerList.Last()))
+                {
+                    Condition += "users_id = " + benutzer_id;
+                }
+                else
+                {
+                    Condition += "users_id = " + benutzer_id + " OR ";
+                }
+            }
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS} FROM {SCHEMA}.{TABLE} WHERE {Condition}"; // WIP: order by?
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    benutzerListe.Add(new Benutzer(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
+            return benutzerListe;
+        }
+
+        public static bool CheckBenutzer(string toCheck)
         {
 			bool result = false;
 			decimal? test = -1;
@@ -488,11 +538,20 @@ namespace VRentalsClasses.Models
 
 			return result;
         }
-		#endregion
 
-		//************************************************************************
-		#region constructors
-		public Benutzer()
+		// Removes duplicates from an array of strings
+        public static string[] RemoveDuplicates(string[] stringList)
+        {
+            HashSet<string> set = new HashSet<string>(stringList);
+            string[] result = new string[set.Count];
+            set.CopyTo(result);
+            return result;
+        }
+        #endregion
+
+        //************************************************************************
+        #region constructors
+        public Benutzer()
 		{
             Rolle = RollenTyp.Unbekannt;
         }
@@ -967,7 +1026,7 @@ namespace VRentalsClasses.Models
 			return result;
 		}
 
-		public override string ToString()
+        public override string ToString()
 		{
 			return $"{this.Vorname} {this.Nachname} ({this.UserName})";
 		}

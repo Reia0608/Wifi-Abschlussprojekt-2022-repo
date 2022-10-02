@@ -21,7 +21,14 @@ import PageRentStepTwo from './page-rent-step-two.js';
 import PageRentStepThree from './page-rent-step-three.js';
 import PageRentStepFour from './page-rent-step-four.js';
 import PageRentStepFive from './page-rent-step-five.js';
-
+import PageTransactionList from './page-transaction-list.js';
+import PageTransactionToday from './page-transactions-today.js';
+import PageTransactionDetails from './page-transaction-details.js';
+import PageCarsOffice from './page-cars-office.js';
+import PageTrailerClientList from './page-trailer-client-list.js';
+import PageTrailerOffice from './page-trailer-office.js';
+import PageTransactionFinished from './page-transactions-finished.js';
+import PageTransactionOpen from './page-transactions-open.js';
 
 export default class Application 
 {
@@ -162,6 +169,30 @@ export default class Application
 				break;
 			case '#rentstepfive':
 				new PageRentStepFive(args);
+				break;
+			case '#transactions':
+				new PageTransactionList(args);
+				break;
+			case '#transactionstoday':
+				new PageTransactionToday(args);
+				break;
+			case '#transactiondetails':
+				new PageTransactionDetails(args);
+				break;
+			case '#carsoffice':
+				new PageCarsOffice(args);
+				break;
+			case '#trailerclientlist':
+				new PageTrailerClientList(args);
+				break;
+			case '#traileroffice':
+				new PageTrailerOffice(args);
+				break;
+			case '#transactionsfinished':
+				new PageTransactionFinished(args);
+				break;
+			case '#transactionsnew':
+				new PageTransactionOpen(args);
 				break;
 			default:
 				this.Main.innerHTML = '<div class="alert alert-danger">Fehler! Kein Modul Geladen!</div>'
@@ -616,6 +647,30 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiBenutzerGetSpecificList(successCallback, errorCallback, benutzerList)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'benutzer/specific/' + benutzerList, 
+        {
+            method: 'GET',
+        })
+        .then((response) => 
+        {
+            if (response.status == 200) 
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            }
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
 	//==================================================================================
 	// Kraftfahrzeug
 
@@ -897,6 +952,31 @@ export default class Application
 			} 
 		})
 		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiAnhaengerFilterBy(successCallback, errorCallback, by, value) 
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'anhaenger/filter/' + by + '/' + value, 
+		{
+			method: 'GET',
+			cache: 'no-cache',
+			credentials: 'include'
+		})
+		.then((response)=>
+		{
+			if (response.status == 200 || response.status == 401)
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			} 
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		}).then(successCallback)
 		.catch(errorCallback);
 	}
 
@@ -1245,6 +1325,56 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiAusgabenstelleAllNames(successCallback, errorCallback)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'ausgabenstelle/getallnames', 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
+	ApiAusgabenstelleNamesByKfz(successCallback, errorCallback, marke, modell)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'ausgabenstelle/getbymarkemodell/' + marke + '/' + modell, 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
 	ApiAusgabenstelleSet(successCallback, errorCallback, ausgabenstelle)
 	{
 		$('body').addClass('waiting');
@@ -1386,6 +1516,31 @@ export default class Application
 		.catch(errorCallback);
 	}
 
+	ApiBilderGetAllAnhaengerList(successCallback, errorCallback)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/anhaenger', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
 	ApiKraftfahrzeugGetCardList(successCallback, errorCallback)
 	{
 		$('body').addClass('waiting');
@@ -1464,6 +1619,54 @@ export default class Application
 	{
 		$('body').addClass('waiting');
 		fetch(this.apiBaseUrl + 'bilder/specifickfz/' + kfzList, 
+		{
+			method: 'GET',
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBilderGetSpecificAnhaengerList(successCallback, errorCallback, anhaengerList)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/specificanhaenger/' + anhaengerList, 
+		{
+			method: 'GET',
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBilderGetAnhaenger(successCallback, errorCallback, anhaenger_id)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bilder/anhaenger/' + anhaenger_id, 
 		{
 			method: 'GET',
 		})
@@ -1629,4 +1832,216 @@ export default class Application
 		})
 		.catch(errorCallback);
 	}
+
+	//==================================================================================
+	// Bewegung
+
+	ApiBewegungGetList(successCallback, errorCallback)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bewegung', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBewegungGetTodayList(successCallback, errorCallback)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bewegung/today', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBewegungGetOpenList(successCallback, errorCallback)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bewegung/open', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBewegungGetFinishedList(successCallback, errorCallback)
+	{
+		$('body').addClass('waiting');
+		fetch(this.apiBaseUrl + 'bewegung/finished', 
+		{
+			method: 'GET',
+			credentials: 'include'
+		})
+		.then((response) => 
+		{
+			if (response.status == 200) 
+			{
+				$('body').removeClass('waiting');
+				return response.json();
+			}
+			else
+			{
+				$('body').removeClass('waiting');
+				throw new Error(response.status + ' ' + response.statusText);
+			} 
+		})
+		.then(successCallback)
+		.catch(errorCallback);
+	}
+
+	ApiBewegungSet(successCallback, errorCallback, rentObject)
+    {
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bewegung' + (rentObject.bewegung_id ? '/' + rentObject.bewegung_id : ''), 
+        {
+            method: rentObject.bewegung_id ? 'PUT' : 'POST',
+            cache: 'no-cache',
+            headers: 
+            {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(rentObject)
+        })
+        .then((response) => 
+        {
+            if (response.status == 200) 
+            {
+                $('body').removeClass('waiting');
+                return successCallback('Daten wurden erfolgreich geschickt!');
+            }
+            else if (response.status == 204) 
+            {
+                $('body').removeClass('waiting');
+                errorCallback('Daten sind unvollständig!');
+            }
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .catch(errorCallback);
+    }
+
+    ApiBewegungGet(successCallback, errorCallback, bewegung_id)
+    {  
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bewegung/' + bewegung_id, 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
+    ApiBewegungGetById(successCallback, errorCallback, user_id)
+    {  
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bewegung/user/' + user_id, 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
+
+    ApiBewegungGetByFahrerId(successCallback, errorCallback, fahrer_id)
+    {  
+        $('body').addClass('waiting');
+        fetch(this.apiBaseUrl + 'bewegung/fahrer/' + fahrer_id, 
+        {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => 
+        {
+            if (response.status == 200)
+            {
+                $('body').removeClass('waiting');
+                return response.json();
+            } 
+            else
+            {
+                $('body').removeClass('waiting');
+                throw new Error(response.status + ' ' + response.statusText);
+            } 
+        })
+        .then(successCallback)
+        .catch(errorCallback);
+    }
 }

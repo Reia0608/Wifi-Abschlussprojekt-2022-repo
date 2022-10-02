@@ -25,8 +25,7 @@ namespace VRentalsClasses.Models
 			}
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = DBConnection.GetConnection();
-			command.CommandText = $"SELECT * FROM rentals.staff_list where rolle = :rl order by vorname, vorname";
-			command.Parameters.AddWithValue("rl", 2);
+			command.CommandText = $"SELECT * FROM rentals.staff_list where rolle = 2 OR rolle = 4 order by vorname, vorname";
 			NpgsqlDataReader reader = command.ExecuteReader();
 
 			try

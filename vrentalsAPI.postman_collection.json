@@ -380,6 +380,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Specific Benutzer List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/benutzer/specific/5_66_",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"benutzer",
+								"specific",
+								"5_66_"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1440,6 +1462,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Bilder of All Anhaenger",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bilder/anhaenger",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bilder",
+								"anhaenger"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1503,7 +1546,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"bewegung_id\": 10,\r\n    \"users_id\": 5,\r\n    \"beschreibung\": \"test\",\r\n    \"grund\": \"put test\",\r\n    \"gleicherrueckgabeort\": false \r\n}",
+							"raw": "{\r\n    \"bewegung_id\": 31,\r\n    \"users_id\": 5,\r\n    \"beschreibung\": \"test\",\r\n    \"grund\": \"put test\",\r\n    \"gleicherrueckgabeort\": false,\r\n    \"start_km_stand\": 50\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1511,7 +1554,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:59968/api/bewegung/10",
+							"raw": "http://localhost:59968/api/bewegung/31",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1520,7 +1563,7 @@
 							"path": [
 								"api",
 								"bewegung",
-								"10"
+								"31"
 							]
 						}
 					},
@@ -1565,6 +1608,152 @@
 								"bewegung",
 								"fahrer",
 								"105"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Bewegung",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bewegung",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bewegung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bewegung for Today",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/bewegung/today",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"bewegung",
+								"today"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WartungsterminController",
+			"item": [
+				{
+					"name": "Get Wartungstermin by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/wartungstermin/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"wartungstermin",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new Wartungstermin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"kraftfahrzeug_id\": 15,\r\n    \"kosten\": 300,\r\n    \"erledigt\": false,\r\n    \"werkstatt\": \"KFZ Paradies\",\r\n    \"bezahlt\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/wartungstermin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"wartungstermin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change existing Wartungstermin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"wartungstermin_id\": 1,\r\n    \"werkstatt\": \"KFZ Paradies Wien\",\r\n    \"erledigt\": false,\r\n    \"bezahlt\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:59968/api/wartungstermin/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"wartungstermin",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Wartungstermin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59968/api/wartungstermin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59968",
+							"path": [
+								"api",
+								"wartungstermin"
 							]
 						}
 					},
