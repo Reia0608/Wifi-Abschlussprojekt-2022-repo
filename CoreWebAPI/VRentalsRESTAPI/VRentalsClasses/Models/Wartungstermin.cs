@@ -14,7 +14,7 @@ namespace VRentalsClasses.Models
         #region constants
         private const string SCHEMA = "rentals";
         private const string TABLE = "tbl_wartungstermin";
-        private const string COLUMNS = "wartungstermin_id, datum, uhrzeit, kraftfahrzeug_id, kosten, erledigt, werkstatt, bezahlt";
+        private const string COLUMNS = "wartungstermin_id, datum, uhrzeit, kraftfahrzeug_id, kosten, erledigt, werkstatt, bezahlt, vorraussichtliches_ende";
         #endregion
         //************************************************************************
         #region static methods
@@ -32,6 +32,105 @@ namespace VRentalsClasses.Models
             command.Connection = DBConnection.GetConnection();
             command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE}";
 
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    wartungsterminList.Add(new Wartungstermin(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return wartungsterminList;
+        }
+
+        public static List<Wartungstermin> GetToday()
+        {
+            List<Wartungstermin> wartungsterminList = new List<Wartungstermin>();
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} Where vorraussichtliches_ende = now()";
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    wartungsterminList.Add(new Wartungstermin(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return wartungsterminList;
+        }
+
+        public static List<Wartungstermin> GetOpen()
+        {
+            List<Wartungstermin> wartungsterminList = new List<Wartungstermin>();
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} Where erledigt = false";
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    wartungsterminList.Add(new Wartungstermin(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+            return wartungsterminList;
+        }
+
+        public static List<Wartungstermin> GetFinished()
+        {
+            List<Wartungstermin> wartungsterminList = new List<Wartungstermin>();
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select {COLUMNS} from {SCHEMA}.{TABLE} Where erledigt = true";
             NpgsqlDataReader reader = command.ExecuteReader();
 
             try
@@ -135,6 +234,7 @@ namespace VRentalsClasses.Models
             Erledigt = reader.GetBoolean(5);
             Werkstatt = reader.IsDBNull(6) ? null : reader.GetString(6);
             Bezahlt = reader.GetBoolean(7);
+            VorraussichtlichesEnde = reader.IsDBNull(8) ? null : reader.GetDateTime(8);
         }
         #endregion
         //************************************************************************
@@ -164,6 +264,9 @@ namespace VRentalsClasses.Models
         [JsonPropertyName("bezahlt")]
         public bool? Bezahlt { get; set; }
 
+        [JsonPropertyName("vorraussichtliches_ende")]
+        public DateTime? VorraussichtlichesEnde { get; set; }
+
         #endregion
         //************************************************************************
         #region public methods
@@ -180,13 +283,13 @@ namespace VRentalsClasses.Models
 
             if (this.Wartungstermin_Id.HasValue)
             {
-                command.CommandText = $"update {SCHEMA}.{TABLE} set datum = :dat, uhrzeit = :uhr, kraftfahrzeug_id = :kid, kosten = :kos, erledigt = :erl, werkstatt = :wer, bezahlt = :bez where wartungstermin_id = :wid";
+                command.CommandText = $"update {SCHEMA}.{TABLE} set datum = :dat, uhrzeit = :uhr, kraftfahrzeug_id = :kid, kosten = :kos, erledigt = :erl, werkstatt = :wer, bezahlt = :bez, vorraussichtliches_ende = :ve where wartungstermin_id = :wid";
             }
             else
             {
                 command.CommandText = $"select nextval('{SCHEMA}.{TABLE}_seq')";
                 this.Wartungstermin_Id = (int)((long)command.ExecuteScalar());
-                command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:wid, :dat, :uhr, :kid, :kos, :erl, :wer, :bez)";
+                command.CommandText = $"insert into {SCHEMA}.{TABLE} ({COLUMNS}) values (:wid, :dat, :uhr, :kid, :kos, :erl, :wer, :bez, :ve)";
             }
 
             command.Parameters.AddWithValue("wid", this.Wartungstermin_Id);
@@ -197,6 +300,7 @@ namespace VRentalsClasses.Models
             command.Parameters.AddWithValue("erl", this.Erledigt);
             command.Parameters.AddWithValue("wer", String.IsNullOrEmpty(this.Werkstatt) ? (object)DBNull.Value : (object)this.Werkstatt);
             command.Parameters.AddWithValue("bez", this.Bezahlt);
+            command.Parameters.AddWithValue("ve", this.VorraussichtlichesEnde.HasValue ? (object)this.VorraussichtlichesEnde.Value : (object)DBNull.Value);
 
             try
             {

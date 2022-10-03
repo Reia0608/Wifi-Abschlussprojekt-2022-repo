@@ -59,7 +59,7 @@ export default class PageTransactionDetails
             const buttonBewegungAbbrechen = this.app.Main.querySelector('#buttonBewegungAbbrechen');
 
             // Hiding the ID for security
-            //history.replaceState({}, null, "./index.html#transactiondetails");
+            history.replaceState({}, null, "./index.html#transactiondetails");
 
 			// Initialisierung
 			var kfzbild = {};
@@ -85,7 +85,24 @@ export default class PageTransactionDetails
 
             buttonBewegungAbbrechen.addEventListener('click', () =>
             {
-                location.hash = '#transactions';
+                if(document.cookie)
+                {
+                    const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+                    this.app.ApiBenutzerGet((response) =>
+                    {
+                        if(response.benutzer.rolle == 4 || response.benutzer.rolle == 1)
+                        {
+                            location.hash = '#transactions';
+                        }
+                        else
+                        {
+                            location.hash = "#main";
+                        }
+                    }, (ex) =>
+                    {
+    
+                    }, benutzerMerkmal);
+                }  
             });
 
             buttonClientDetails.addEventListener('click', () =>

@@ -23,6 +23,8 @@ export default class PageCarsDetails
 			const divDateSchaden = args.app.Main.querySelector('#divDateSchaden');
 			const imgBild = this.app.Main.querySelector('#imgBild');
 			const spanKraftfahrzeugJahre = this.app.Main.querySelector('#spanKraftfahrzeugJahre');
+			const selectAusgabenstelle = this.app.Main.querySelector('#selectAusgabenstelle');
+			const divAusgabenstelleBody = this.app.Main.querySelector('#divAusgabenstelleBody');
 			
 			// Hiding the ID for security
 			history.replaceState({}, null, "./index.html#carsdetails");
@@ -37,7 +39,7 @@ export default class PageCarsDetails
 			}
 			else
 			{
-				this.schadenListAnzeigen(); 
+				this.loadOptions();
 			}
 
 			//-------------------------------------------------------------
@@ -83,6 +85,7 @@ export default class PageCarsDetails
 				const inputBaujahr = this.app.Main.querySelector('#inputBaujahr');
 				const selectKlasse = this.app.Main.querySelector('#selectKlasse');
 				const selectKategorie = this.app.Main.querySelector('#selectKategorie');
+				const selectAusgabenstelle = this.app.Main.querySelector('#selectAusgabenstelle');
 
 				if (inputMarke.value && inputModell.value) 
 				{
@@ -101,30 +104,71 @@ export default class PageCarsDetails
 					this.kraftfahrzeug.baujahr = parseInt(inputBaujahr.value);
 					this.kraftfahrzeug.klasse = selectKlasse.options[selectKlasse.selectedIndex].text;
 					this.kraftfahrzeug.kategorie = selectKategorie.options[selectKategorie.selectedIndex].text;
-
-					this.app.ApiKraftfahrzeugSet(() => 
+					
+					if(selectAusgabenstelle.options[selectAusgabenstelle.selectedIndex].text != "Bitte wählen")
 					{
-						if (kfzbild.bild_bytes) 
+						// Get Ausgabenstelle ID
+						this.app.ApiAusgabenstelleGetIdByName((response) =>
 						{
-							kfzbild.kraftfahrzeug_id = this.kraftfahrzeug.kraftfahrzeug_id;
-							this.app.ApiBilderSet(() => 
-							{
+							this.kraftfahrzeug.ausgabenstelle_id = response;
 
+							// Save Kraftfahrzeug
+							this.app.ApiKraftfahrzeugSet(() => 
+							{
+								if (kfzbild.bild_bytes) 
+								{
+									kfzbild.kraftfahrzeug_id = this.kraftfahrzeug.kraftfahrzeug_id;
+									this.app.ApiBilderSet(() => 
+									{
+										location.hash = '#carlist';
+									}, (ex) => 
+									{
+										alert(ex);
+									}, kfzbild);
+								}
+								else
+								{
+									location.hash = '#carlist';
+								}
 							}, (ex) => 
 							{
 								alert(ex);
-							}, kfzbild);
-						}
-					}, (ex) => 
+							}, this.kraftfahrzeug);
+						}, (ex) =>
+						{
+							alert(ex);
+						}, selectAusgabenstelle.options[selectAusgabenstelle.selectedIndex].text);
+					}
+					else
 					{
-						alert(ex);
-					}, this.kraftfahrzeug);
+						// Save Kraftfahrzeug
+						this.app.ApiKraftfahrzeugSet(() => 
+						{
+							if (kfzbild.bild_bytes) 
+							{
+								kfzbild.kraftfahrzeug_id = this.kraftfahrzeug.kraftfahrzeug_id;
+								this.app.ApiBilderSet(() => 
+								{
+									location.hash = '#carlist';
+								}, (ex) => 
+								{
+									alert(ex);
+								}, kfzbild);
+							}
+							else
+							{
+								location.hash = '#carlist';
+							}
+						}, (ex) => 
+						{
+							alert(ex);
+						}, this.kraftfahrzeug);
+					}
 				}
 				else 
 				{
 					alert('Marke und Modell sind Pflicht!');
 				}
-				location.hash = '#carlist';
 			});
 
 			//-------------------------------------------------------------
@@ -288,74 +332,123 @@ export default class PageCarsDetails
 
 	datenLaden(kraftfahrzeug_id) 
 	{
-		this.app.ApiKraftfahrzeugGet((response) => 
+		this.app.ApiAusgabenstelleAllNames((response) =>
 		{
-			let currentYear = new Date().getFullYear();
-			this.kraftfahrzeug = response;
+			let html = `<select class="form-select col-6" aria-label="Rueckgabe Ort" id="selectAusgabenstelle"><option>Bitte wählen</option>`;
 
-			//const bildliste = response.bildliste;
+			for(let ausgabenstellename of response)
+			{
+				html += 
+				`
+				<option value="${ausgabenstellename}">${ausgabenstellename}</option>
+				`;
+			}
 
-			inputMarke.value = this.kraftfahrzeug.marke;
-			inputModell.value = this.kraftfahrzeug.modell;
-			inputKennzeichen.value = this.kraftfahrzeug.kennzeichen;
-			inputMietpreis.value = this.kraftfahrzeug.mietpreis;
-			inputBaujahr.value = this.kraftfahrzeug.baujahr;
-			spanKraftfahrzeugJahre.textContent = (currentYear - inputBaujahr.value).toString();
-			if(this.kraftfahrzeug.klasse == null)
+			html += `</select>`;
+			divAusgabenstelleBody.innerHTML = html;
+
+			// Load Data
+			this.app.ApiKraftfahrzeugGet((response) => 
 			{
-				selectKlasse.value = '0';
-			}
-			else
-			{
-				selectKlasse.options[selectKlasse.selectedIndex].text = this.kraftfahrzeug.klasse;
-			}
-			
-			if(this.kraftfahrzeug.kategorie == null)
-			{
-				selectKategorie.value = '0';
-			}
-			else
-			{
-				selectKategorie.options[selectKategorie.selectedIndex].text = this.kraftfahrzeug.kategorie;
-			}
-			
-			// Kfz Bild anzeigen
-			this.app.ApiBilderGetKfzList((response) =>
-			{
-				if(response != null && response.length > 0)
+				let currentYear = new Date().getFullYear();
+				this.kraftfahrzeug = response;
+
+				//const bildliste = response.bildliste;
+
+				inputMarke.value = this.kraftfahrzeug.marke;
+				inputModell.value = this.kraftfahrzeug.modell;
+				inputKennzeichen.value = this.kraftfahrzeug.kennzeichen;
+				inputMietpreis.value = this.kraftfahrzeug.mietpreis;
+				inputBaujahr.value = this.kraftfahrzeug.baujahr;
+				spanKraftfahrzeugJahre.textContent = (currentYear - inputBaujahr.value).toString();
+				if(this.kraftfahrzeug.klasse == null)
 				{
-					let bildliste = response;
-					imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
+					selectKlasse.value = '0';
 				}
-				this.schadenListAnzeigen();
+				else
+				{
+					selectKlasse.options[selectKlasse.selectedIndex].text = this.kraftfahrzeug.klasse;
+				}
+				
+				if(this.kraftfahrzeug.kategorie == null)
+				{
+					selectKategorie.value = '0';
+				}
+				else
+				{
+					selectKategorie.options[selectKategorie.selectedIndex].text = this.kraftfahrzeug.kategorie;
+				}
+				
+				if(this.kraftfahrzeug.ausgabenstelle_id == null)
+				{
+					selectAusgabenstelle.value = '0';
+
+					// Kfz Bild anzeigen
+					this.app.ApiBilderGetKfzList((response) =>
+					{
+						if(response != null && response.length > 0)
+						{
+							let bildliste = response;
+							imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
+						}
+						this.schadenListAnzeigen();
+					}, (ex) => 
+					{
+						alert(ex);
+					}, this.kraftfahrzeug.kraftfahrzeug_id);
+				}
+				else
+				{
+					this.app.ApiAusgabenstelleGetName((response) =>
+					{
+						selectAusgabenstelle.value = response;
+
+						// Kfz Bild anzeigen
+						this.app.ApiBilderGetKfzList((response) =>
+						{
+							if(response != null && response.length > 0)
+							{
+								let bildliste = response;
+								imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
+							}
+							this.schadenListAnzeigen();
+						}, (ex) => 
+						{
+							alert(ex);
+						}, this.kraftfahrzeug.kraftfahrzeug_id);
+					}, (ex) =>
+					{
+						alert(ex);
+					}, this.kraftfahrzeug.ausgabenstelle_id);
+				}
+
+				// if (bildliste != null)
+				// {
+
+				// 	for(var iterator=0 ; iterator< bildliste.length ; iterator++) 
+				// 	{
+				// 		$('<div class="item"><img src="'+bildliste.Bild_Url[iterator]+'"><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
+				// 		$('<li data-target="#carouselControlImages" data-slide-to="'+iterator+'"></li>').appendTo('.carousel-indicators')
+				// 	}
+				// 	$('.item').first().addClass('active'); 
+				// 	$('.carousel-indicators > li').first().addClass('active');
+				// 	$('#carouselControlImages').carousel(); 
+				// }
+
+				// if (this.kraftfahrzeug.bildliste) 
+				// {
+				// 	imgBild.src = this.app.apiBaseUrl + 'kraftfahrzeug/' + this.kraftfahrzeug.kraftfahrzeug_id + '/bild';
+				// }
+
+				//this.bilderAnzeigen();
 			}, (ex) => 
 			{
 				alert(ex);
-			}, this.kraftfahrzeug.kraftfahrzeug_id);
-
-			// if (bildliste != null)
-			// {
-
-			// 	for(var iterator=0 ; iterator< bildliste.length ; iterator++) 
-			// 	{
-			// 		$('<div class="item"><img src="'+bildliste.Bild_Url[iterator]+'"><div class="carousel-caption"></div>   </div>').appendTo('.carousel-inner');
-			// 		$('<li data-target="#carouselControlImages" data-slide-to="'+iterator+'"></li>').appendTo('.carousel-indicators')
-			// 	}
-			// 	$('.item').first().addClass('active'); 
-			// 	$('.carousel-indicators > li').first().addClass('active');
-			// 	$('#carouselControlImages').carousel(); 
-			// }
-
-			// if (this.kraftfahrzeug.bildliste) 
-			// {
-			// 	imgBild.src = this.app.apiBaseUrl + 'kraftfahrzeug/' + this.kraftfahrzeug.kraftfahrzeug_id + '/bild';
-			// }
-
-			//this.bilderAnzeigen();
-		}, (ex) => 
+			}, kraftfahrzeug_id);
+		}, (ex) =>
 		{
 			alert(ex);
-		}, kraftfahrzeug_id);
+		});
 	}
 
 	//----------------------------------------------------------------------------------------
@@ -410,49 +503,48 @@ export default class PageCarsDetails
 		}		
 	}
 
-	// Bilder anzeigen
-	// bilderAnzeigen()
+	// this.app.ApiAusgabenstelleNamesByKfz((response) =>
 	// {
-	// 	const imgContainer = this.app.Main.querySelector('#imgContainer');
-	// 	let html = '';
-	// 	let leerBildPath = ".\..\media\LeerBild.jpg";
+	// 	let html = `<select class="form-select col-6" aria-label="Abhol Ort" id="selectAbholort"><option>Bitte wählen</option>`;
 
-	// 	this.app.ApiBilderGetKfzList((response) =>
+	// 	for(let ausgabenstellename of response)
 	// 	{
-	// 		this.kraftfahrzeug.bildliste = response;
-	// 		let iterator = 0;
-	// 		for (let bilditem of this.kraftfahrzeug.bildliste)
-	// 		{
-	// 			if (iterator == 0)
-	// 			{
-	// 				html =  				
-	// 				`
-	// 				<div class="carousel-item active d-block w-100" alt="Kein Bild vorhanden!" data-idx="${iterator}">
-	// 				<img src=${bilditem.bild_bytes ? bilditem.bild_bytes : '&nbsp;'}. class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_${bilditem.bilder_id}">
-	// 				</div>
-	// 				`;
-	// 			}
-	// 			else
-	// 			{
-	// 				html += 
-	// 			`
-	// 			<div class="carousel-item" alt="Kein Bild vorhanden!" data-idx="${iterator}">
-	// 			<img src=${bilditem.bild_bytes ? bilditem.bild_bytes : '&nbsp;'}. class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_${bilditem.bilder_id}">
-	// 			</div>
-	// 			`;
-	// 			}
-	// 			iterator++;
-	// 		}
-	// 		// html +=
-	// 		// `
-	// 		// <div class="carousel-item" data-idx="${iterator+1}">
-	// 		// 	<img src="${leerBildPath}" class="d-block w-100" alt="Kein Bild vorhanden!" id="imgContainer_leerBild">
-	// 		// </div>
-	// 		// `;
-	// 		imgContainer.innerHTML = html;
-	// 	}, (ex) => 
-	// 	{
-	// 		alert(ex);
-	// 	}, this.kraftfahrzeug.kraftfahrzeug_id);
-	// }
+	// 		html += 
+	// 		`
+	// 		<option value="${ausgabenstellename}">${ausgabenstellename}</option>
+	// 		`;
+	// 	}
+
+	// 	html += `</select>`;
+	// 	divAbholortBody.innerHTML = html;
+
+
+	// }, (ex) => 
+	// {
+	// 	alert(ex);
+	// }, this.kraftfahrzeug.marke, this.kraftfahrzeug.modell); 
+
+	loadOptions()
+	{
+		this.app.ApiAusgabenstelleAllNames((response) =>
+		{
+			let html = `<select class="form-select col-6" aria-label="Rueckgabe Ort" id="selectAusgabenstelle"><option>Bitte wählen</option>`;
+
+			for(let ausgabenstellename of response)
+			{
+				html += 
+				`
+				<option value="${ausgabenstellename}">${ausgabenstellename}</option>
+				`;
+			}
+
+			html += `</select>`;
+			divAusgabenstelleBody.innerHTML = html;
+
+			this.schadenListAnzeigen(); 
+		}, (ex) =>
+		{
+			alert(ex);
+		});
+	}
 }

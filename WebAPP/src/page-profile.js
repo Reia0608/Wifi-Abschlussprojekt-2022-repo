@@ -31,6 +31,8 @@ export default class PageProfile
 			const inputMarke = document.querySelector('#inputMarke');
 			const inputModell = document.querySelector('#inputModell');
 			const inputKennzeichen = document.querySelector('#inputKennzeichen');
+			const appointmentsBody = document.querySelector('#appointmentsBody');
+			const divTermineBody = this.app.Main.querySelector('#divTermineBody');
 			
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 			 
@@ -415,11 +417,11 @@ export default class PageProfile
 			{
 				switch (this.benutzer.rolle)
 				{
-					case 0: location.hash = '#clientlist';
+					case 0: location.hash = '#main';
 							break;
 					case 1: location.hash = '#stafflist';
 							break;
-					case 2: location.hash = '#stafflist';
+					case 2: location.hash = '#main';
 							break;
 					default: location.hash = '#clientlist';
 							break;
@@ -452,6 +454,66 @@ export default class PageProfile
 					inputDateAusstellung.value = new Date(this.benutzer.fuehrerscheinausstellungsdatum).toLocaleDateString('en-CA');
 					inputDateAblauf.value = new Date(this.benutzer.fuehrerscheinablaufdatum).toLocaleDateString('en-CA');
 					inputFuehrerscheinnummer.value = this.benutzer.fuehrerscheinnummer;
+
+					// Hide Termine for clients and unidentified people
+					if(this.benutzer.rolle == 0 || this.benutzer.rolle == 3)
+					{
+						divTermineBody.classList.add('d-none');
+					}
+					else
+					{
+						// ListGroupElement-click
+						appointmentsBody.addEventListener('click', (pointerCoordinates) => 
+						{
+							let button = null;
+
+							if (pointerCoordinates.target.nodeName == 'PATH' && pointerCoordinates.target.parentElement.nodeName == 'SVG' && pointerCoordinates.target.parentElement.parentElement.nodeName == 'BUTTON') 
+							{
+								button = pointerCoordinates.target.parentElement.parentElement;
+							}
+							else if (pointerCoordinates.target.nodeName == 'SVG' && pointerCoordinates.target.parentElement.nodeName == 'BUTTON')
+							{
+								button = pointerCoordinates.target.parentElement;
+							} 
+							else if (pointerCoordinates.target.nodeName == 'BUTTON') 
+							{
+								button = pointerCoordinates.target;
+							}
+
+							if (button) 
+							{
+
+							}
+							else if (pointerCoordinates.target.nodeName == 'TD') 
+							{
+								if(document.cookie)
+								{
+									const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+
+									this.app.ApiBenutzerGet((response) =>
+									{
+										if(response.benutzer.rolle == 2 && response.benutzer.status == 3)
+										{
+											let bewegung_id = pointerCoordinates.target.parentElement.dataset.bewegungId;
+											window.open('#transactiondetails?bid=' + bewegung_id, '_self');
+										}
+										else if(response.benutzer.rolle == 1 || response.benutzer.rolle == 4)
+										{
+											let bewegung_id = pointerCoordinates.target.parentElement.dataset.bewegungId;
+											window.open('#transactiondetails?bid=' + bewegung_id, '_self');
+										}
+										else
+										{
+											alert("Sie müssen Krank sein um die Termine ändern zu dürfen!");
+										}
+									}, (ex) =>
+									{
+										alert(ex);
+									}, benutzerMerkmal);
+								}
+							}
+						});
+					}
 				}
 
 				if(this.benutzer.hatzugfahrzeug)
@@ -517,6 +579,9 @@ export default class PageProfile
 						iterator++;
 					}
 					tableFSKList.innerHTML = html;
+
+					// Termine anzeigen
+					this.termineLaden(benutzer_id);
 				}
 			}, (ex) => 
 			{
@@ -531,5 +596,39 @@ export default class PageProfile
 			`
 			trFSKHeader.innerHTML = html;
 		}		
+	}
+
+	termineLaden(benutzer_id)
+	{
+		const dateFormatter = new Intl.DateTimeFormat('de-AT', 
+        {
+            dateStyle: 'short'
+        });
+
+		let html = '';
+		let fahrer_id = benutzer_id;
+		let iterator = 1;
+		this.app.ApiBewegungGetByFahrerId((response) =>
+		{
+			if(response.length > 0)
+			{
+				for(let bewegung of response)
+				{
+					html += `<tr data-bewegung-id="${bewegung.bewegung_id}">
+							<th scope="row">${iterator}</th>
+							<td>${bewegung.abholort}</td>
+							<td>${dateFormatter.format(new Date(bewegung.abholdatum))} ${bewegung.abholzeit} </td>
+							<td>${dateFormatter.format(new Date(bewegung.rueckgabedatum))} ${bewegung.rueckgabezeit}</td>
+							<td>${bewegung.rueckgabeort}</td>
+							</tr>`;
+					iterator++;
+				}
+
+				appointmentsBody.innerHTML = html;
+			}
+		}, (ex) => 
+		{
+			alert(ex);
+		}, fahrer_id);
 	}
 }

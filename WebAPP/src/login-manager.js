@@ -74,17 +74,17 @@ export default class LoginManager
                     }
                     appArgs.Sidebar = new Sidebar(sidebarArgs);
                     appArgs.Banner = new Banner(bannerArgs)
-					// if(response.benutzer.rolle == 4)
-					// {
-					// 	location.hash = '#transactionstoday';
-					// }
-					// else
-					// {
-					// 	if (!location.hash) 
-					// 	{
-					// 		location.hash = '#main';
-					// 	}
-					// }
+					if(response.benutzer.rolle == 4)
+					{
+						location.hash = '#transactionstoday';
+					}
+					else
+					{
+						if (!location.hash) 
+						{
+							location.hash = '#main';
+						}
+					}
 
                     appArgs.Navigate(location.hash);
                     console.log("angemeldet!");

@@ -318,6 +318,48 @@ namespace VRentalsClasses.Models
             return bewegung;
         }
 
+        public static int Delete(List<int> listToDelete)
+        {
+            int result = 0;
+            NpgsqlCommand command = new NpgsqlCommand();
+
+            if (listToDelete != null)
+            {
+                try
+                {
+                    if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+                    {
+                        command.Connection = DBConnection.GetConnection();
+                        command.Connection.Open();
+                    }
+
+                    foreach (int entry in listToDelete)
+                    {
+                        command.CommandText = $"delete from {SCHEMA}.{TABLE} where bewegung_id = :bwid;";
+                        command.Parameters.AddWithValue("bwid", entry);
+                        try
+                        {
+                            result += command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    command.Connection.Close();
+                }
+            }
+
+            return result;
+        }
+
         #endregion
         //************************************************************************
         #region constructor

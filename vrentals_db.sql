@@ -500,7 +500,8 @@ CREATE TABLE rentals.tbl_wartungstermin
     kosten numeric,
     erledigt boolean DEFAULT false,
 	werkstatt character varying,
-	bezahlt boolean DEFAULT false
+	bezahlt boolean DEFAULT false,
+	vorraussichtliches_ende date
 );
 
 ALTER TABLE IF EXISTS rentals.tbl_wartungstermin

@@ -48,6 +48,14 @@ namespace VRentalsRESTAPI.Controllers
                 return Kraftfahrzeug.FilterBy(by, value);
         }
 
+        // GET: api/<KraftfahrzeugController>/specific/12_5_4_
+        [HttpGet("specific/{kraftfahrzeuglist}")]
+        public IEnumerable<Kraftfahrzeug> GetAllKraftfahrzeugBySpecificList(string kraftfahrzeuglist)
+        {
+            // WIP: add security
+            return Kraftfahrzeug.GetAllKraftfahrzeugBySpecificList(kraftfahrzeuglist);
+        }
+
         // POST: api/<KraftfahrzeugController>
         [HttpPost]
         public IActionResult Post([FromBody] Kraftfahrzeug kraftfahrzeug)

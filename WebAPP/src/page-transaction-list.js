@@ -87,11 +87,11 @@ export default class PageTransactionList
 					if(confirm("Sind Sie sicher, dass Sie die gewählten Bewegungen löschen wollen?!"))
 					{
 						let bewegungList = [];
-						for(let kunde of selectedBewegungList)
+						for(let bewegung of selectedBewegungList)
 						{
-							bewegungList.push(kunde.dataset.bewegungId);
+							bewegungList.push(bewegung.dataset.bewegungId);
 						}
-						this.app.ApiBenutzerDelete(() =>
+						this.app.ApiBewegungDelete(() =>
 						{
 							this.datenLaden();
 						}, (ex) =>

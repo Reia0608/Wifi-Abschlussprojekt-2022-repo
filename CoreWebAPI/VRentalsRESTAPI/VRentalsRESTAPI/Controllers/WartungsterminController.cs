@@ -24,7 +24,19 @@ namespace VRentalsRESTAPI.Controllers
         [HttpGet("{id}")]
         public Wartungstermin Get(int id) => Wartungstermin.Get(id);
 
-        // POST: api/<BewegungController>
+        // GET: api/<WartungsterminController>/today
+        [HttpGet("today")]
+        public IEnumerable<Wartungstermin> GetToday() => Wartungstermin.GetToday();
+
+        // GET: api/<WartungsterminController>/today
+        [HttpGet("finished")]
+        public IEnumerable<Wartungstermin> GetFinished() => Wartungstermin.GetFinished();
+
+        // GET: api/<WartungsterminController>/today
+        [HttpGet("open")]
+        public IEnumerable<Wartungstermin> GetOpen() => Wartungstermin.GetOpen();
+
+        // POST: api/<WartungsterminController>
         [HttpPost]
         public IActionResult Post([FromBody] Wartungstermin wartungstermin)
         {

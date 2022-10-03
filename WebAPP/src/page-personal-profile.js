@@ -1,5 +1,6 @@
 import  "./../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
 import "./app.js";
+import Helper from "./helper.js";
 
 export default class PagePersonalProfile
 {
@@ -8,7 +9,7 @@ export default class PagePersonalProfile
         this.app = appArgs.app;
         const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
 
-        appArgs.app.LoadHTML('./page-profile.html', appArgs.app.Main, () => 
+        appArgs.app.LoadHTML('./page-personal-profile.html', appArgs.app.Main, () => 
 		{
             const imgContainer = appArgs.app.Main.querySelector('#imgContainer');
             const imgBild = this.app.Main.querySelector('#imgBild');
@@ -20,6 +21,9 @@ export default class PagePersonalProfile
 			const buttonFSKNeu = this.app.Main.querySelector('#buttonFSKNeu');
 			const dialogFuehrerschein = new bootstrap.Modal(modalFSKBody);
 			const buttonModalFSKSpeichern = this.app.Main.querySelector('#buttonModalFSKSpeichern');
+			const checkboxSwitchHatZugfahrzeug = document.querySelector('#checkboxSwitchHatZugfahrzeug');
+			const divTermineBody = this.app.Main.querySelector('#divTermineBody');
+			const appointmentsBody = this.app.Main.querySelector('#appointmentsBody');
 
 			this.checkboxAll = this.app.Main.querySelector('#checkboxAll');
 
@@ -74,6 +78,38 @@ export default class PagePersonalProfile
 				labelNeuesPasswort2.value = "";
 
 				dialogPasswort.show();
+			});
+
+			//-------------------------------------------------------------
+			// Checkbox-Switch-Ist-Fahrer-click
+			checkboxSwitchIstFahrer.addEventListener('click', (e) =>
+			{
+				if(checkboxSwitchIstFahrer.checked == true)
+				{
+					this.benutzer.istfahrer = true;
+					collapseFuehrerschein.classList.add("show");
+				}
+				else
+				{
+					this.benutzer.istfahrer = false;
+					collapseFuehrerschein.classList.remove("show");
+				}
+			});
+
+			//-------------------------------------------------------------
+			// Checkbox-Switch-Hat-Zugfahrzeug-click
+			checkboxSwitchHatZugfahrzeug.addEventListener('click', (e) =>
+			{
+				if(checkboxSwitchHatZugfahrzeug.checked == true)
+				{
+					this.benutzer.hatzugfahrzeug = true;
+					collapseZugfahrzeug.classList.add("show");
+				}
+				else
+				{
+					this.benutzer.hatzugfahrzeug = false;
+					collapseZugfahrzeug.classList.remove("show");
+				}
 			});
 
 			//---------------------------
@@ -229,12 +265,22 @@ export default class PagePersonalProfile
                 const inputDateGeburtsdatum = this.app.Main.querySelector('#inputDateGeburtsdatum');
                 const inputGeburtsort = this.app.Main.querySelector('#inputGeburtsort');
                 const divProfile = this.app.Main.querySelector('#divProfile');
+				const checkboxSwitchIstFahrer = this.app.Main.querySelector('#checkboxSwitchIstFahrer');
 
 				if (inputBenutzername.value && inputVorname.value && inputNachname.value) 
 				{
+					let saveOk = true;
 					if(benutzerMerkmal)
 					{
-						this.benutzer.rolle = parseInt(inputRolle.value);
+						if(typeof inputRolle.value === 'number')
+						{
+							this.benutzer.rolle = parseInt(inputRolle.value);
+						}
+						else
+						{
+							this.benutzer.rolle = new Helper().RolleConverter(inputRolle.value);
+						}
+						
 						this.benutzer.username = inputBenutzername.value;
 						this.benutzer.vorname = inputVorname.value;
 						this.benutzer.nachname = inputNachname.value;
@@ -243,26 +289,117 @@ export default class PagePersonalProfile
 							this.benutzer.geburtsdatum = inputDateGeburtsdatum.value;
 						}
 						this.benutzer.geburtsort = inputGeburtsort.value;
+
+						if(labelMietpreis.innerHTML == "")
+						{
+							this.benutzer.mietpreis = 0;
+						}
+						else
+						{
+							this.benutzer.mietpreis = parseInt(labelMietpreis.innerHTML);
+						}
 						
-
-						this.app.ApiBenutzerSetWOP((response) => 
+						if(checkboxSwitchIstFahrer.checked)
 						{
-							if (benutzerBild.bild_bytes) 
+							this.benutzer.istfahrer = true;
+
+							if (selectStatus.value == '0') 
 							{
-								benutzerBild.users_id = this.benutzer.userid;
-								this.app.ApiBilderSet(() => 
-								{
-
-								}, (ex) => 
-								{
-									alert(ex);
-								}, benutzerBild);
+								saveOk = false;
+								selectStatus.classList.add('is-invalid');
+								selectStatus.classList.remove('is-valid')
 							}
-						}, (ex) => 
+							else 
+							{
+								selectStatus.classList.add('is-valid');
+								selectStatus.classList.remove('is-invalid')
+							}
+
+							if(!inputDateAusstellung.value)
+							{
+								saveOk = false;
+								inputDateAusstellung.classList.add('is-invalid');
+								inputDateAusstellung.classList.remove('is-valid');
+							}
+							else
+							{
+								inputDateAusstellung.classList.add('is-valid');
+								inputDateAusstellung.classList.remove('is-invalid');
+							}
+
+							if(!inputDateAblauf.value)
+							{
+								saveOk = false;
+								inputDateAblauf.classList.add('is-invalid');
+								inputDateAblauf.classList.remove('is-valid');
+							}
+							else
+							{
+								inputDateAblauf.classList.add('is-valid');
+								inputDateAblauf.classList.remove('is-invalid');
+							}
+
+							if(!inputFuehrerscheinnummer.value)
+							{
+								saveOk = false;
+								inputFuehrerscheinnummer.classList.add('is-invalid');
+								inputFuehrerscheinnummer.classList.remove('is-valid');
+							}
+							else
+							{
+								inputFuehrerscheinnummer.classList.add('is-valid');
+								inputFuehrerscheinnummer.classList.remove('is-invalid');
+							}
+
+							if(saveOk)
+							{
+								this.benutzer.status = parseInt(selectStatus.value);
+							if(inputDateAusstellung.value)
+							{
+								this.benutzer.fuehrerscheinausstellungsdatum = inputDateAusstellung.value;
+							}
+							if(inputDateAblauf.value)
+							{
+								this.benutzer.fuehrerscheinablaufdatum = inputDateAblauf.value;
+							}
+							this.benutzer.fuehrerscheinnummer = inputFuehrerscheinnummer.value;
+							}
+						}
+						 
+						if(saveOk)
 						{
-							alert(ex);
-						}, this.benutzer);
-						location.hash = '#main';
+							this.app.ApiBenutzerSet((response) => 
+							{
+								if (benutzerBild.bild_bytes) 
+								{
+									benutzerBild.users_id = this.benutzer.userid;
+									this.app.ApiBilderSet(() => 
+									{
+
+									}, (ex) => 
+									{
+										alert(ex);
+									}, benutzerBild);
+								}
+							}, (ex) => 
+							{
+								alert(ex);
+							}, this.benutzer);
+							
+							switch (this.benutzer.rolle)
+							{
+								case 0: location.hash = '#main';
+										break;
+								case 1: location.hash = '#stafflist';
+										break;
+								case 2: location.hash = '#main';
+										break;
+								case 4: location.hash = '#clientlist';
+										break;
+								default: location.hash = '#clientlist';
+										break;
+							}
+						}
 					}
 				}
 				else 
@@ -275,26 +412,120 @@ export default class PagePersonalProfile
 			// Vorgang abbrechen
 			buttonBenutzerAbbrechen.addEventListener('click', (e) =>
 			{
-				location.hash = '#main';
+				switch (this.benutzer.rolle)
+				{
+					case 0: location.hash = '#clientlist';
+							break;
+					case 1: location.hash = '#stafflist';
+							break;
+					case 2: location.hash = '#main';
+							break;
+					case 4: location.hash = '#transactionstoday';
+							break;
+					default: location.hash = '#main';
+							break;
+				}
 			});
 		});
     }
 
     datenLaden(benutzerMerkmal)
     {
+		// Initialisierung
+		const labelMietpreis = this.app.Main.querySelector('#labelMietpreis');
+
         this.app.ApiBenutzerGet((response) =>
         {
             if(response.success)
             {
                 this.benutzer = response.benutzer;
-				this.benutzer.userid = response.benutzer.userid;
 
-                inputRolle.value = this.benutzer.rolle;
+                inputRolle.value = new Helper().RolleConverter(this.benutzer.rolle);
                 inputBenutzername.value = this.benutzer.username;
                 inputVorname.value = this.benutzer.vorname;
                 inputNachname.value = this.benutzer.nachname;
                 inputDateGeburtsdatum.value = new Date(this.benutzer.geburtsdatum).toLocaleDateString('en-CA');
                 inputGeburtsort.value = this.benutzer.geburtsort;
+				labelMietpreis.innerHTML = this.benutzer.mietpreis;
+
+				if(this.benutzer.istfahrer)
+				{
+					checkboxSwitchIstFahrer.checked = true;
+					collapseFuehrerschein.classList.add("show");
+					selectStatus.value = this.benutzer.status;
+					inputDateAusstellung.value = new Date(this.benutzer.fuehrerscheinausstellungsdatum).toLocaleDateString('en-CA');
+					inputDateAblauf.value = new Date(this.benutzer.fuehrerscheinablaufdatum).toLocaleDateString('en-CA');
+					inputFuehrerscheinnummer.value = this.benutzer.fuehrerscheinnummer;
+
+					// Hide Termine for clients and unidentified people
+					if(this.benutzer.rolle == 0 || this.benutzer.rolle == 3)
+					{
+						divTermineBody.classList.add('d-none');
+					}
+					else
+					{
+						// ListGroupElement-click
+						appointmentsBody.addEventListener('click', (pointerCoordinates) => 
+						{
+							let button = null;
+
+							if (pointerCoordinates.target.nodeName == 'PATH' && pointerCoordinates.target.parentElement.nodeName == 'SVG' && pointerCoordinates.target.parentElement.parentElement.nodeName == 'BUTTON') 
+							{
+								button = pointerCoordinates.target.parentElement.parentElement;
+							}
+							else if (pointerCoordinates.target.nodeName == 'SVG' && pointerCoordinates.target.parentElement.nodeName == 'BUTTON')
+							{
+								button = pointerCoordinates.target.parentElement;
+							} 
+							else if (pointerCoordinates.target.nodeName == 'BUTTON') 
+							{
+								button = pointerCoordinates.target;
+							}
+
+							if (button) 
+							{
+
+							}
+							else if (pointerCoordinates.target.nodeName == 'TD') 
+							{
+								if(document.cookie)
+								{
+									const benutzerMerkmal = document.cookie.split('; ').find(row => row.startsWith('benutzermerkmal=')).split('=')[1];
+
+									this.app.ApiBenutzerGet((response) =>
+									{
+										if(response.benutzer.rolle == 2 && response.benutzer.status == 3)
+										{
+											let bewegung_id = pointerCoordinates.target.parentElement.dataset.bewegungId;
+											window.open('#transactiondetails?bid=' + bewegung_id, '_self');
+										}
+										else if(response.benutzer.rolle == 1 || response.benutzer.rolle == 4)
+										{
+											let bewegung_id = pointerCoordinates.target.parentElement.dataset.bewegungId;
+											window.open('#transactiondetails?bid=' + bewegung_id, '_self');
+										}
+										else
+										{
+											alert("Sie müssen Krank sein um die Termine ändern zu dürfen!");
+										}
+									}, (ex) =>
+									{
+										alert(ex);
+									}, benutzerMerkmal);
+								}
+							}
+						});
+					}
+				}
+
+				if(this.benutzer.hatzugfahrzeug)
+				{
+					checkboxSwitchHatZugfahrzeug.checked = true;
+					collapseZugfahrzeug.classList.add("show");
+					inputMarke.value = this.benutzer.eigeneszugfahrzeugmarke;
+					inputModell.value = this.benutzer.eigeneszugfahrzeugmodell;
+					inputKennzeichen.value = this.benutzer.eigeneszugfahrzeugkennzeichen;
+				}
 
                 //  Profilbild anzeigen
                 this.app.ApiBilderGetBenutzerList((response) =>
@@ -304,7 +535,7 @@ export default class PagePersonalProfile
                         let bildliste = response;
                         imgBild.src = "data:image/jpeg;base64," + bildliste[0].bild_bytes;
                     }
-                    // Führerscheinklassenlist anzeigen
+                    // Führerscheinklassen anzeigen
 					this.FSKListAnzeigen(this.benutzer.userid);
                 }, (ex) => 
                 {
@@ -335,9 +566,9 @@ export default class PagePersonalProfile
 			{
 				if(response != null)
 				{
-					this.benutzer.fuehrerscheinklassenlist = response;
+					this.fuehrerscheinklassenlist = response;
 					let iterator = 0;
-					for (let fskitem of this.benutzer.fuehrerscheinklassenlist) 
+					for (let fskitem of this.fuehrerscheinklassenlist) 
 					{
 						html += 
 						`
@@ -350,6 +581,9 @@ export default class PagePersonalProfile
 						iterator++;
 					}
 					tableFSKList.innerHTML = html;
+
+					// Termine anzeigen
+					this.termineLaden(benutzer_id);
 				}
 			}, (ex) => 
 			{
@@ -364,5 +598,39 @@ export default class PagePersonalProfile
 			`
 			trFSKHeader.innerHTML = html;
 		}		
+	}
+
+	termineLaden(benutzer_id)
+	{
+		const dateFormatter = new Intl.DateTimeFormat('de-AT', 
+        {
+            dateStyle: 'short'
+        });
+
+		let html = '';
+		let fahrer_id = benutzer_id;
+		let iterator = 1;
+		this.app.ApiBewegungGetByFahrerId((response) =>
+		{
+			if(response.length > 0)
+			{
+				for(let bewegung of response)
+				{
+					html += `<tr data-bewegung-id="${bewegung.bewegung_id}">
+							<th scope="row">${iterator}</th>
+							<td>${bewegung.abholort}</td>
+							<td>${dateFormatter.format(new Date(bewegung.abholdatum))} ${bewegung.abholzeit} </td>
+							<td>${dateFormatter.format(new Date(bewegung.rueckgabedatum))} ${bewegung.rueckgabezeit}</td>
+							<td>${bewegung.rueckgabeort}</td>
+							</tr>`;
+					iterator++;
+				}
+
+				appointmentsBody.innerHTML = html;
+			}
+		}, (ex) => 
+		{
+			alert(ex);
+		}, fahrer_id);
 	}
 }

@@ -9,3 +9,7 @@ foreground color: #0d6efd (RGB 13, 110, 253)
 background color: #dbe4f2 (RGB 219, 228, 242)
 
 font: MS Shell Dlg 2
+
+=== Barrierefreiheit ===
+
+https://barrierefreies.design/barrierefreiheit-interaktiv-testen/farben-und-kontraste-pruefen

@@ -61,7 +61,7 @@ namespace VRentalsClasses.Models
 			else if (by == "rolle")
             {
 				int convertedValue = RolleConverter(value);
-				Condition = $"WHERE {by} = {convertedValue} AND (rolle = 2 OR rolle = 1)";
+				Condition = $"WHERE {by} = {convertedValue}";
 			}
 			else if (by == "fsk")
 			{
@@ -145,6 +145,9 @@ namespace VRentalsClasses.Models
 					break;
 				case "User":
 					result = 2;
+					break;
+				case "Office":
+					result = 4;
 					break;
 				default:
 					result = 0;

@@ -34,6 +34,20 @@ namespace VRentalsRESTAPI.Controllers
             return Adresse.GetByAusgabenstelleId(ausgabenstelle_id);
         }
 
+        // GET: api/<AusgabenstelleController>/standort/5
+        [HttpGet("standort/{ausgabenstelle_id}")]
+        public IEnumerable<string> GetNameOfAusgabenstelle(int? ausgabenstelle_id)
+        {
+            return Ausgabenstelle.GetNameByAusgabenstelleId(ausgabenstelle_id);
+        }
+
+        // GET: api/<AusgabenstelleController>/bezeichnung/5
+        [HttpGet("bezeichnung/{ausgabenstelle_bezeichnung}")]
+        public int? GetNameOfAusgabenstelle(string? ausgabenstelle_bezeichnung)
+        {
+            return Ausgabenstelle.GetIdByName(ausgabenstelle_bezeichnung);
+        }
+
         // GET: api/<AusgabenstelleController>/5/anhaenger
         [HttpGet("{ausgabenstelle_id}/anhaenger")]
         public IEnumerable<Anhaenger> GetAllAnhaengerInAusgabenstelle(int ausgabenstelle_id)

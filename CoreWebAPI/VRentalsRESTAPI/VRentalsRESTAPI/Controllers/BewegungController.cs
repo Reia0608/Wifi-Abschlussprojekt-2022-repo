@@ -103,5 +103,29 @@ namespace VRentalsRESTAPI.Controllers
             }
             return result;
         }
+
+        //DELETE: api/<BewegungController>/
+        [HttpDelete()]
+        public IActionResult Delete([FromBody] List<int> listToDelete)
+        {
+            IActionResult result = null;
+            try
+            {
+                if (Bewegung.Delete(listToDelete) > 0)
+                {
+                    result = Ok("Transaction entries deleted!");
+                }
+                else
+                {
+                    result = NotFound("Transaction(s) not found!");
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                Debug.WriteLine(ex.Message);
+            }
+            return result;
+        }
     }
 }

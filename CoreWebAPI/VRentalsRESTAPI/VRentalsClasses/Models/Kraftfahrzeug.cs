@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using VRentalsClasses.Interfaces;
 using System.Diagnostics;
+using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 
 namespace VRentalsClasses.Models
 {
@@ -18,12 +19,12 @@ namespace VRentalsClasses.Models
 		private const string TABLE_BILDER = "tbl_bilder";
 		private const string COLUMNS_BILDER = "bilder_id, bild_bytes, bild_url, kraftfahrzeug_id, anhaenger_id, users_id, schaden_id";
 		private const string COLUMNS_KFZ = "kraftfahrzeug_id, mietpreis, gegenstandzustand, kategorie, marke, modell, ausgabenstelle_id, aktueller_standort_id, kennzeichen, baujahr, klasse, km_stand";
-		
-		#endregion
+		private const string COLUMNS_NOKM = "kraftfahrzeug_id, mietpreis, gegenstandzustand, kategorie, marke, modell, ausgabenstelle_id, aktueller_standort_id, kennzeichen, baujahr, klasse";
+        #endregion
 
-		//************************************************************************
-		#region static methods
-		public static void Truncate(Kraftfahrzeug kraftfahrzeug)
+        //************************************************************************
+        #region static methods
+        public static void Truncate(Kraftfahrzeug kraftfahrzeug)
 		{
 			NpgsqlCommand command = new NpgsqlCommand();
 			if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
@@ -186,6 +187,56 @@ namespace VRentalsClasses.Models
             }
 
             return ausgabenstelleListe;
+        }
+
+        // Gets a specific list of kraftfahrzeug by using a string made out of user ID's seperated by a "_".
+        // Used in the WebAPP, file page-wartungstermin-list.js
+        public static List<Kraftfahrzeug> GetAllKraftfahrzeugBySpecificList(string kraftfahrzeugString)
+        {
+            List<Kraftfahrzeug> kraftfahrzeugListe = new List<Kraftfahrzeug>();
+            string Condition = $"";
+            kraftfahrzeugString = kraftfahrzeugString.Remove(kraftfahrzeugString.Length - 1, 1);
+            string[] kraftfahrzeugList = kraftfahrzeugString.Split("_");
+            kraftfahrzeugList = Benutzer.RemoveDuplicates(kraftfahrzeugList);
+
+            foreach (string kraftfahrzeug_id in kraftfahrzeugList)
+            {
+                if (kraftfahrzeug_id.Equals(kraftfahrzeugList.Last()))
+                {
+                    Condition += "kraftfahrzeug_id = " + kraftfahrzeug_id;
+                }
+                else
+                {
+                    Condition += "kraftfahrzeug_id = " + kraftfahrzeug_id + " OR ";
+                }
+            }
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+            NpgsqlCommand command = new NpgsqlCommand();
+			command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"SELECT {COLUMNS_KFZ} FROM {SCHEMA}.{TABLE_KFZ} WHERE {Condition}"; // WIP: order by?
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    kraftfahrzeugListe.Add(new Kraftfahrzeug(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
+            return kraftfahrzeugListe;
         }
 
         public static int Delete(List<int> listToDelete)
@@ -528,7 +579,7 @@ namespace VRentalsClasses.Models
 				{
                     command.CommandText = $"select nextval('{SCHEMA}.{TABLE_KFZ}_seq')";
                     this.KraftfahrzeugId = (int)((long)command.ExecuteScalar());
-                    command.CommandText = $"insert into {SCHEMA}.{TABLE_KFZ} ({COLUMNS_KFZ}) values (:kid, :mp, :gz, :k, :ma, :mo, :asid, :aso, :ken, :bj, :kla)";
+                    command.CommandText = $"insert into {SCHEMA}.{TABLE_KFZ} ({COLUMNS_NOKM}) values (:kid, :mp, :gz, :k, :ma, :mo, :asid, :aso, :ken, :bj, :kla)";
                 }			
 			}
 

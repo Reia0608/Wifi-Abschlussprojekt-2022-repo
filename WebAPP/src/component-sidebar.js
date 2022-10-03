@@ -18,6 +18,7 @@ export default class Sidebar
 			this.sideNavButtonVerwaltungList = this.target.querySelector('#sideNavButtonVerwaltungList');
 			this.sideNavButtonCarList = this.target.querySelector('#sideNavButtonCarList');
 			this.sideNavButtonBewegungList = this.target.querySelector('#sideNavButtonBewegungList');
+			this.sideNavButtonWartungenList = this.target.querySelector('#sideNavButtonWartungenList');
 
 			// WIP parse component-sidebar.html for the active command and put the correspondent element in activeSideNavButton.
 			let activeSideNavButton = this.sideNavButtonHome;
@@ -39,16 +40,19 @@ export default class Sidebar
 			{
 				this.sideNavButtonVerwaltungList.classList.remove('d-none');
 				this.sideNavButtonBewegungList.classList.remove('d-none');
+				this.sideNavButtonBewegungList.classList.remove('d-none');
 			}
 			else if(args.rolle == 4)
 			{
 				this.sideNavButtonVerwaltungList.classList.add('d-none');
 				this.sideNavButtonBewegungList.classList.remove('d-none');
+				this.sideNavButtonWartungenList.classList.remove('d-none');
 			}
 			else
 			{
 				this.sideNavButtonVerwaltungList.classList.add('d-none');
 				this.sideNavButtonBewegungList.classList.add('d-none');
+				this.sideNavButtonWartungenList.classList.add('d-none');
 			}
 
 			this.sideNavButtonHome.addEventListener('click', (e)=>
@@ -115,6 +119,17 @@ export default class Sidebar
 					this.sideNavButtonBewegungList.classList.add("active");
 					activeSideNavButton.classList.remove("active");
 					activeSideNavButton = this.sideNavButtonBewegungList;
+				}
+			});
+
+			sideNavButtonWartungenList.addEventListener('click', (e)=>
+			{
+				location.hash = '#maintenance';
+				if(activeSideNavButton != this.sideNavButtonWartungenList)
+				{
+					this.sideNavButtonWartungenList.classList.add("active");
+					activeSideNavButton.classList.remove("active");
+					activeSideNavButton = this.sideNavButtonWartungenList;
 				}
 			});
 

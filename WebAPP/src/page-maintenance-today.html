@@ -1,0 +1,34 @@
+<div class="container">
+    <button type="button" class="btn btn-outline-dark btn-sm" color="#0d6efd" id="buttonWartungNeu"><span class="iconify me-2" data-icon="mdi-plus"></span>Neue Wartung</button>
+    <button type="button" class="btn btn-outline-dark btn-sm" color="#0d6efd" id="buttonWartungLoeschen"><span class="iconify me-2" data-icon="cil:trash"></span>Gewählte Wartungen löschen</button>
+    <ul class="nav nav-tabs mt-5">
+        <li class="nav-item">
+          <a class="nav-link" href="#maintenance">Alle Wartungen</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#maintenancetoday">Heutige Wartungen</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#maintenancefinished">Erledigte Wartungen</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#maintenancenew">Offene Wartungen</a>
+        </li>
+    </ul>
+	<table class="table table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Fahrzeug</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Uhrzeit</th>
+            <th scope="col">Werkstatt</th>
+            <th scope="col">Vsl.Ende</th>
+            <th scope="col"><input class="form-check-input" type="checkbox" value="" id="checkboxAll"></th>
+          </tr>
+        </thead>
+        <tbody class="clickable" id="tbodyWartungList">
+         
+        </tbody>
+      </table>
+</div>

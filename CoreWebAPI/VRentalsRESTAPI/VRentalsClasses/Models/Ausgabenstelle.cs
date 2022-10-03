@@ -89,6 +89,43 @@ namespace VRentalsClasses.Models
             return resultAusgabenstelleListe;
         }
 
+        public static List<string> GetNameByAusgabenstelleId(int? ausgabenstelle_id)
+        {
+            string ausgabenstelleName = "";
+			List<string> resultAusgabenstelle = new List<string>();
+
+            if (DBConnection.GetConnection().FullState == System.Data.ConnectionState.Closed)
+            {
+                DBConnection.GetConnection().Open();
+            }
+
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = DBConnection.GetConnection();
+            command.CommandText = $"select ausgabenstelle_bezeichnung from {SCHEMA}.{TABLE} WHERE ausgabenstelle_id = :asid";
+			command.Parameters.AddWithValue("asid", ausgabenstelle_id);
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+            try
+            {
+                if (reader.Read())
+                {
+                    ausgabenstelleName = reader.GetString(0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+                DBConnection.GetConnection().Close();
+            }
+
+			resultAusgabenstelle.Add(ausgabenstelleName);
+            return resultAusgabenstelle;
+        }
+
         public static List<string>? GetByIdList(List<int?> ausgabenstelleListe)
         {
             List<string>? resultAusgabenstelleListe = new List<string>();
